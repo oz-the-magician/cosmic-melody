@@ -1,0 +1,174 @@
+{
+  "lead": [
+    {
+      "file": "samples/piano/C3.wav",
+      "rootMidi": 48,
+      "sampleName": "Piano Db2",
+      "rate": 22050,
+      "loopStart": 0.24353741496598638,
+      "loopEnd": 0.34294784580498866,
+      "program": 0,
+      "loop": false
+    },
+    {
+      "file": "samples/piano/C4.wav",
+      "rootMidi": 60,
+      "sampleName": "Piano Db3",
+      "rate": 22050,
+      "loopStart": 0.4812698412698413,
+      "loopEnd": 0.5022222222222222,
+      "program": 0,
+      "loop": false
+    },
+    {
+      "file": "samples/piano/C5.wav",
+      "rootMidi": 72,
+      "sampleName": "Piano Db4",
+      "rate": 22050,
+      "loopStart": 0.5645351473922903,
+      "loopEnd": 0.587437641723356,
+      "program": 0,
+      "loop": false
+    },
+    {
+      "file": "samples/piano/C6.wav",
+      "rootMidi": 84,
+      "sampleName": "Piano C5",
+      "rate": 22050,
+      "loopStart": 0.33927437641723357,
+      "loopEnd": 0.34793650793650793,
+      "program": 0,
+      "loop": false
+    }
+  ],
+  "pad": [
+    {
+      "file": "samples/strings/C3.wav",
+      "rootMidi": 48,
+      "sampleName": "ensstringsc3",
+      "rate": 12000,
+      "loopStart": 0.7329166666666667,
+      "loopEnd": 1.972,
+      "program": 48,
+      "loop": true
+    },
+    {
+      "file": "samples/strings/C4.wav",
+      "rootMidi": 60,
+      "sampleName": "ensstringsc4",
+      "rate": 12000,
+      "loopStart": 0.506,
+      "loopEnd": 1.7286666666666666,
+      "program": 48,
+      "loop": true
+    },
+    {
+      "file": "samples/strings/C5.wav",
+      "rootMidi": 72,
+      "sampleName": "Str1C5 L",
+      "rate": 12000,
+      "loopStart": 0.6481666666666667,
+      "loopEnd": 1.8493333333333333,
+      "program": 48,
+      "loop": true
+    },
+    {
+      "file": "samples/strings/C6.wav",
+      "rootMidi": 84,
+      "sampleName": "ensstringsc6",
+      "rate": 12000,
+      "loopStart": 0.3293333333333333,
+      "loopEnd": 1.09875,
+      "program": 48,
+      "loop": true
+    }
+  ],
+  "bass": [
+    {
+      "file": "samples/bass/C2.wav",
+      "rootMidi": 36,
+      "sampleName": "Acoustic Bass A11",
+      "rate": 44100,
+      "loopStart": 0.11344671201814059,
+      "loopEnd": 0.11798185941043084,
+      "program": 32,
+      "loop": true
+    },
+    {
+      "file": "samples/bass/G2.wav",
+      "rootMidi": 43,
+      "sampleName": "Acoustic Bass A11",
+      "rate": 44100,
+      "loopStart": 0.11344671201814059,
+      "loopEnd": 0.11798185941043084,
+      "program": 32,
+      "loop": true
+    },
+    {
+      "file": "samples/bass/C3.wav",
+      "rootMidi": 48,
+      "sampleName": "Acoustic Bass A11",
+      "rate": 44100,
+      "loopStart": 0.11344671201814059,
+      "loopEnd": 0.11798185941043084,
+      "program": 32,
+      "loop": true
+    }
+  ],
+  "arp": [
+    {
+      "file": "samples/harp/C4.wav",
+      "rootMidi": 60,
+      "sampleName": "HarpD#7",
+      "rate": 44100,
+      "loopStart": 0.019931972789115647,
+      "loopEnd": 0.02072562358276644,
+      "program": 46,
+      "loop": false
+    },
+    {
+      "file": "samples/harp/C5.wav",
+      "rootMidi": 72,
+      "sampleName": "HarpD#7",
+      "rate": 44100,
+      "loopStart": 0.019931972789115647,
+      "loopEnd": 0.02072562358276644,
+      "program": 46,
+      "loop": false
+    },
+    {
+      "file": "samples/harp/C6.wav",
+      "rootMidi": 84,
+      "sampleName": "HarpD#7",
+      "rate": 44100,
+      "loopStart": 0.019931972789115647,
+      "loopEnd": 0.02072562358276644,
+      "program": 46,
+      "loop": false
+    }
+  ],
+  "impact": [
+    {
+      "file": "samples/percussion/C3.wav",
+      "rootMidi": 48,
+      "sampleName": "Timp Drum A1",
+      "rate": 44100,
+      "loopStart": 0.1458956916099773,
+      "loopEnd": 0.17564625850340135,
+      "program": 47,
+      "loop": false
+    }
+  ],
+  "pulse": [
+    {
+      "file": "samples/percussion/C5.wav",
+      "rootMidi": 72,
+      "sampleName": "Wood Block",
+      "rate": 44100,
+      "loopStart": 6.802721088435374e-05,
+      "loopEnd": 0.03845804988662131,
+      "program": 115,
+      "loop": false
+    }
+  ]
+}
