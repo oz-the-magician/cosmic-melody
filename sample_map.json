@@ -1,174 +1,158 @@
 {
   "lead": [
     {
-      "file": "samples/piano/C3.wav",
-      "rootMidi": 48,
-      "sampleName": "Piano Db2",
-      "rate": 22050,
-      "loopStart": 0.24353741496598638,
-      "loopEnd": 0.34294784580498866,
+      "file": "samples/piano/Cs3.mp3",
+      "rootMidi": 49,
+      "sampleName": "Upright Piano Cs3",
       "program": 0,
-      "loop": false
+      "loop": false,
+      "loopStart": 0,
+      "loopEnd": 0
     },
     {
-      "file": "samples/piano/C4.wav",
-      "rootMidi": 60,
-      "sampleName": "Piano Db3",
-      "rate": 22050,
-      "loopStart": 0.4812698412698413,
-      "loopEnd": 0.5022222222222222,
+      "file": "samples/piano/Cs4.mp3",
+      "rootMidi": 61,
+      "sampleName": "Upright Piano Cs4",
       "program": 0,
-      "loop": false
+      "loop": false,
+      "loopStart": 0,
+      "loopEnd": 0
     },
     {
-      "file": "samples/piano/C5.wav",
-      "rootMidi": 72,
-      "sampleName": "Piano Db4",
-      "rate": 22050,
-      "loopStart": 0.5645351473922903,
-      "loopEnd": 0.587437641723356,
+      "file": "samples/piano/Cs5.mp3",
+      "rootMidi": 73,
+      "sampleName": "Upright Piano Cs5",
       "program": 0,
-      "loop": false
+      "loop": false,
+      "loopStart": 0,
+      "loopEnd": 0
     },
     {
-      "file": "samples/piano/C6.wav",
-      "rootMidi": 84,
-      "sampleName": "Piano C5",
-      "rate": 22050,
-      "loopStart": 0.33927437641723357,
-      "loopEnd": 0.34793650793650793,
+      "file": "samples/piano/Cs6.mp3",
+      "rootMidi": 85,
+      "sampleName": "Upright Piano Cs6",
       "program": 0,
-      "loop": false
+      "loop": false,
+      "loopStart": 0,
+      "loopEnd": 0
     }
   ],
   "pad": [
     {
-      "file": "samples/strings/C3.wav",
+      "file": "samples/strings/C3.mp3",
       "rootMidi": 48,
-      "sampleName": "ensstringsc3",
-      "rate": 12000,
-      "loopStart": 0.7329166666666667,
-      "loopEnd": 1.972,
+      "sampleName": "String Ensemble C3",
       "program": 48,
-      "loop": true
+      "loop": true,
+      "loopStart": 1.49927,
+      "loopEnd": 4.95528
     },
     {
-      "file": "samples/strings/C4.wav",
+      "file": "samples/strings/C4.mp3",
       "rootMidi": 60,
-      "sampleName": "ensstringsc4",
-      "rate": 12000,
-      "loopStart": 0.506,
-      "loopEnd": 1.7286666666666666,
+      "sampleName": "String Ensemble C4",
       "program": 48,
-      "loop": true
+      "loop": true,
+      "loopStart": 1.49982,
+      "loopEnd": 4.98712
     },
     {
-      "file": "samples/strings/C5.wav",
+      "file": "samples/strings/C5.mp3",
       "rootMidi": 72,
-      "sampleName": "Str1C5 L",
-      "rate": 12000,
-      "loopStart": 0.6481666666666667,
-      "loopEnd": 1.8493333333333333,
+      "sampleName": "String Ensemble C5",
       "program": 48,
-      "loop": true
+      "loop": true,
+      "loopStart": 1.50029,
+      "loopEnd": 4.95154
     },
     {
-      "file": "samples/strings/C6.wav",
-      "rootMidi": 84,
-      "sampleName": "ensstringsc6",
-      "rate": 12000,
-      "loopStart": 0.3293333333333333,
-      "loopEnd": 1.09875,
+      "file": "samples/strings/B5.mp3",
+      "rootMidi": 83,
+      "sampleName": "String Ensemble B5",
       "program": 48,
-      "loop": true
+      "loop": true,
+      "loopStart": 1.5,
+      "loopEnd": 5.00365
     }
   ],
   "bass": [
     {
-      "file": "samples/bass/C2.wav",
+      "file": "samples/bass/C2.mp3",
       "rootMidi": 36,
-      "sampleName": "Acoustic Bass A11",
-      "rate": 44100,
-      "loopStart": 0.11344671201814059,
-      "loopEnd": 0.11798185941043084,
+      "sampleName": "Contrabass Pizzicato C2",
       "program": 32,
-      "loop": true
+      "loop": false,
+      "loopStart": 0,
+      "loopEnd": 0
     },
     {
-      "file": "samples/bass/G2.wav",
-      "rootMidi": 43,
-      "sampleName": "Acoustic Bass A11",
-      "rate": 44100,
-      "loopStart": 0.11344671201814059,
-      "loopEnd": 0.11798185941043084,
+      "file": "samples/bass/Gs2.mp3",
+      "rootMidi": 44,
+      "sampleName": "Contrabass Pizzicato Gs2",
       "program": 32,
-      "loop": true
+      "loop": false,
+      "loopStart": 0,
+      "loopEnd": 0
     },
     {
-      "file": "samples/bass/C3.wav",
-      "rootMidi": 48,
-      "sampleName": "Acoustic Bass A11",
-      "rate": 44100,
-      "loopStart": 0.11344671201814059,
-      "loopEnd": 0.11798185941043084,
+      "file": "samples/bass/Cs3.mp3",
+      "rootMidi": 49,
+      "sampleName": "Contrabass Pizzicato Cs3",
       "program": 32,
-      "loop": true
+      "loop": false,
+      "loopStart": 0,
+      "loopEnd": 0
     }
   ],
   "arp": [
     {
-      "file": "samples/harp/C4.wav",
-      "rootMidi": 60,
-      "sampleName": "HarpD#7",
-      "rate": 44100,
-      "loopStart": 0.019931972789115647,
-      "loopEnd": 0.02072562358276644,
+      "file": "samples/harp/B3.mp3",
+      "rootMidi": 59,
+      "sampleName": "Harp B3",
       "program": 46,
-      "loop": false
+      "loop": false,
+      "loopStart": 0,
+      "loopEnd": 0
     },
     {
-      "file": "samples/harp/C5.wav",
+      "file": "samples/harp/C5.mp3",
       "rootMidi": 72,
-      "sampleName": "HarpD#7",
-      "rate": 44100,
-      "loopStart": 0.019931972789115647,
-      "loopEnd": 0.02072562358276644,
+      "sampleName": "Harp C5",
       "program": 46,
-      "loop": false
+      "loop": false,
+      "loopStart": 0,
+      "loopEnd": 0
     },
     {
-      "file": "samples/harp/C6.wav",
-      "rootMidi": 84,
-      "sampleName": "HarpD#7",
-      "rate": 44100,
-      "loopStart": 0.019931972789115647,
-      "loopEnd": 0.02072562358276644,
+      "file": "samples/harp/B5.mp3",
+      "rootMidi": 83,
+      "sampleName": "Harp B5",
       "program": 46,
-      "loop": false
+      "loop": false,
+      "loopStart": 0,
+      "loopEnd": 0
     }
   ],
   "impact": [
     {
-      "file": "samples/percussion/C3.wav",
-      "rootMidi": 48,
-      "sampleName": "Timp Drum A1",
-      "rate": 44100,
-      "loopStart": 0.1458956916099773,
-      "loopEnd": 0.17564625850340135,
+      "file": "samples/percussion/timpani_Cs2.mp3",
+      "rootMidi": 37,
+      "sampleName": "Timpani Cs2",
       "program": 47,
-      "loop": false
+      "loop": false,
+      "loopStart": 0,
+      "loopEnd": 0
     }
   ],
   "pulse": [
     {
-      "file": "samples/percussion/C5.wav",
-      "rootMidi": 72,
-      "sampleName": "Wood Block",
-      "rate": 44100,
-      "loopStart": 6.802721088435374e-05,
-      "loopEnd": 0.03845804988662131,
+      "file": "samples/percussion/wood_F6.mp3",
+      "rootMidi": 89,
+      "sampleName": "Wood Click F6",
       "program": 115,
-      "loop": false
+      "loop": false,
+      "loopStart": 0,
+      "loopEnd": 0
     }
   ]
 }

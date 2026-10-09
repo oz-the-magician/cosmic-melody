@@ -1,59 +1,45 @@
-# Cosmic Melody Date — GitHub Pages / VS Code prototype
+# Cosmic Melody
 
-Статический прототип генератора «Космическая мелодия даты».
+**Turns a date into a 30-second piece of music.** The position of the Sun and the phase of the Moon on the chosen date set the key, mode, tempo and harmony. Real orchestral samples then play the result right in the browser.
 
-Работает как обычный сайт:
+> 🇷🇺 Генератор «Космическая мелодия даты»: дата → положение Солнца и фаза Луны → лад, темп и гармония → 30 секунд музыки на живых оркестровых сэмплах.
 
-- `index.html`
-- `samples/` — локальные WAV-сэмплы инструментов
-- `.nojekyll` — чтобы GitHub Pages отдавал файлы как статический сайт без Jekyll
+## How it works
 
-## Запуск в VS Code
+| Sky parameter | Musical parameter |
+|---|---|
+| Sun's ecliptic longitude (zodiac sign) | Root note |
+| Moon phase & illumination | Mode (one of 8) and dynamics |
+| Combined sky state | Tempo, chord progression, scene structure |
 
-### Вариант 1: Live Server
+Six voices are arranged on top of that: **piano** lead, **string ensemble** pad, **contrabass** pizzicato, **harp** arpeggios, **timpani** accents and a **wood click** pulse. Everything is synthesized with the Web Audio API: no dependencies, no build step, no CDN.
 
-1. Открой папку проекта в VS Code.
-2. Установи расширение **Live Server**, если его ещё нет.
-3. Нажми правой кнопкой по `index.html` → **Open with Live Server**.
+## Run locally
 
-### Вариант 2: без расширений, через Python
-
-В терминале VS Code из корня проекта:
+Browsers block audio loading from `file://`, so serve the folder over HTTP:
 
 ```bash
 python3 -m http.server 8765
+# open http://localhost:8765
 ```
 
-Потом открой:
+Alternatives: VS Code **Live Server**, or the bundled `start_mac.command` / `start_windows.bat`.
 
-```text
-http://localhost:8765
+## Project structure
+
+```
+index.html          — app: UI, astronomy, composition engine, audio playback
+sample_map.json     — reference copy of the sample map (inline in index.html)
+samples/
+  piano/            — lead
+  strings/          — pad (with loop points)
+  bass/             — contrabass pizzicato
+  harp/             — arpeggios
+  percussion/       — timpani + wood click
 ```
 
-На Windows иногда команда такая:
+Each sample is a single note at a measured pitch (`rootMidi`); the engine picks the nearest sample and repitches it.
 
-```bash
-python -m http.server 8765
-```
+## Credits
 
-## Публикация на GitHub Pages
-
-1. Создай новый репозиторий на GitHub, например `cosmic-melody`.
-2. Загрузи в него все файлы из этой папки.
-3. Открой репозиторий → **Settings** → **Pages**.
-4. В разделе **Build and deployment** выбери:
-   - Source: **Deploy from a branch**
-   - Branch: `main`
-   - Folder: `/ (root)`
-5. Нажми **Save**.
-6. Через пару минут сайт будет доступен по адресу вида:
-
-```text
-https://USERNAME.github.io/cosmic-melody/
-```
-
-## Важно
-
-На GitHub Pages samples будут загружаться как обычные статические WAV-файлы. Интернет нужен только пользователю для открытия сайта.
-
-Для локального запуска не открывай просто `index.html` двойным кликом, если браузер блокирует загрузку samples. Используй Live Server или `python3 -m http.server`.
+Instrument samples come from **[VSCO 2 Community Edition](https://versilian-studios.com/vsco-community/)** by Versilian Studios, released under **CC0 1.0** (public domain). The samples were trimmed, normalized, pitch-verified and encoded to MP3 for this project.
