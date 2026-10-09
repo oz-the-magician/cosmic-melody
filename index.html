@@ -7,82 +7,83 @@
 <meta name="description" content="Любая дата превращается в 30 секунд оркестровой музыки по положению Солнца и фазе Луны.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --night:#121a3d;     /* фон карты */
-  --deep:#0c1230;      /* края виньетки */
-  --ink:#2b3870;       /* линии сетки */
-  --star:#ece6d3;      /* основной текст */
-  --dim:#9aa3c4;       /* второстепенный */
-  --brass:#d4ac5e;     /* Солнце, акцент */
-  --silver:#c4cde3;    /* Луна */
+  --deep:#070b22;      /* самая тёмная часть неба */
+  --night:#13204f;     /* индиго */
+  --dusk:#2a1f5c;      /* фиолетовый край */
+  --aurora:#0f3a52;    /* холодный бирюзовый отсвет */
+  --ink:rgba(196,205,227,.18); /* линии карты */
+  --star:#eef0fa;
+  --dim:#9ea8cc;
+  --brass:#e7c27a;
+  --silver:#cdd5ee;
 }
 *{box-sizing:border-box}
 html{background:var(--deep)}
-body{margin:0;min-height:100vh;color:var(--star);font:16px/1.6 Manrope,system-ui,sans-serif;
-  background:radial-gradient(ellipse at 50% 30%,var(--night) 0%,var(--deep) 75%)}
-.wrap{max-width:1080px;margin:0 auto;padding:48px 24px 64px}
-header{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-bottom:8px}
-h1{font:500 clamp(44px,7vw,84px)/.95 Cormorant,Georgia,serif;letter-spacing:-.01em;margin:0}
-.lede{max-width:34ch;color:var(--dim);margin:0;font-size:15px}
-.stage{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:40px;align-items:center;margin-top:24px}
-.chart{position:relative;aspect-ratio:1;width:100%;max-width:640px;justify-self:center}
+body{margin:0;min-height:100vh;color:var(--star);font:300 16px/1.6 Jost,system-ui,sans-serif;
+  background:
+    radial-gradient(60vmax 50vmax at 12% 8%,rgba(42,31,92,.9),transparent 60%),
+    radial-gradient(55vmax 45vmax at 88% 18%,rgba(15,58,82,.85),transparent 62%),
+    radial-gradient(70vmax 55vmax at 50% 105%,rgba(19,32,79,.95),transparent 65%),
+    radial-gradient(40vmax 35vmax at 75% 70%,rgba(58,34,96,.55),transparent 60%),
+    var(--deep);
+  background-attachment:fixed}
+#sky{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1;max-width:920px;margin:0 auto;padding:36px 20px 64px;text-align:center}
+h1{font:200 clamp(40px,7.4vw,80px)/1.05 Jost,sans-serif;letter-spacing:.04em;margin:0 0 14px;
+  background:linear-gradient(100deg,#f6eedc 0%,#e7c9f2 45%,#bfe2f7 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lede{max-width:44ch;margin:0 auto;color:var(--dim);font-size:16px}
+.chart{position:relative;aspect-ratio:1;width:clamp(280px,calc(100vh - 330px),560px);max-width:100%;margin:18px auto 0}
 .chart canvas{width:100%;height:100%;display:block}
-.panel{display:flex;flex-direction:column;gap:28px}
-.field label{display:block;font-size:13px;color:var(--dim);margin-bottom:6px}
-input[type=datetime-local]{width:100%;padding:12px 0;border:0;border-bottom:1px solid var(--ink);background:transparent;color:var(--star);font:500 22px Cormorant,serif;color-scheme:dark}
-input:focus{outline:none;border-bottom-color:var(--brass)}
-.actions{display:flex;gap:10px;flex-wrap:wrap}
-button,.link{font:600 14px Manrope,sans-serif;border-radius:999px;padding:12px 20px;cursor:pointer;border:1px solid var(--ink);background:transparent;color:var(--star);text-decoration:none}
-button:hover,.link:hover{border-color:var(--dim)}
-button.play{background:var(--brass);border-color:var(--brass);color:var(--deep);min-width:128px}
-button.play:hover{background:#e2bd74}
+.actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+button,.link{font:400 15px Jost,sans-serif;letter-spacing:.02em;border-radius:999px;padding:12px 26px;cursor:pointer;border:1px solid rgba(205,213,238,.3);background:rgba(7,11,34,.35);color:var(--star);text-decoration:none;backdrop-filter:blur(6px)}
+button:hover,.link:hover{border-color:var(--silver)}
+button.play{background:var(--brass);border-color:var(--brass);color:#14112a;font-weight:500;min-width:150px}
+button.play:hover{background:#f0d197}
 :focus-visible{outline:2px solid var(--brass);outline-offset:3px}
 .link[aria-disabled=true]{opacity:.4;pointer-events:none}
-dl.reading{margin:0;display:grid;grid-template-columns:auto 1fr;gap:10px 18px;font-size:14px}
-dl.reading dt{color:var(--dim)}
-dl.reading dd{margin:0;font-weight:500}
-.status{font-size:13px;color:var(--dim);min-height:1.6em}
-.epochs{margin-top:56px}
-.epochs h2{font:500 28px Cormorant,serif;margin:0 0 4px}
-.epochs p{color:var(--dim);margin:0 0 20px;font-size:14px;max-width:62ch}
-.track{display:flex;border-top:1px solid var(--ink);position:relative}
-.track .seg{flex:var(--w) 1 0;padding:12px 10px 0 0;border-left:1px solid var(--ink);padding-left:10px;min-width:0}
-.track .seg:first-child{border-left:0;padding-left:0}
-.seg b{display:block;font:500 17px/1.2 Cormorant,serif;margin-bottom:4px}
-.seg span{display:block;font-size:12px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.info{margin:44px auto 0;max-width:820px}
+.field label{display:block;font-size:13px;color:var(--dim);margin-bottom:4px}
+input[type=datetime-local]{width:100%;max-width:340px;text-align:center;padding:10px 0;border:0;border-bottom:1px solid var(--ink);background:transparent;color:var(--star);font:300 22px Jost,sans-serif;color-scheme:dark}
+input:focus{outline:none;border-bottom-color:var(--brass)}
+dl.reading{margin:28px auto 0;display:grid;grid-template-columns:repeat(5,auto);justify-content:center;gap:18px 36px}
+dl.reading div{display:flex;flex-direction:column-reverse}
+dl.reading dt{color:var(--dim);font-size:13px}
+dl.reading dd{margin:0;font-size:17px;font-weight:400}
+.info .actions{margin-top:28px}
+.status{font-size:13px;color:var(--dim);min-height:1.6em;margin-top:12px}
+.epochs{margin:64px auto 0;max-width:640px;text-align:left}
+.epochs h2{font:300 28px Jost,sans-serif;text-align:center;margin:0 0 6px;letter-spacing:.02em}
+.epochs p{color:var(--dim);margin:0 auto 24px;font-size:15px;max-width:52ch;text-align:center}
+.track{display:flex;flex-direction:column;position:relative}
+.track .seg{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:baseline;padding:10px 0;border-top:1px solid var(--ink)}
+.seg b{font-weight:400;font-size:17px}
+.seg span{font-size:13px;color:var(--dim);text-align:right}
 .seg.now b{color:var(--brass)}
-.playhead{position:absolute;top:-3px;width:5px;height:5px;border-radius:50%;background:var(--brass);transform:translateX(-50%);opacity:0;transition:opacity .3s}
-footer{margin-top:64px;font-size:12px;color:var(--dim)}
+.playhead{display:none}
+footer{margin-top:64px;font-size:13px;color:var(--dim)}
 footer a{color:var(--star)}
-@media (max-width:820px){
-  .stage{grid-template-columns:1fr;gap:24px}
-  .track{flex-direction:column;border-top:0}
-  .track .seg{border-left:0;border-top:1px solid var(--ink);padding:10px 0}
-  .playhead{display:none}
-}
+@media (max-width:720px){dl.reading{grid-template-columns:repeat(2,auto);gap:16px 40px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
+<canvas id="sky" aria-hidden="true"></canvas>
 <main class="wrap">
-  <header>
-    <h1>Космическая<br>мелодия</h1>
-    <p class="lede">Выберите дату. Солнце задаст тонику, Луна — лад, время суток — темп. Получится 30 секунд музыки об истории Вселенной.</p>
-  </header>
-  <section class="stage">
-    <div class="chart"><canvas id="chart" aria-label="Карта неба: положение Солнца в зодиаке и фаза Луны" role="img"></canvas></div>
-    <div class="panel">
-      <div class="field"><label for="dateInput">Дата и время</label><input id="dateInput" type="datetime-local" step="60"></div>
-      <div class="actions">
-        <button id="playBtn" class="play">Слушать</button>
-        <button id="randomBtn">Случайная дата</button>
-      </div>
-      <dl class="reading" id="reading"></dl>
-      <div class="actions"><a id="downloadMidi" class="link" aria-disabled="true" href="#" download>Скачать MIDI</a></div>
-      <div id="status" class="status" aria-live="polite"></div>
-    </div>
+  <h1>Космическая мелодия</h1>
+  <p class="lede">Солнце задаёт тонику, Луна — лад, время суток — темп. Нажмите «Слушать», и звёзды соберутся в мелодию вашей даты.</p>
+  <div class="chart"><canvas id="chart" aria-label="Карта неба: положение Солнца в зодиаке и фаза Луны" role="img"></canvas></div>
+  <div class="actions">
+    <button id="playBtn" class="play">Слушать</button>
+    <button id="randomBtn">Случайная дата</button>
+  </div>
+  <section class="info">
+    <div class="field"><label for="dateInput">Дата и время</label><input id="dateInput" type="datetime-local" step="60"></div>
+    <dl class="reading" id="reading"></dl>
+    <div class="actions"><a id="downloadMidi" class="link" aria-disabled="true" href="#" download>Скачать MIDI</a></div>
+    <div id="status" class="status" aria-live="polite"></div>
   </section>
   <section class="epochs">
     <h2>Семь эпох за 30 секунд</h2>
@@ -128,7 +129,7 @@ let midiUrl=null,currentArrangement=null,audioCtx=null,buffers={},active=[],bus=
 function render(arr){
   const s=arr.sky;
   const rows=[['Солнце',`${ZODIAC[s.zodiacIdx]}, ${s.lambda.toFixed(1)}°`],['Тоника',NOTE_NAMES[s.rootPc]],['Луна',`${Math.round(s.illum*100)}% освещена`],['Лад',arr.mode.name],['Темп',`${Math.round(s.tempo)} уд/мин`]];
-  els.reading.innerHTML=rows.map(([k,v])=>`<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(v)}</dd>`).join('');
+  els.reading.innerHTML=rows.map(([k,v])=>`<div><dt>${escapeHtml(k)}</dt><dd>${escapeHtml(v)}</dd></div>`).join('');
   els.track.querySelectorAll('.seg').forEach(n=>n.remove());
   arr.scenes.forEach((sc,i)=>{const d=document.createElement('div');d.className='seg';d.style.setProperty('--w',Math.max(.6,sc.end-sc.start));d.dataset.i=i;
     d.innerHTML=`<b>${escapeHtml(sc.name)}</b><span>${Math.round(sc.start)}–${Math.round(sc.end)} с · ${escapeHtml(sc.chord)}</span>`;els.track.appendChild(d)});
@@ -144,13 +145,10 @@ function drawChart(arr,t){
   const cx=W/2,cy=W/2,R=W*.47,ink=css('--ink'),star=css('--star'),dim=css('--dim'),brass=css('--brass'),silver=css('--silver');
   const s=arr.sky,ang=deg=>(-90-deg)*Math.PI/180; // Овен сверху, против часовой — как на планисфере
   // фоновые звёзды, детерминированные датой
-  const r=rng(Math.floor(s.jd*24));g.fillStyle=star;
-  for(let i=0;i<160;i++){const a=r()*Math.PI*2,d=Math.sqrt(r())*R*.78;g.globalAlpha=.15+r()*.45;g.beginPath();g.arc(cx+Math.cos(a)*d,cy+Math.sin(a)*d,r()*1.1+.2,0,7);g.fill()}
-  g.globalAlpha=1;
   // кольца
   g.strokeStyle=ink;g.lineWidth=1;[R,R*.84,R*.78].forEach(rr=>{g.beginPath();g.arc(cx,cy,rr,0,7);g.stroke()});
   // сектора и подписи знаков
-  g.font=`500 ${Math.max(11,W*.024)}px Cormorant, serif`;g.textAlign='center';g.textBaseline='middle';
+  g.font=`300 ${Math.max(11,W*.024)}px Jost, sans-serif`;g.textAlign='center';g.textBaseline='middle';
   for(let i=0;i<12;i++){const a=ang(i*30);g.beginPath();g.moveTo(cx+Math.cos(a)*R*.78,cy+Math.sin(a)*R*.78);g.lineTo(cx+Math.cos(a)*R,cy+Math.sin(a)*R);g.stroke();
     const m=ang(i*30+15);g.fillStyle=i===s.zodiacIdx?brass:dim;g.save();g.translate(cx+Math.cos(m)*R*.92,cy+Math.sin(m)*R*.92);const up=Math.sin(m)>0;g.rotate(m+(up?-Math.PI/2:Math.PI/2));g.fillText(ZODIAC[i],0,0);g.restore()}
   // градусная шкала
@@ -167,7 +165,7 @@ function drawChart(arr,t){
       if(e.voice==='lead'){if(prev){g.strokeStyle=brass;g.globalAlpha=.4;g.beginPath();g.moveTo(prev[0],prev[1]);g.lineTo(x,y);g.stroke()}prev=[x,y]}});
     g.globalAlpha=1;const ha=ang(-t/TRACK_SECONDS*360);g.strokeStyle=silver;g.globalAlpha=.6;g.beginPath();g.moveTo(cx,cy);g.lineTo(cx+Math.cos(ha)*R*.78,cy+Math.sin(ha)*R*.78);g.stroke();g.globalAlpha=1}
   // Луна в центре с реальной фазой
-  const mr=W*.06;g.fillStyle='#0b102b';g.beginPath();g.arc(cx,cy,mr,0,7);g.fill();
+  const mr=W*.06;g.fillStyle='rgba(7,11,34,.85)';g.beginPath();g.arc(cx,cy,mr,0,7);g.fill();
   g.save();g.beginPath();g.arc(cx,cy,mr,0,7);g.clip();g.fillStyle=silver;
   const p=s.phase,k=Math.cos(2*Math.PI*p);g.beginPath();
   if(p<.5){g.arc(cx,cy,mr,-Math.PI/2,Math.PI/2);g.ellipse(cx,cy,Math.abs(k)*mr,mr,0,Math.PI/2,-Math.PI/2,k>0)}
@@ -175,7 +173,7 @@ function drawChart(arr,t){
   g.fill();g.restore();g.strokeStyle=ink;g.beginPath();g.arc(cx,cy,mr,0,7);g.stroke();
 }
 
-function generate(){try{if(playing)stop();const dt=parseDatetimeLocal(els.dateInput.value);currentArrangement=buildArrangement(dt);render(currentArrangement);const mb=generateMidiBlob(currentArrangement);if(midiUrl)URL.revokeObjectURL(midiUrl);midiUrl=URL.createObjectURL(mb);els.downloadMidi.href=midiUrl;els.downloadMidi.download=fileBase(dt)+'.mid';els.downloadMidi.setAttribute('aria-disabled','false');setStatus('')}catch(e){console.error(e);setStatus(e.message||'Не получилось разобрать дату. Проверьте формат.')}}
+function generate(){try{if(playing)stop();gatherStars(0);const dt=parseDatetimeLocal(els.dateInput.value);currentArrangement=buildArrangement(dt);render(currentArrangement);const mb=generateMidiBlob(currentArrangement);if(midiUrl)URL.revokeObjectURL(midiUrl);midiUrl=URL.createObjectURL(mb);els.downloadMidi.href=midiUrl;els.downloadMidi.download=fileBase(dt)+'.mid';els.downloadMidi.setAttribute('aria-disabled','false');setStatus('')}catch(e){console.error(e);setStatus(e.message||'Не получилось разобрать дату. Проверьте формат.')}}
 
 /* ---------- звук ---------- */
 function makeImpulse(ctx,sec,decay){const len=ctx.sampleRate*sec,b=ctx.createBuffer(2,len,ctx.sampleRate);for(let ch=0;ch<2;ch++){const d=b.getChannelData(ch);for(let i=0;i<len;i++){const x=i/len;d[i]=(Math.random()*2-1)*Math.pow(1-x,decay)*(i<ctx.sampleRate*.012?i/(ctx.sampleRate*.012):1)}}return b}
@@ -203,12 +201,30 @@ async function play(){try{if(!currentArrangement)generate();await loadSamples();
   // pad: сцены перекрываются, чтобы аккорды плавно перетекали
   arr.events.forEach(e=>playSample(e.voice==='pad'?{...e,dur:e.dur+.8}:e,startAt,r));
   const endT=startAt+TRACK_SECONDS;bus.master.gain.setValueAtTime(.9,endT);bus.master.gain.linearRampToValueAtTime(0,endT+3.5);
-  playing=true;els.playBtn.textContent='Остановить';els.playhead.style.opacity=1;setStatus('');tick()}catch(e){console.error(e);setStatus(e.message||'Не получилось воспроизвести звук.')}}
+  gatherStars(1);playing=true;els.playBtn.textContent='Остановить';els.playhead.style.opacity=1;setStatus('');tick()}catch(e){console.error(e);setStatus(e.message||'Не получилось воспроизвести звук.')}}
 function stop(){active.forEach(n=>{try{n.stop()}catch(e){}});active=[];playing=false;cancelAnimationFrame(raf);els.playBtn.textContent='Слушать';els.playhead.style.opacity=0;els.track.querySelectorAll('.seg').forEach(n=>n.classList.remove('now'))}
 function tick(){const t=audioCtx.currentTime-startAt;if(t>TRACK_SECONDS+3.5){stop();drawChart(currentArrangement,TRACK_SECONDS);return}
   const tt=clamp(t,0,TRACK_SECONDS);drawChart(currentArrangement,tt);
   const segs=els.track.querySelectorAll('.seg');currentArrangement.scenes.forEach((sc,i)=>segs[i]&&segs[i].classList.toggle('now',tt>=sc.start&&tt<sc.end));
   els.playhead.style.left=(tt/TRACK_SECONDS*100)+'%';raf=requestAnimationFrame(tick)}
+
+/* ---------- звёзды: по всему экрану → в круг ---------- */
+const SKY={c:document.getElementById('sky'),ps:[],G:0,from:0,to:0,t0:0,dur:2600};
+(function initStars(){const r=rng(20260609),n=window.innerWidth<600?150:240;for(let i=0;i<n;i++)SKY.ps.push({sx:r(),sy:r(),wa:r()*Math.PI*2,wd:.08+Math.sqrt(r())*.7,size:r()*1.3+.35,a:.3+r()*.6,tw:r()*6.28,ts:.6+r()*1.6,delay:r()*.6})})();
+const reduceMotion=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+function gatherStars(to){if(SKY.to===to&&SKY.G===to)return;SKY.from=SKY.G;SKY.to=to;SKY.t0=performance.now();if(reduceMotion)SKY.G=to}
+const ease=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;
+function skyFrame(now){const c=SKY.c,dpr=Math.min(2,window.devicePixelRatio||1),W=window.innerWidth,H=window.innerHeight;
+  if(c.width!==W*dpr||c.height!==H*dpr){c.width=W*dpr;c.height=H*dpr}
+  if(SKY.G!==SKY.to){const p=clamp((now-SKY.t0)/SKY.dur,0,1);SKY.G=SKY.from+(SKY.to-SKY.from)*p;if(p>=1)SKY.G=SKY.to}
+  const g=c.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);g.clearRect(0,0,W,H);
+  const rc=els.chart.getBoundingClientRect(),cx=rc.left+rc.width/2,cy=rc.top+rc.height/2,R=rc.width*.47*.78,t=now/1000;
+  g.fillStyle='#eef0fa';
+  for(const s of SKY.ps){const q=ease(clamp(SKY.G*1.6-s.delay,0,1)),x0=s.sx*W,y0=s.sy*H,x1=cx+Math.cos(s.wa)*s.wd*R,y1=cy+Math.sin(s.wa)*s.wd*R;
+    const x=x0+(x1-x0)*q,y=y0+(y1-y0)*q,tw=reduceMotion?1:.7+.3*Math.sin(t*s.ts+s.tw);
+    g.globalAlpha=s.a*tw;g.beginPath();g.arc(x,y,s.size*(1-.25*q),0,7);g.fill()}
+  g.globalAlpha=1;requestAnimationFrame(skyFrame)}
+requestAnimationFrame(skyFrame);
 
 els.randomBtn.addEventListener('click',randomDate);els.playBtn.addEventListener('click',()=>playing?stop():play());els.dateInput.addEventListener('change',generate);
 window.addEventListener('resize',()=>currentArrangement&&drawChart(currentArrangement,playing?clamp(audioCtx.currentTime-startAt,0,TRACK_SECONDS):-1));
