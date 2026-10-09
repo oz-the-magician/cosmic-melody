@@ -35,6 +35,10 @@ The tempo map breathes (accelerando, ritardando), yet every piece lasts exactly 
 
 Each phrase is fitted into the instrument's range as a whole, so melodies keep their shape. Only the selected ensemble is downloaded.
 
+## Languages
+
+The interface follows the browser language — Russian, English or Czech (Slovak browsers get Czech, everything else English). A RU / EN / CS switch in the header overrides it and is remembered.
+
 ## Run locally
 
 Browsers block audio loading from `file://`, so serve the folder over HTTP:
