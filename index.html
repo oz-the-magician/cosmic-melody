@@ -49,7 +49,7 @@ h1{position:absolute;left:0;right:0;top:calc(64px + 5svh);margin:0;text-align:ce
 h1 span{display:block;color:var(--cyan);text-shadow:0 0 12px rgba(0,229,255,.8),0 0 40px rgba(0,229,255,.45)}
 .chip{position:absolute;left:50%;top:calc(64px + 1.4svh);transform:translateX(-50%);font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--dim);padding:5px 14px;border:1px solid var(--line);white-space:nowrap}
 .chip i{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);margin-right:8px;vertical-align:1px}
-.stage{position:absolute;left:50%;top:63%;width:min(56svh,90vw);aspect-ratio:1;transform:translate(-50%,-50%);z-index:3}
+.stage{position:absolute;left:50%;top:59%;width:min(50svh,90vw);aspect-ratio:1;transform:translate(-50%,-50%);z-index:3}
 .stage canvas{position:absolute;inset:0;width:100%;height:100%}
 button.orb{position:absolute;left:50%;top:50%;width:36%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;cursor:pointer;
   border:1px solid rgba(0,229,255,.6);color:var(--cyan);font:600 clamp(13px,1.7svh,17px) 'Exo 2',sans-serif;letter-spacing:.22em;text-transform:uppercase;
@@ -64,9 +64,9 @@ button.orb.on{color:var(--warn);border-color:rgba(255,204,0,.6);text-shadow:0 0 
 .tag::before{top:-1px;left:-1px;border-width:2px 0 0 2px}.tag::after{bottom:-1px;right:-1px;border-width:0 2px 2px 0}
 .tag b{display:block;margin-top:4px;font:600 clamp(16px,1.6vw,22px)/1.15 'Exo 2',sans-serif;letter-spacing:.06em;color:var(--cyan);text-shadow:0 0 10px rgba(0,229,255,.6);text-transform:none}
 .tag.g b{color:var(--green);text-shadow:0 0 10px rgba(0,255,157,.6)}.tag.w b{color:var(--warn);text-shadow:0 0 10px rgba(255,204,0,.5)}
-.tag.l{right:calc(50% + min(28svh,45vw) + 24px);top:52%;text-align:right}
-.tag.r{left:calc(50% + min(28svh,45vw) + 24px);top:48%}
-.tag.r2{left:calc(50% + min(25svh,41vw) + 24px);top:70%}
+.tag.l{right:calc(50% + min(25svh,45vw) + 24px);top:52%;text-align:right}
+.tag.r{left:calc(50% + min(25svh,45vw) + 24px);top:48%}
+.tag.r2{left:calc(50% + min(22svh,41vw) + 24px);top:70%}
 .controls{position:absolute;left:0;right:0;bottom:3.5svh;display:flex;justify-content:center;align-items:center;gap:14px;flex-wrap:wrap;z-index:4;padding:0 16px}
 .field{display:flex;align-items:center;gap:10px;font-size:10px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase}
 input[type=datetime-local]{padding:9px 12px;border:1px solid var(--line);background:var(--surf);color:var(--cyan);font:500 14px 'JetBrains Mono',monospace;color-scheme:dark}
@@ -77,7 +77,11 @@ input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 12px rgba(0,229
 .hud-btn.solid{background:var(--cyan);color:#001018}.hud-btn.solid:hover{background:#5ff0ff}
 .hud-btn[aria-disabled=true]{opacity:.4;pointer-events:none}
 :focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
-.status{position:absolute;left:0;right:0;bottom:calc(3.5svh + 52px);text-align:center;font-size:11px;letter-spacing:.15em;color:var(--warn);z-index:4}
+.ens-row{position:absolute;left:0;right:0;bottom:calc(3.5svh + 60px);display:flex;justify-content:center;align-items:center;gap:12px;z-index:4;flex-wrap:wrap;padding:0 16px}
+.ens-label{font-size:10px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase}
+#ensembles{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+#ensembles .hud-btn{padding:9px 18px;font-size:10.5px}
+.status{position:absolute;left:0;right:0;bottom:calc(3.5svh + 112px);text-align:center;font-size:11px;letter-spacing:.15em;color:var(--warn);z-index:4}
 
 /* эпохи: шкала прогресса */
 .more{position:relative;z-index:2;max-width:760px;margin:0 auto;padding:12svh 20px 72px}
@@ -100,13 +104,14 @@ footer a{color:var(--cyan)}
 @media (max-width:760px){
   .bar{padding:12px 16px}.brand small{display:none}
   .hero{height:auto;min-height:0;display:flex;flex-direction:column;align-items:center;gap:18px;padding:80px 12px 32px;overflow:visible}
-  .chip,h1,.stage,.tags,.controls,.status{position:static;transform:none}
+  .chip,h1,.stage,.tags,.controls,.status,.ens-row{position:static;transform:none}
   .chip{font-size:9px;white-space:normal;text-align:center}
   h1{font-size:clamp(30px,10vw,54px)}
   .stage{width:min(92vw,440px);position:relative;left:auto;top:auto}
   .tags{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
   .tag{position:static;text-align:left!important;padding:8px 10px}.tag b{font-size:15px}
   .controls{padding:0}
+  .ens-row{position:static;padding:0}
   .field span{display:none}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.glitchbar{display:none}}
@@ -126,6 +131,7 @@ footer a{color:var(--cyan)}
   </div>
   <div class="tags" id="reading"></div>
   <div id="status" class="status" aria-live="polite"></div>
+  <div class="ens-row" role="group" aria-label="Группа инструментов"><span class="ens-label">// Состав</span><div id="ensembles"></div></div>
   <div class="controls">
     <label class="field" for="dateInput"><span>// Дата</span><input id="dateInput" type="datetime-local" step="60"></label>
     <button id="randomBtn" class="hud-btn">Случайная дата</button>
@@ -140,7 +146,7 @@ footer a{color:var(--cyan)}
 </section>
 <script>
 'use strict';
-const SAMPLE_MAP={"lead":[{"file":"samples/piano/Cs3.mp3","rootMidi":49,"sampleName":"Upright Piano Cs3","program":0,"loop":false,"loopStart":0,"loopEnd":0},{"file":"samples/piano/Cs4.mp3","rootMidi":61,"sampleName":"Upright Piano Cs4","program":0,"loop":false,"loopStart":0,"loopEnd":0},{"file":"samples/piano/Cs5.mp3","rootMidi":73,"sampleName":"Upright Piano Cs5","program":0,"loop":false,"loopStart":0,"loopEnd":0},{"file":"samples/piano/Cs6.mp3","rootMidi":85,"sampleName":"Upright Piano Cs6","program":0,"loop":false,"loopStart":0,"loopEnd":0}],"pad":[{"file":"samples/strings/C3.mp3","rootMidi":48,"sampleName":"String Ensemble C3","program":48,"loop":true,"loopStart":1.49927,"loopEnd":4.95528},{"file":"samples/strings/C4.mp3","rootMidi":60,"sampleName":"String Ensemble C4","program":48,"loop":true,"loopStart":1.49982,"loopEnd":4.98712},{"file":"samples/strings/C5.mp3","rootMidi":72,"sampleName":"String Ensemble C5","program":48,"loop":true,"loopStart":1.50029,"loopEnd":4.95154},{"file":"samples/strings/B5.mp3","rootMidi":83,"sampleName":"String Ensemble B5","program":48,"loop":true,"loopStart":1.5,"loopEnd":5.00365}],"bass":[{"file":"samples/bass/C2.mp3","rootMidi":36,"sampleName":"Contrabass Pizzicato C2","program":32,"loop":false,"loopStart":0,"loopEnd":0},{"file":"samples/bass/Gs2.mp3","rootMidi":44,"sampleName":"Contrabass Pizzicato Gs2","program":32,"loop":false,"loopStart":0,"loopEnd":0},{"file":"samples/bass/Cs3.mp3","rootMidi":49,"sampleName":"Contrabass Pizzicato Cs3","program":32,"loop":false,"loopStart":0,"loopEnd":0}],"arp":[{"file":"samples/harp/B3.mp3","rootMidi":59,"sampleName":"Harp B3","program":46,"loop":false,"loopStart":0,"loopEnd":0},{"file":"samples/harp/C5.mp3","rootMidi":72,"sampleName":"Harp C5","program":46,"loop":false,"loopStart":0,"loopEnd":0},{"file":"samples/harp/B5.mp3","rootMidi":83,"sampleName":"Harp B5","program":46,"loop":false,"loopStart":0,"loopEnd":0}],"impact":[{"file":"samples/percussion/timpani_Cs2.mp3","rootMidi":37,"sampleName":"Timpani Cs2","program":47,"loop":false,"loopStart":0,"loopEnd":0}],"pulse":[{"file":"samples/percussion/wood_F6.mp3","rootMidi":89,"sampleName":"Wood Click F6","program":115,"loop":false,"loopStart":0,"loopEnd":0}]};
+const ENSEMBLES={"orchestra":{"name":"Оркестр","voices":{"lead":[{"file":"samples/piano/Cs3.mp3","rootMidi":49,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0},{"file":"samples/piano/Cs4.mp3","rootMidi":61,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0},{"file":"samples/piano/Cs5.mp3","rootMidi":73,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0},{"file":"samples/piano/Cs6.mp3","rootMidi":85,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0}],"pad":[{"file":"samples/strings/C3.mp3","rootMidi":48,"fixed":false,"loop":true,"loopStart":1.49927,"loopEnd":4.95528},{"file":"samples/strings/C4.mp3","rootMidi":60,"fixed":false,"loop":true,"loopStart":1.49982,"loopEnd":4.98712},{"file":"samples/strings/C5.mp3","rootMidi":72,"fixed":false,"loop":true,"loopStart":1.50029,"loopEnd":4.95154},{"file":"samples/strings/B5.mp3","rootMidi":83,"fixed":false,"loop":true,"loopStart":1.5,"loopEnd":5.00365}],"bass":[{"file":"samples/bass/C2.mp3","rootMidi":36,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0},{"file":"samples/bass/Gs2.mp3","rootMidi":44,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0},{"file":"samples/bass/Cs3.mp3","rootMidi":49,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0}],"arp":[{"file":"samples/harp/B3.mp3","rootMidi":59,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0},{"file":"samples/harp/C5.mp3","rootMidi":72,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0},{"file":"samples/harp/B5.mp3","rootMidi":83,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0}],"impact":[{"file":"samples/percussion/timpani_Cs2.mp3","rootMidi":37,"fixed":true,"loop":false,"loopStart":0,"loopEnd":0}],"pulse":[{"file":"samples/percussion/wood_F6.mp3","rootMidi":89,"fixed":true,"loop":false,"loopStart":0,"loopEnd":0}]}},"stardust":{"name":"Звёздная пыль","voices":{"lead":[{"rootMidi":60,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/lead/C4.mp3"},{"rootMidi":64,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/lead/E4.mp3"},{"rootMidi":69,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/lead/A4.mp3"},{"rootMidi":72,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/lead/C5.mp3"},{"rootMidi":76,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/lead/E5.mp3"},{"rootMidi":81,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/lead/A5.mp3"}],"pad":[{"rootMidi":48,"fixed":false,"loop":true,"loopStart":1.39687,"loopEnd":4.55596,"file":"samples/stardust/pad/C3.mp3"},{"rootMidi":54,"fixed":false,"loop":true,"loopStart":1.40249,"loopEnd":4.61961,"file":"samples/stardust/pad/Fs3.mp3"},{"rootMidi":60,"fixed":false,"loop":true,"loopStart":1.39989,"loopEnd":4.59472,"file":"samples/stardust/pad/C4.mp3"},{"rootMidi":66,"fixed":false,"loop":true,"loopStart":1.4012,"loopEnd":4.6405,"file":"samples/stardust/pad/Fs4.mp3"},{"rootMidi":72,"fixed":false,"loop":true,"loopStart":1.39943,"loopEnd":4.64755,"file":"samples/stardust/pad/C5.mp3"},{"rootMidi":78,"fixed":false,"loop":true,"loopStart":1.39971,"loopEnd":4.55447,"file":"samples/stardust/pad/Fs5.mp3"},{"rootMidi":84,"fixed":false,"loop":true,"loopStart":1.4,"loopEnd":4.60721,"file":"samples/stardust/pad/C6.mp3"}],"arp":[{"rootMidi":79,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/arp/G5.mp3"},{"rootMidi":84,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/arp/C6.mp3"},{"rootMidi":91,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/arp/G6.mp3"},{"rootMidi":96,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/arp/C7.mp3"}],"bass":[{"rootMidi":36,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/bass/C2.mp3"},{"rootMidi":43,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/bass/G2.mp3"},{"rootMidi":50,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/bass/D3.mp3"},{"rootMidi":57,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/bass/A3.mp3"}],"impact":[{"rootMidi":60,"fixed":true,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/impact/impact.mp3"}],"pulse":[{"rootMidi":60,"fixed":true,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/pulse/pulse.mp3"}]}},"brass":{"name":"Медь","voices":{"lead":[{"rootMidi":46,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/lead/As2.mp3"},{"rootMidi":50,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/lead/D3.mp3"},{"rootMidi":53,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/lead/F3.mp3"},{"rootMidi":57,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/lead/A3.mp3"},{"rootMidi":60,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/lead/C4.mp3"},{"rootMidi":74,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/lead/D5.mp3"},{"rootMidi":77,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/lead/F5.mp3"}],"pad":[{"rootMidi":41,"fixed":false,"loop":true,"loopStart":1.40098,"loopEnd":4.61995,"file":"samples/brass/pad/F2.mp3"},{"rootMidi":46,"fixed":false,"loop":true,"loopStart":1.39961,"loopEnd":4.60664,"file":"samples/brass/pad/As2.mp3"},{"rootMidi":50,"fixed":false,"loop":true,"loopStart":1.39887,"loopEnd":4.60658,"file":"samples/brass/pad/D3.mp3"},{"rootMidi":53,"fixed":false,"loop":true,"loopStart":1.40005,"loopEnd":4.60705,"file":"samples/brass/pad/F3.mp3"},{"rootMidi":60,"fixed":false,"loop":true,"loopStart":1.3995,"loopEnd":4.57959,"file":"samples/brass/pad/C4.mp3"},{"rootMidi":65,"fixed":false,"loop":true,"loopStart":1.40066,"loopEnd":4.59918,"file":"samples/brass/pad/F4.mp3"}],"bass":[{"rootMidi":34,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/bass/As1.mp3"},{"rootMidi":39,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/bass/Ds2.mp3"},{"rootMidi":46,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/bass/As2.mp3"},{"rootMidi":53,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/bass/F3.mp3"}],"arp":[{"rootMidi":55,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/arp/G3.mp3"},{"rootMidi":65,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/arp/F4.mp3"},{"rootMidi":72,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/arp/C5.mp3"},{"rootMidi":79,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/arp/G5.mp3"},{"rootMidi":89,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/arp/F6.mp3"}],"impact":[{"rootMidi":60,"fixed":true,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/impact/impact.mp3"}],"pulse":[{"rootMidi":60,"fixed":true,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/pulse/pulse.mp3"}]}},"chamber":{"name":"Камерный","voices":{"lead":[{"rootMidi":58,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/lead/As3.mp3"},{"rootMidi":62,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/lead/D4.mp3"},{"rootMidi":65,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/lead/F4.mp3"},{"rootMidi":70,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/lead/As4.mp3"},{"rootMidi":74,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/lead/D5.mp3"},{"rootMidi":77,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/lead/F5.mp3"},{"rootMidi":82,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/lead/As5.mp3"}],"pad":[{"rootMidi":47,"fixed":false,"loop":true,"loopStart":1.40061,"loopEnd":4.56701,"file":"samples/chamber/pad/B2.mp3"},{"rootMidi":53,"fixed":false,"loop":true,"loopStart":1.39973,"loopEnd":4.63018,"file":"samples/chamber/pad/F3.mp3"},{"rootMidi":60,"fixed":false,"loop":true,"loopStart":1.40186,"loopEnd":4.56494,"file":"samples/chamber/pad/C4.mp3"},{"rootMidi":65,"fixed":false,"loop":true,"loopStart":1.40025,"loopEnd":4.56283,"file":"samples/chamber/pad/F4.mp3"},{"rootMidi":72,"fixed":false,"loop":true,"loopStart":1.39993,"loopEnd":4.58866,"file":"samples/chamber/pad/C5.mp3"},{"rootMidi":79,"fixed":false,"loop":true,"loopStart":1.39984,"loopEnd":4.64891,"file":"samples/chamber/pad/G5.mp3"}],"bass":[{"rootMidi":38,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/bass/D2.mp3"},{"rootMidi":45,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/bass/A2.mp3"},{"rootMidi":52,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/bass/E3.mp3"},{"rootMidi":57,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/bass/A3.mp3"}],"arp":[{"rootMidi":67,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/arp/G4.mp3"},{"rootMidi":72,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/arp/C5.mp3"},{"rootMidi":79,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/arp/G5.mp3"},{"rootMidi":84,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/arp/C6.mp3"},{"rootMidi":91,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/arp/G6.mp3"}],"impact":[{"rootMidi":60,"fixed":true,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/impact/impact.mp3"}],"pulse":[{"rootMidi":60,"fixed":true,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/pulse/pulse.mp3"}]}}};
 const TRACK_SECONDS=30,PPQ=480,MIDI_LOW=48,MIDI_HIGH=84;
 const EPOCHS=[{name:'Рекомбинация',temp:3000,sec:3},{name:'Первые звёзды',temp:57,sec:7.5},{name:'Первые галактики',temp:30,sec:11},{name:'Пик звездообразования',temp:9,sec:16},{name:'Эпоха тёмной энергии',temp:6,sec:20},{name:'Рождение Солнца',temp:4,sec:24},{name:'Сегодня',temp:2.725,sec:30}];
 const MODES=[{name:'Ионийский',intervals:[0,2,4,5,7,9,11]},{name:'Дорийский',intervals:[0,2,3,5,7,9,10]},{name:'Фригийский',intervals:[0,1,3,5,7,8,10]},{name:'Лидийский',intervals:[0,2,4,6,7,9,11]},{name:'Миксолидийский',intervals:[0,2,4,5,7,9,10]},{name:'Эолийский',intervals:[0,2,3,5,7,8,10]},{name:'Гармонический минор',intervals:[0,2,3,5,7,8,11]},{name:'Лидийский доминантовый',intervals:[0,2,4,6,7,9,10]}];
@@ -156,10 +162,7 @@ function skeletonPitches(){const logs=EPOCHS.map(e=>Math.log10(e.temp)),lo=Math.
 function makeScalePitches(rootPc,intervals,min=24,max=108){const out=[];for(let m=min;m<=max;m++){if(intervals.some(i=>mod(rootPc+i,12)===mod(m,12)))out.push(m)}return out}function nearestScaleIndex(scale,pitch){let best=0,dist=999;scale.forEach((p,i)=>{const d=Math.abs(p-pitch);if(d<dist){dist=d;best=i}});return best}function snapToScale(midi,rootPc,intervals){const scale=makeScalePitches(rootPc,intervals,0,127);return scale[nearestScaleIndex(scale,midi)]}function scaleDegreePitch(rootPc,intervals,degree,octave){const d=Math.floor(degree),oct=octave+Math.floor(d/7),interval=intervals[mod(d,7)];return 12*(oct+1)+rootPc+interval}function buildChord(rootPc,intervals,degree,octave,seventh=false){return(seventh?[degree,degree+2,degree+4,degree+6]:[degree,degree+2,degree+4]).map(d=>scaleDegreePitch(rootPc,intervals,d,octave))}
 function quantizeBeat(beat,q=2){return Math.round(beat/q)*q}function beatToSec(beat,tempo){return beat*60/tempo}function addEvent(events,voice,midi,beat,durBeat,vel,tempo){const start=beatToSec(beat,tempo),dur=beatToSec(durBeat,tempo);if(start>=TRACK_SECONDS||dur<=0)return;events.push({voice,midi:clamp(Math.round(midi),0,127),beat,durBeat,start,dur:Math.min(dur,TRACK_SECONDS-start),vel:clamp(Math.round(vel),1,127)})}
 function buildBeatSections(sky){const totalBeats=TRACK_SECONDS*sky.tempo/60,secMarks=[0,...EPOCHS.map(e=>e.sec)];let beats=secMarks.map((sec,i)=>i===0?0:i===secMarks.length-1?totalBeats:quantizeBeat(sec/TRACK_SECONDS*totalBeats,2));for(let i=1;i<beats.length-1;i++)beats[i]=Math.max(beats[i-1]+2,Math.min(beats[i],totalBeats-2*(beats.length-1-i)));beats[beats.length-1]=totalBeats;const names=['Большой взрыв',...EPOCHS.slice(0,-1).map(e=>e.name)];return names.map((name,i)=>({name,beatStart:beats[i],beatEnd:beats[i+1],start:beatToSec(beats[i],sky.tempo),end:beatToSec(beats[i+1],sky.tempo),epoch:i===0?null:i-1}))}
-function buildArrangement(dt){const sky=skyParams(dt),mode=MODES[sky.modeIdx],skeleton=skeletonPitches(),sections=buildBeatSections(sky),scale=makeScalePitches(sky.rootPc,mode.intervals,24,108),events=[],scenes=[];const progressions=[[0,3,4,5,1,4,0],[0,5,3,4,0,1,4],[0,2,5,3,4,1,0],[0,4,5,3,1,4,0]],progression=progressions[Math.floor(sky.lambda/90)%4],rotation=(sky.modeIdx+Math.floor(sky.phase*16))%progression.length;const motifs=[[0,1,2,1],[0,2,1,-1],[0,-1,1,2],[0,3,2,1],[0,1,-1,0],[0,-2,-1,1],[0,1,3,2],[0,2,4,3]],motif=motifs[(sky.modeIdx+Math.floor(sky.phase*32))%motifs.length],arpPattern=[[0,1,2,1],[2,1,0,1],[0,2,1,3],[1,0,2,3]][Math.floor(sky.phase*16)%4];addEvent(events,'impact',45,0,.9,112,sky.tempo);
-sections.forEach((sec,si)=>{const durB=sec.beatEnd-sec.beatStart,degree=progression[(si+rotation)%progression.length],chord=buildChord(sky.rootPc,mode.intervals,degree,3,sky.illum>.62),chordHigh=chord.map(p=>p+12);chord.forEach((p,j)=>addEvent(events,'pad',p,sec.beatStart,Math.max(.5,durB-.25),30+Math.round(sky.illum*22)-j*2,sky.tempo));for(let b=sec.beatStart;b<sec.beatEnd-.25;b+=2){const bassPattern=[degree,degree+4,degree+7,degree+4],idx=Math.floor((b-sec.beatStart)/2)%4;addEvent(events,'bass',scaleDegreePitch(sky.rootPc,mode.intervals,bassPattern[idx],1),b,1.45,52+Math.round(sky.illum*18),sky.tempo)}const arpStep=sky.tempo>=126?.5:1;for(let b=sec.beatStart+1;b<sec.beatEnd-.25;b+=arpStep){const idx=Math.floor((b-sec.beatStart)/arpStep)%arpPattern.length,src=chordHigh.concat(chordHigh.map(p=>p+12));addEvent(events,'arp',src[arpPattern[idx]%src.length],b,arpStep*.48,38+Math.round(sky.illum*24),sky.tempo)}if(si>0&&sec.epoch!==null){const base=skeleton[sec.epoch].baseMidi+sky.octShift,center=snapToScale(base,sky.rootPc,mode.intervals),centerIdx=nearestScaleIndex(scale,center);for(let k=0;k<4;k++){let idx=centerIdx+motif[k%motif.length];if(sec.epoch===EPOCHS.length-2&&k===3){const today=snapToScale(skeleton[skeleton.length-1].baseMidi+sky.octShift,sky.rootPc,mode.intervals);idx=nearestScaleIndex(scale,today)}const rel=quantizeBeat((k+.5)*durB/4,.5),b=clamp(sec.beatStart+rel,sec.beatStart+.5,sec.beatEnd-1);addEvent(events,'lead',scale[clamp(idx,0,scale.length-1)],b,Math.min(1.25,Math.max(.55,durB/5)),sky.velocity,sky.tempo)}}for(let b=sec.beatStart+4;b<sec.beatEnd-.25;b+=4)addEvent(events,'pulse',72,b,.08,24+Math.round(sky.illum*15),sky.tempo);const leadCenter=sec.epoch===null?'—':midiName(snapToScale(skeleton[sec.epoch].baseMidi+sky.octShift,sky.rootPc,mode.intervals));scenes.push({name:sec.name,start:sec.start,end:sec.end,time:`${sec.start.toFixed(2)}–${sec.end.toFixed(2)} сек`,beats:`${sec.beatStart.toFixed(1)}–${sec.beatEnd.toFixed(1)}`,chord:chord.map(midiName).join(' · '),leadCenter})});events.sort((a,b)=>a.beat-b.beat||a.midi-b.midi);return{sky,mode,events,scenes,totalBeats:TRACK_SECONDS*sky.tempo/60}}
-function nearestSample(voice,midi){const list=buffers[voice]||[];let best=list[0],dist=999;for(const s of list){const d=Math.abs(s.rootMidi-midi);if(d<dist){dist=d;best=s}}return best}
-function generateMidiBlob(arr){const endTick=Math.round(arr.totalBeats*PPQ),ev=[],tempoMicro=Math.round(60000000/arr.sky.tempo);ev.push({tick:0,order:0,data:[0xff,0x51,0x03,(tempoMicro>>16)&255,(tempoMicro>>8)&255,tempoMicro&255]});Object.entries(VOICES).forEach(([voice,v])=>{if(v.channel!==9)ev.push({tick:0,order:1,data:[0xc0+v.channel,v.program]})});arr.events.forEach(e=>addMidiNote(ev,VOICES[e.voice].channel,e.midi,e.beat,e.durBeat,e.vel));ev.push({tick:endTick,order:99,data:[0xff,0x2f,0]});ev.sort((a,b)=>a.tick-b.tick||a.order-b.order);const track=[];let prev=0;for(const e of ev){track.push(...varLen(Math.max(0,e.tick-prev)),...e.data);prev=e.tick}const bytes=[...ascii('MThd'),...u32(6),...u16(0),...u16(1),...u16(PPQ),...ascii('MTrk'),...u32(track.length),...track];return new Blob([new Uint8Array(bytes)],{type:'audio/midi'})}function addMidiNote(out,ch,pitch,beat,durBeat,vel){const st=Math.round(beat*PPQ),en=Math.round((beat+durBeat)*PPQ);if(en<=st)return;out.push({tick:st,order:2,data:[0x90+ch,pitch,vel]});out.push({tick:en,order:1,data:[0x80+ch,pitch,0]})}function ascii(s){return[...s].map(ch=>ch.charCodeAt(0))}function u16(n){return[(n>>8)&255,n&255]}function u32(n){return[(n>>24)&255,(n>>16)&255,(n>>8)&255,n&255]}function varLen(v){let b=v&0x7f,bytes=[];while((v>>=7)){b<<=8;b|=((v&0x7f)|0x80)}while(true){bytes.push(b&0xff);if(b&0x80)b>>=8;else break}return bytes}function fileBase(dt){return`cosmic-melody_${dt.year}-${pad2(dt.month)}-${pad2(dt.day)}_${pad2(dt.hour)}-${pad2(dt.minute)}_UTC`}
+function generateMidiBlob(arr){const endTick=Math.round(arr.totalBeats*PPQ),ev=[],tempoMicro=Math.round(60000000/arr.sky.tempo);ev.push({tick:0,order:0,data:[0xff,0x51,0x03,(tempoMicro>>16)&255,(tempoMicro>>8)&255,tempoMicro&255]});Object.entries(VOICES).forEach(([voice,v])=>{if(v.channel!==9)ev.push({tick:0,order:1,data:[0xc0+v.channel,(ENS_CFG[ensemble].gm[voice]??v.program)]})});arr.events.forEach(e=>addMidiNote(ev,VOICES[e.voice].channel,e.midi,e.beat,e.durBeat,e.vel));ev.push({tick:endTick,order:99,data:[0xff,0x2f,0]});ev.sort((a,b)=>a.tick-b.tick||a.order-b.order);const track=[];let prev=0;for(const e of ev){track.push(...varLen(Math.max(0,e.tick-prev)),...e.data);prev=e.tick}const bytes=[...ascii('MThd'),...u32(6),...u16(0),...u16(1),...u16(PPQ),...ascii('MTrk'),...u32(track.length),...track];return new Blob([new Uint8Array(bytes)],{type:'audio/midi'})}function addMidiNote(out,ch,pitch,beat,durBeat,vel){const st=Math.round(beat*PPQ),en=Math.round((beat+durBeat)*PPQ);if(en<=st)return;out.push({tick:st,order:2,data:[0x90+ch,pitch,vel]});out.push({tick:en,order:1,data:[0x80+ch,pitch,0]})}function ascii(s){return[...s].map(ch=>ch.charCodeAt(0))}function u16(n){return[(n>>8)&255,n&255]}function u32(n){return[(n>>24)&255,(n>>16)&255,(n>>8)&255,n&255]}function varLen(v){let b=v&0x7f,bytes=[];while((v>>=7)){b<<=8;b|=((v&0x7f)|0x80)}while(true){bytes.push(b&0xff);if(b&0x80)b>>=8;else break}return bytes}function fileBase(dt){return`cosmic-melody_${dt.year}-${pad2(dt.month)}-${pad2(dt.day)}_${pad2(dt.hour)}-${pad2(dt.minute)}_UTC`}
 function randomDate(){const y=1900+Math.floor(Math.random()*180),m=1+Math.floor(Math.random()*12),max=new Date(Date.UTC(y,m,0)).getUTCDate(),d=1+Math.floor(Math.random()*max),h=Math.floor(Math.random()*24),mi=Math.floor(Math.random()*60);els.dateInput.value=`${y}-${pad2(m)}-${pad2(d)}T${pad2(h)}:${pad2(mi)}`;generate()}
 const VOICES={
  lead:{channel:0,program:0,gain:.62,attack:.006,release:1.4,ring:1.6,pan:0,send:.32,human:.014},
@@ -173,7 +176,124 @@ let midiUrl=null,currentArrangement=null,audioCtx=null,buffers={},active=[],bus=
 
 function rng(seed){let t=seed>>>0;return()=>{t+=0x6D2B79F5;let r=Math.imul(t^t>>>15,1|t);r^=r+Math.imul(r^r>>>7,61|r);return((r^r>>>14)>>>0)/4294967296}}
 const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
-function generate(){try{if(playing)stop();gatherStars(0);lastT=-1;const dt=parseDatetimeLocal(els.dateInput.value);currentArrangement=buildArrangement(dt);render(currentArrangement);const mb=generateMidiBlob(currentArrangement);if(midiUrl)URL.revokeObjectURL(midiUrl);midiUrl=URL.createObjectURL(mb);els.downloadMidi.href=midiUrl;els.downloadMidi.download=fileBase(dt)+'.mid';els.downloadMidi.setAttribute('aria-disabled','false');setStatus('')}catch(e){console.error(e);setStatus(e.message||'Не получилось разобрать дату. Проверьте формат.')}}
+/* ================= группы инструментов ================= */
+// диапазоны, в которые укладываются фразы каждого голоса, и поправки к звуку
+const ENS_CFG={
+ orchestra:{label:'Оркестр',range:{lead:[57,86],pad:[45,76],bass:[33,52],arp:[60,88]},tune:{},gm:{lead:0,pad:48,bass:32,arp:46}},
+ stardust:{label:'Звёздная пыль',range:{lead:[60,86],pad:[48,79],bass:[36,57],arp:[79,98]},
+   tune:{lead:{attack:.08,release:.9,ring:.4,gain:.5},pad:{gain:.22},arp:{gain:.26,ring:2.2},impact:{gain:.55},pulse:{gain:.18}},gm:{lead:73,pad:19,bass:45,arp:9}},
+ brass:{label:'Медь',range:{lead:[50,77],pad:[41,65],bass:[30,53],arp:[55,89]},
+   tune:{lead:{attack:.07,release:.8,ring:.4,gain:.48},pad:{gain:.2,attack:1.1},bass:{gain:.5},arp:{gain:.32},impact:{gain:.4},pulse:{gain:.22}},gm:{lead:60,pad:57,bass:58,arp:12}},
+ chamber:{label:'Камерный',range:{lead:[58,84],pad:[45,79],bass:[36,57],arp:[67,93]},
+   tune:{lead:{attack:.06,release:.8,ring:.4,gain:.5},pad:{gain:.26},bass:{gain:.55},arp:{gain:.3},impact:{gain:.45},pulse:{gain:.2}},gm:{lead:71,pad:42,bass:70,arp:13}}};
+let ensemble=(()=>{try{return ENS_CFG[localStorage.getItem('cm-ens')]?localStorage.getItem('cm-ens'):'orchestra'}catch(e){return'orchestra'}})();
+const voiceCfg=(ens,voice)=>({...VOICES[voice],...(ENS_CFG[ens].tune[voice]||{})});
+
+/* ================= композиция ================= */
+// мотив даты: цифры дня, месяца и года → шаги по ладу и ритм
+function dateMotif(dt){
+  const digits=(String(dt.day).padStart(2,'0')+String(dt.month).padStart(2,'0')+String(dt.year%100).padStart(2,'0')).split('').map(Number);
+  const STEP=[0,1,2,-1,3,-2,1,4,-1,-3],RHY=[1,.5,1.5,.5,1,1,.5,1.5,1,.5];
+  const deg=[0],dur=[];for(let i=1;i<6;i++)deg.push(clamp(deg[i-1]+(STEP[digits[i]]||1),-3,7));
+  for(let i=0;i<6;i++)dur.push(RHY[digits[i]]);dur[5]=Math.max(dur[5],1.5);// последняя нота длиннее — фраза дышит
+  if(deg[5]===deg[4])deg[5]+=deg[4]>2?-1:1;
+  return{deg,dur,digits}}
+// голосоведение: ближайшее обращение аккорда к предыдущему
+function voiceChord(pcs,prev,lo=50,hi=74){
+  const opts=[];for(let inv=0;inv<pcs.length;inv++){const order=pcs.slice(inv).concat(pcs.slice(0,inv));for(let base=lo-12;base<=hi;base++){if(mod(base,12)!==order[0])continue;const v=[base];for(let k=1;k<order.length;k++){let p=v[k-1]+1;while(mod(p,12)!==order[k])p++;v.push(p)}if(v[0]>=lo&&v[v.length-1]<=hi)opts.push(v)}}
+  if(!prev||!opts.length)return opts.sort((a,b)=>Math.abs(a[0]-58)-Math.abs(b[0]-58))[0]||pcs.map(p=>60+p);
+  const cost=v=>v.reduce((s,p,i)=>s+Math.abs(p-(prev[Math.min(i,prev.length-1)])),0);return opts.sort((a,b)=>cost(a)-cost(b))[0]}
+function buildArrangement(dt){
+  const sky=skyParams(dt);sky.tempo=64+(sky.hourFloat/24)*28;// спокойный темп 64–92
+  const mode=MODES[sky.modeIdx],iv=mode.intervals,root=sky.rootPc,sections=buildBeatSections(sky),scale=makeScalePitches(root,iv,24,108);
+  const T=sky.tempo,ill=sky.illum,events=[],scenes=[],mot=dateMotif(dt);
+  const add=(v,m,b,d,vel)=>addEvent(events,v,m,b,d,vel,T);
+  const pcOf=d=>mod(root+iv[mod(d,7)],12);
+  const triad=(d,kind)=>kind==='sus2'?[pcOf(d),pcOf(d+1),pcOf(d+4)]:kind==='sus4'?[pcOf(d),pcOf(d+3),pcOf(d+4)]:kind==='7'?[pcOf(d),pcOf(d+2),pcOf(d+4),pcOf(d+6)]:[pcOf(d),pcOf(d+2),pcOf(d+4)];
+  // гармонический план: тоника → путешествие → доминанта → тоника
+  const PLANS=[[0,0,5,3,1,4,0],[0,0,3,5,4,1,0],[0,0,5,1,3,4,0],[0,0,2,5,3,4,0]],plan=PLANS[Math.floor(sky.lambda/90)%4];
+  const DYN=[44,50,60,72,92,58,78],dyn=i=>Math.round(DYN[i]*(.85+.25*ill));
+  // регистр главной темы остывает вместе со Вселенной: от 77 к 62
+  const centers=[0,77,74,71,72,64,62];
+  let prevVoicing=null;
+  const lead=(sec,si,degs,durs,{scale:sc=1,shift=0,invert=false,start=.5,vel=0,toTonic=false}={})=>{
+    const cIdx=nearestScaleIndex(scale,snapToScale(centers[si],root,iv));let b=sec.beatStart+start;
+    degs.forEach((d,k)=>{let dd=invert?-d:d;let idx=cIdx+dd+shift,m=scale[clamp(idx,0,scale.length-1)];
+      if(toTonic&&k===degs.length-1){m=snapToScale(m,root,[0]);}
+      const len=durs[k]*sc,last=k===degs.length-1,end=sec.beatEnd-(si===6?0:.25);if(b>=end)return;
+      add('lead',m,b,Math.min(len*(last?1.25:.95),Math.max(.25,end-b)),(vel||dyn(si))+(k===0?8:0)+(last?-4:0));b+=len})};
+  sections.forEach((sec,si)=>{
+    const L=sec.beatEnd-sec.beatStart,deg=plan[si];
+    const kind=(si===1||si===2)&&ill<.4?'sus2':si===5?'sus4':(si===3||si===4)&&ill>.55?'7':'';
+    const chordNames=[];
+    const placeChord=(d,k,b0,b1,vel)=>{const v=voiceChord(triad(d,k),prevVoicing);prevVoicing=v;v.forEach((p,j)=>add('pad',p,b0,b1-b0,vel-j*2));chordNames.push(v.map(midiName).join(' '));return v};
+    if(si===0){ // Большой взрыв: удар и низкий гул пустоты
+      add('impact',60,0,3,118);const r0=48+mod(root-48,12);add('pad',r0,.5,L-.5,dyn(0)-6);add('pad',r0+7,1.5,L-1.5,dyn(0)-10);add('bass',r0-12,.5,L-.5,dyn(0));chordNames.push(midiName(r0)+' '+midiName(r0+7));prevVoicing=[r0,r0+7,r0+12]}
+    else if(si===6){ // Рождение Солнца: доминанта → тоника, финальный аккорд
+      const mid=sec.beatStart+Math.max(2,quantizeBeat(L*.45,1));placeChord(4,'',sec.beatStart,mid,dyn(6));const fin=placeChord(0,'',mid,sec.beatEnd,dyn(6)+6);
+      add('bass',scaleDegreePitch(root,iv,4,1),sec.beatStart,mid-sec.beatStart,dyn(6));add('bass',scaleDegreePitch(root,iv,0,1),mid,sec.beatEnd-mid,dyn(6)+8);
+      add('impact',60,mid,3,96);
+      // восходящая арфа к финалу
+      const top=fin.map(p=>p+12).concat(fin.map(p=>p+24));top.forEach((p,k)=>add('arp',p,mid+k*.25,1.5,dyn(6)-10+k*2));
+      lead(sec,si,mot.deg,mot.dur.map(x=>x*.75),{start:0,toTonic:true,shift:0})}
+    else placeChord(deg,kind,sec.beatStart,sec.beatEnd,dyn(si)-14);
+    const ch=prevVoicing;
+    // бас: вступает с галактиками
+    if(si>=3&&si<=5){const step=si===5?4:2;for(let b=sec.beatStart;b<sec.beatEnd-.25;b+=step){const k=Math.round((b-sec.beatStart)/step)%2;add('bass',scaleDegreePitch(root,iv,deg+(k?4:0),1),b,step*.8,dyn(si)-4)}}
+    // искры: плотность растёт к пику, редеет в тёмной энергии; полнолуние — гуще
+    if(si>=1&&si<=5){const base=[0,2,1,1,.5,2][si],step=ill<.25&&base<2?base*2:base,src=ch.map(p=>p+12).concat(ch.map(p=>p+24)),pat=[0,2,1,3,2,4,1,5];
+      for(let b=sec.beatStart+(si===1?1:.5),k=0;b<sec.beatEnd-.2;b+=step,k++)add('arp',src[pat[(k+si)%pat.length]%src.length],b,step*.9,dyn(si)-18+(k%2?0:6))}
+    // пульс в сердце истории
+    if(si===3||si===4)for(let b=sec.beatStart+1;b<sec.beatEnd-.25;b+=2)add('pulse',60,b,.1,dyn(si)-30);
+    if(si===4)add('impact',60,sec.beatStart,2,100);
+    // главная тема: мотив даты в вариациях
+    if(si===1)lead(sec,si,mot.deg.slice(0,3),mot.dur.slice(0,3),{scale:1.5,start:1});           // первый свет: фрагмент, медленно
+    if(si===2)lead(sec,si,mot.deg,mot.dur,{start:.5});                                           // тема целиком
+    if(si===3){lead(sec,si,mot.deg.slice(0,4),mot.dur.slice(0,4),{start:0});lead(sec,si,mot.deg.slice(2),mot.dur.slice(2),{start:Math.min(L-2,mot.dur.slice(0,4).reduce((a,b)=>a+b,0)),shift:2})}// вопрос и ответ
+    if(si===4)lead(sec,si,mot.deg,mot.dur.map(x=>x*.8),{start:0,shift:7,vel:dyn(4)+6});         // кульминация октавой выше
+    if(si===5)lead(sec,si,mot.deg.slice(0,4),mot.dur.slice(0,4).map(x=>x*1.3),{start:.5,invert:true,vel:dyn(5)-6}); // тёмная энергия: тема вверх ногами
+    const leadCenter=si===0?'—':midiName(snapToScale(centers[si],root,iv));
+    scenes.push({name:sec.name,start:sec.start,end:sec.end,time:`${sec.start.toFixed(2)}–${sec.end.toFixed(2)} сек`,beats:`${sec.beatStart.toFixed(1)}–${sec.beatEnd.toFixed(1)}`,chord:chordNames.join(' → '),leadCenter});
+  });
+  events.sort((a,b)=>a.beat-b.beat||a.midi-b.midi);
+  return{sky,mode,events,scenes,motif:mot,totalBeats:TRACK_SECONDS*T/60}}
+
+/* ================= звук ================= */
+// укладываем каждую фразу целиком в диапазон инструмента (без ломки мелодии)
+function fitToEnsemble(events,ens){const R=ENS_CFG[ens].range,groups={};
+  events.forEach(e=>{if(!R[e.voice])return;const key=e.voice+'|'+Math.floor(e.start/ (e.voice==='lead'?2.5:4));(groups[key]=groups[key]||[]).push(e)});
+  const out=new Map();Object.values(groups).forEach(g=>{const [lo,hi]=R[g[0].voice],mean=g.reduce((s,e)=>s+e.midi,0)/g.length,mid=(lo+hi)/2;const sh=Math.round((mid-mean)/12)*12;
+    g.forEach(e=>{let m=e.midi+sh;while(m<lo)m+=12;while(m>hi)m-=12;out.set(e,m)})});
+  return events.map(e=>out.has(e)?{...e,midi:out.get(e)}:e)}
+async function loadSamples(ens=ensemble){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')await audioCtx.resume();if(!bus)bus=makeBus();
+  const B=buffers[ens]=buffers[ens]||{},jobs=[];
+  for(const[voice,list]of Object.entries(ENSEMBLES[ens].voices)){B[voice]=B[voice]||[];list.forEach((rec,i)=>{if(B[voice][i])return;jobs.push(fetch(rec.file).then(r=>{if(!r.ok)throw new Error(`Не загрузился ${rec.file}. Откройте страницу через сервер, а не двойным кликом по файлу.`);return r.arrayBuffer()}).then(a=>audioCtx.decodeAudioData(a)).then(buffer=>{B[voice][i]={...rec,buffer}}))})}
+  if(jobs.length){setStatus(`Загружаю: ${ENS_CFG[ens].label}…`);await Promise.all(jobs);setStatus('')}}
+function nearestSample(ens,voice,midi){const list=(buffers[ens]||{})[voice]||[];let best=list[0],dist=999;for(const s of list){const d=Math.abs(s.rootMidi-midi);if(d<dist){dist=d;best=s}}return best}
+function playSample(e,when,r,ens){const v=voiceCfg(ens,e.voice),s=nearestSample(ens,e.voice,e.midi);if(!s)return;const ctx=audioCtx,src=ctx.createBufferSource();src.buffer=s.buffer;src.playbackRate.value=s.fixed?1:Math.pow(2,(e.midi-s.rootMidi)/12);
+  const hold=Math.max(e.dur,v.ring),start=when+e.start+(r()*2-1)*v.human,len=s.buffer.duration/src.playbackRate.value;
+  let end=start+hold+v.release;if(s.loop&&s.loopEnd>s.loopStart+.2){src.loop=true;src.loopStart=s.loopStart;src.loopEnd=s.loopEnd}else end=Math.min(end,start+len);
+  const lvl=Math.max(.003,(e.vel/127)*v.gain*(.88+r()*.18)),g=ctx.createGain();
+  g.gain.setValueAtTime(.0001,start);g.gain.exponentialRampToValueAtTime(lvl,start+v.attack);
+  const relAt=Math.max(start+v.attack+.02,end-v.release);g.gain.setValueAtTime(lvl,relAt);g.gain.exponentialRampToValueAtTime(.0001,end);
+  let out=g;if(v.wide&&ctx.createStereoPanner){const p=ctx.createStereoPanner();p.pan.value=((e.midi%5)-2)*.22;g.connect(p);out=p}
+  src.connect(g);out.connect(bus.voices[e.voice]);src.start(Math.max(ctx.currentTime,start));src.stop(end+.05);active.push(src)}
+let playedEvents=[];
+async function play(){try{if(!currentArrangement)generate();const ens=ensemble;await loadSamples(ens);stop();const arr=currentArrangement,r=rng(Math.floor(arr.sky.jd*1000));
+  bus.master.gain.cancelScheduledValues(0);bus.master.gain.setValueAtTime(.9,audioCtx.currentTime);
+  startAt=audioCtx.currentTime+.2;playedEvents=fitToEnsemble(arr.events,ens);
+  playedEvents.forEach(e=>playSample(e.voice==='pad'?{...e,dur:e.dur+.9}:e,startAt,r,ens));
+  const endT=startAt+TRACK_SECONDS;bus.master.gain.setValueAtTime(.9,endT+1);bus.master.gain.linearRampToValueAtTime(0,endT+4.5);
+  gatherStars(1);playing=true;els.playBtn.textContent='Остановить';els.playBtn.classList.add('on');els.playhead.style.opacity=1;tick()}catch(e){console.error(e);setStatus(e.message||'Не получилось воспроизвести звук.')}}
+
+/* ================= переключатель групп ================= */
+function renderEnsembles(){const box=document.getElementById('ensembles');if(!box)return;
+  box.innerHTML=Object.entries(ENS_CFG).map(([k,c])=>`<button class="hud-btn ens${k===ensemble?' solid':''}" data-ens="${k}" aria-pressed="${k===ensemble}">${escapeHtml(c.label)}</button>`).join('');
+  box.querySelectorAll('button').forEach(b=>b.addEventListener('click',async()=>{const k=b.dataset.ens;if(k===ensemble)return;ensemble=k;try{localStorage.setItem('cm-ens',k)}catch(e){}
+    renderEnsembles();if(currentArrangement){const dt=parseDatetimeLocal(els.dateInput.value);updateMidi(dt)}if(playing){await play()}}))}
+function updateMidi(dt){const mb=generateMidiBlob(currentArrangement);if(midiUrl)URL.revokeObjectURL(midiUrl);midiUrl=URL.createObjectURL(mb);els.downloadMidi.href=midiUrl;els.downloadMidi.download=fileBase(dt)+'-'+ensemble+'.mid';els.downloadMidi.setAttribute('aria-disabled','false')}
+
+function generate(){try{if(playing)stop();gatherStars(0);lastT=-1;const dt=parseDatetimeLocal(els.dateInput.value);currentArrangement=buildArrangement(dt);render(currentArrangement);updateMidi(dt);setStatus('')}catch(e){console.error(e);setStatus(e.message||'Не получилось разобрать дату. Проверьте формат.')}}
 
 /* ---------- звук ---------- */
 function makeImpulse(ctx,sec,decay){const len=ctx.sampleRate*sec,b=ctx.createBuffer(2,len,ctx.sampleRate);for(let ch=0;ch<2;ch++){const d=b.getChannelData(ch);for(let i=0;i<len;i++){const x=i/len;d[i]=(Math.random()*2-1)*Math.pow(1-x,decay)*(i<ctx.sampleRate*.012?i/(ctx.sampleRate*.012):1)}}return b}
@@ -184,24 +304,6 @@ function makeBus(){const ctx=audioCtx,master=ctx.createGain(),comp=ctx.createDyn
   const voices={};for(const[name,v]of Object.entries(VOICES)){const pan=ctx.createStereoPanner?ctx.createStereoPanner():null,dry=ctx.createGain(),send=ctx.createGain();send.gain.value=v.send;
     if(pan){pan.pan.value=v.pan;dry.connect(pan).connect(master)}else dry.connect(master);dry.connect(send).connect(verbIn);voices[name]=dry}
   return{master,voices}}
-async function loadSamples(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')await audioCtx.resume();if(!bus)bus=makeBus();
-  const jobs=[];for(const[voice,list]of Object.entries(SAMPLE_MAP)){buffers[voice]=buffers[voice]||[];list.forEach((rec,i)=>{if(buffers[voice][i])return;jobs.push(fetch(rec.file).then(r=>{if(!r.ok)throw new Error(`Не загрузился ${rec.file}. Откройте страницу через сервер, а не двойным кликом по файлу.`);return r.arrayBuffer()}).then(a=>audioCtx.decodeAudioData(a)).then(buffer=>{buffers[voice][i]={...rec,buffer}}))})}
-  if(jobs.length){setStatus('Загружаю инструменты…');await Promise.all(jobs)}}
-function playSample(e,when,r){const v=VOICES[e.voice],s=nearestSample(e.voice,e.midi);if(!s)return;const ctx=audioCtx,src=ctx.createBufferSource();src.buffer=s.buffer;src.playbackRate.value=Math.pow(2,(e.midi-s.rootMidi)/12);
-  const hold=Math.max(e.dur,v.ring),start=when+e.start+(r()*2-1)*v.human,len=s.buffer.duration/src.playbackRate.value;
-  let end=start+hold+v.release;if(s.loop&&s.loopEnd>s.loopStart+.2){src.loop=true;src.loopStart=s.loopStart;src.loopEnd=s.loopEnd}else end=Math.min(end,start+len);
-  const lvl=Math.max(.003,(e.vel/127)*v.gain*(.86+r()*.22)),g=ctx.createGain();
-  g.gain.setValueAtTime(.0001,start);g.gain.exponentialRampToValueAtTime(lvl,start+v.attack);
-  const relAt=Math.max(start+v.attack+.02,end-v.release);g.gain.setValueAtTime(lvl,relAt);g.gain.exponentialRampToValueAtTime(.0001,end);
-  let out=g;if(v.wide&&ctx.createStereoPanner){const p=ctx.createStereoPanner();p.pan.value=((e.midi%5)-2)*.22;g.connect(p);out=p}
-  src.connect(g);out.connect(bus.voices[e.voice]);src.start(Math.max(ctx.currentTime,start));src.stop(end+.05);active.push(src)}
-async function play(){try{if(!currentArrangement)generate();await loadSamples();stop();const arr=currentArrangement,r=rng(Math.floor(arr.sky.jd*1000));
-  bus.master.gain.cancelScheduledValues(0);bus.master.gain.setValueAtTime(.9,audioCtx.currentTime);
-  startAt=audioCtx.currentTime+.2;
-  // pad: сцены перекрываются, чтобы аккорды плавно перетекали
-  arr.events.forEach(e=>playSample(e.voice==='pad'?{...e,dur:e.dur+.8}:e,startAt,r));
-  const endT=startAt+TRACK_SECONDS;bus.master.gain.setValueAtTime(.9,endT);bus.master.gain.linearRampToValueAtTime(0,endT+3.5);
-  gatherStars(1);playing=true;els.playBtn.textContent='Остановить';els.playBtn.classList.add('on');els.playhead.style.opacity=1;setStatus('');tick()}catch(e){console.error(e);setStatus(e.message||'Не получилось воспроизвести звук.')}}
 function stop(){active.forEach(n=>{try{n.stop()}catch(e){}});active=[];playing=false;cancelAnimationFrame(raf);els.playBtn.textContent='Слушать';els.playBtn.classList.remove('on');els.playhead.style.opacity=0;els.track.querySelectorAll('.seg').forEach(n=>n.classList.remove('now'))}
 function tick(){const t=audioCtx.currentTime-startAt;if(t>TRACK_SECONDS+3.5){stop();drawChart(currentArrangement,TRACK_SECONDS);return}
   const tt=clamp(t,0,TRACK_SECONDS);drawChart(currentArrangement,tt);
@@ -253,7 +355,10 @@ function drawChart(arr,t){
   if(t>=0){let prev=null;arr.events.filter(e=>e.voice!=='pulse'&&e.start<=t).forEach(e=>{const a=ang(-e.start/TRACK_SECONDS*360),rr=R*(.25+.72*clamp((e.midi-30)/66,0,1)),x=cx+Math.cos(a)*rr,y=cy+Math.sin(a)*rr,flash=Math.max(0,1-(t-e.start)*1.5);
       if(e.voice==='lead'){if(prev){g.strokeStyle=`rgba(${C},.55)`;g.lineWidth=1;g.shadowColor=`rgba(${C},1)`;g.shadowBlur=6;g.beginPath();g.moveTo(prev[0],prev[1]);g.lineTo(x,y);g.stroke();g.shadowBlur=0}prev=[x,y];
         g.fillStyle=`rgba(${C},${.6+.4*flash})`;const q=3+flash*4;g.fillRect(x-q/2,y-q/2,q,q);g.strokeStyle=`rgba(${C},${.3+.5*flash})`;g.strokeRect(x-q*1.5,y-q*1.5,q*3,q*3)}
-      else{const z=W*(e.voice==='impact'?.07:.022)*(1+flash*1.5);g.globalAlpha=clamp(.5+flash,0,1);g.drawImage(flash>.3?SPR.bright:SPR.star,x-z/2,y-z/2,z,z);g.globalAlpha=1}});
+      else if(e.voice==='arp'){g.fillStyle=`rgba(0,255,157,${.45+.55*flash})`;g.shadowColor='rgba(0,255,157,.9)';g.shadowBlur=6+10*flash;g.beginPath();g.arc(x,y,1.6+2*flash,0,7);g.fill();g.shadowBlur=0}
+      else if(e.voice==='bass'){g.strokeStyle=`rgba(255,204,0,${.4+.6*flash})`;g.lineWidth=1;const q=3+3*flash;g.beginPath();g.moveTo(x,y-q);g.lineTo(x+q,y);g.lineTo(x,y+q);g.lineTo(x-q,y);g.closePath();g.stroke()}
+      else if(e.voice==='pad'){g.strokeStyle=`rgba(200,240,255,${.12+.3*flash})`;g.lineWidth=1;g.beginPath();g.arc(x,y,3+6*flash,0,7);g.stroke()}
+      else{const z=W*(e.voice==='impact'?.09:.022)*(1+flash*1.5);g.globalAlpha=clamp(.5+flash,0,1);g.drawImage(SPR.bright,x-z/2,y-z/2,z,z);g.globalAlpha=1}});
     // луч-сканер
     const ha=ang(-t/TRACK_SECONDS*360),grd=g.createLinearGradient(cx,cy,cx+Math.cos(ha)*R,cy+Math.sin(ha)*R);grd.addColorStop(0,`rgba(${C},0)`);grd.addColorStop(1,`rgba(${C},.9)`);
     g.strokeStyle=grd;g.lineWidth=1.5;g.beginPath();g.moveTo(cx,cy);g.lineTo(cx+Math.cos(ha)*R,cy+Math.sin(ha)*R);g.stroke();
@@ -333,7 +438,7 @@ requestAnimationFrame(skyFrame);
 
 els.randomBtn.addEventListener('click',randomDate);els.playBtn.addEventListener('click',()=>playing?stop():play());els.dateInput.addEventListener('change',generate);
 window.addEventListener('resize',()=>currentArrangement&&drawChart(currentArrangement,playing?clamp(audioCtx.currentTime-startAt,0,TRACK_SECONDS):-1));
-setDefaultDate();if(document.fonts&&document.fonts.ready)document.fonts.ready.then(generate);else generate();
+renderEnsembles();setDefaultDate();if(document.fonts&&document.fonts.ready)document.fonts.ready.then(generate);else generate();
 </script>
 </body>
 </html>

@@ -9,10 +9,22 @@
 | Sky parameter | Musical parameter |
 |---|---|
 | Sun's ecliptic longitude (zodiac sign) | Root note |
-| Moon phase & illumination | Mode (one of 8) and dynamics |
-| Combined sky state | Tempo, chord progression, scene structure |
+| Moon phase | Mode (one of 8); illumination sets density and brightness |
+| Time of day | Tempo (64–92 BPM) |
+| Digits of the date | A 6-note motif with its own rhythm — the date's theme |
 
-Six voices are arranged on top of that: **piano** lead, **string ensemble** pad, **contrabass** pizzicato, **harp** arpeggios, **timpani** accents and a **wood click** pulse. Everything is synthesized with the Web Audio API: no dependencies, no build step, no CDN.
+The piece follows seven epochs of the Universe in 30 seconds, and the orchestration tells that story: a Big Bang hit and low drone, first sparkles, the theme entering, bass and pulse with the galaxies, a climax an octave higher, the theme inverted in the dark-energy era, and a dominant-to-tonic cadence at the birth of the Sun. Chords move by smooth voice leading.
+
+### Four ensembles
+
+| Ensemble | Lead | Pad | Bass | Sparkle | Accents |
+|---|---|---|---|---|---|
+| Оркестр | upright piano | string ensemble | contrabass pizz. | harp | timpani, wood click |
+| Звёздная пыль | flute | quiet organ | cello pizz. | glockenspiel | gong, triangle |
+| Медь | French horn | tenor trombone | tuba | marimba | suspended cymbal, slit drum |
+| Камерный | clarinet | cello & viola sections | bassoon | xylophone | timpani roll, slit drum |
+
+Each phrase is fitted into the instrument's range as a whole, so melodies keep their shape. Only the selected ensemble is downloaded.
 
 ## Run locally
 
@@ -31,11 +43,8 @@ Alternatives: VS Code **Live Server**, or the bundled `start_mac.command` / `sta
 index.html          — app: UI, astronomy, composition engine, audio playback
 sample_map.json     — reference copy of the sample map (inline in index.html)
 samples/
-  piano/            — lead
-  strings/          — pad (with loop points)
-  bass/             — contrabass pizzicato
-  harp/             — arpeggios
-  percussion/       — timpani + wood click
+  piano/ strings/ bass/ harp/ percussion/   — Оркестр
+  stardust/ brass/ chamber/                 — other ensembles, one folder per voice
 ```
 
 Each sample is a single note at a measured pitch (`rootMidi`); the engine picks the nearest sample and repitches it.
