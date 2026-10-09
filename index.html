@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Космическая мелодия</title>
-<meta name="description" content="Любая дата превращается в 30 секунд оркестровой музыки по положению Солнца и фазе Луны.">
+<meta name="description" content="Любая дата превращается в минуту оркестровой музыки по положению Солнца и фазе Луны.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -123,7 +123,7 @@ footer a{color:var(--cyan)}
 <div class="glitchbar" id="glitchbar" aria-hidden="true"></div>
 <header class="bar"><div class="brand">Cosmic Melody<small>// SKY_TO_SOUND v2</small></div><div class="sys"><i></i>Звёзды на связи</div></header>
 <section class="hero">
-  <div class="chip"><i></i>Дата → небо → музыка · 30 секунд</div>
+  <div class="chip"><i></i>Дата → небо → музыка · 60 секунд</div>
   <h1>Космическая<span>мелодия</span></h1>
   <div class="stage">
     <canvas id="chart" aria-label="Орбита: положение Солнца в зодиаке и созвездие мелодии" role="img"></canvas>
@@ -139,7 +139,7 @@ footer a{color:var(--cyan)}
   </div>
 </section>
 <section class="more">
-  <h2>Семь эпох за 30 секунд</h2>
+  <h2>Пять эпох за минуту</h2>
   <p>Солнце задаёт тонику, Луна — лад, время суток — темп. Мелодия проходит путь от Большого взрыва до сегодняшнего дня, а высота главной темы следует за температурой Вселенной.</p>
   <div class="track" id="track"><div class="playhead" id="playhead"></div></div>
   <footer>Инструменты: <a href="https://versilian-studios.com/vsco-community/">VSCO 2 Community Edition</a> · Versilian Studios · CC0 // Код на <a href="https://github.com/oz-the-magician/cosmic-melody">GitHub</a></footer>
@@ -147,7 +147,7 @@ footer a{color:var(--cyan)}
 <script>
 'use strict';
 const ENSEMBLES={"orchestra":{"name":"Оркестр","voices":{"lead":[{"file":"samples/piano/Cs3.mp3","rootMidi":49,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0},{"file":"samples/piano/Cs4.mp3","rootMidi":61,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0},{"file":"samples/piano/Cs5.mp3","rootMidi":73,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0},{"file":"samples/piano/Cs6.mp3","rootMidi":85,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0}],"pad":[{"file":"samples/strings/C3.mp3","rootMidi":48,"fixed":false,"loop":true,"loopStart":1.49927,"loopEnd":4.95528},{"file":"samples/strings/C4.mp3","rootMidi":60,"fixed":false,"loop":true,"loopStart":1.49982,"loopEnd":4.98712},{"file":"samples/strings/C5.mp3","rootMidi":72,"fixed":false,"loop":true,"loopStart":1.50029,"loopEnd":4.95154},{"file":"samples/strings/B5.mp3","rootMidi":83,"fixed":false,"loop":true,"loopStart":1.5,"loopEnd":5.00365}],"bass":[{"file":"samples/bass/C2.mp3","rootMidi":36,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0},{"file":"samples/bass/Gs2.mp3","rootMidi":44,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0},{"file":"samples/bass/Cs3.mp3","rootMidi":49,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0}],"arp":[{"file":"samples/harp/B3.mp3","rootMidi":59,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0},{"file":"samples/harp/C5.mp3","rootMidi":72,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0},{"file":"samples/harp/B5.mp3","rootMidi":83,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0}],"impact":[{"file":"samples/percussion/timpani_Cs2.mp3","rootMidi":37,"fixed":true,"loop":false,"loopStart":0,"loopEnd":0}],"pulse":[{"file":"samples/percussion/wood_F6.mp3","rootMidi":89,"fixed":true,"loop":false,"loopStart":0,"loopEnd":0}]}},"stardust":{"name":"Звёздная пыль","voices":{"lead":[{"rootMidi":60,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/lead/C4.mp3"},{"rootMidi":64,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/lead/E4.mp3"},{"rootMidi":69,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/lead/A4.mp3"},{"rootMidi":72,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/lead/C5.mp3"},{"rootMidi":76,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/lead/E5.mp3"},{"rootMidi":81,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/lead/A5.mp3"}],"pad":[{"rootMidi":48,"fixed":false,"loop":true,"loopStart":1.39687,"loopEnd":4.55596,"file":"samples/stardust/pad/C3.mp3"},{"rootMidi":54,"fixed":false,"loop":true,"loopStart":1.40249,"loopEnd":4.61961,"file":"samples/stardust/pad/Fs3.mp3"},{"rootMidi":60,"fixed":false,"loop":true,"loopStart":1.39989,"loopEnd":4.59472,"file":"samples/stardust/pad/C4.mp3"},{"rootMidi":66,"fixed":false,"loop":true,"loopStart":1.4012,"loopEnd":4.6405,"file":"samples/stardust/pad/Fs4.mp3"},{"rootMidi":72,"fixed":false,"loop":true,"loopStart":1.39943,"loopEnd":4.64755,"file":"samples/stardust/pad/C5.mp3"},{"rootMidi":78,"fixed":false,"loop":true,"loopStart":1.39971,"loopEnd":4.55447,"file":"samples/stardust/pad/Fs5.mp3"},{"rootMidi":84,"fixed":false,"loop":true,"loopStart":1.4,"loopEnd":4.60721,"file":"samples/stardust/pad/C6.mp3"}],"arp":[{"rootMidi":79,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/arp/G5.mp3"},{"rootMidi":84,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/arp/C6.mp3"},{"rootMidi":91,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/arp/G6.mp3"},{"rootMidi":96,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/arp/C7.mp3"}],"bass":[{"rootMidi":36,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/bass/C2.mp3"},{"rootMidi":43,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/bass/G2.mp3"},{"rootMidi":50,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/bass/D3.mp3"},{"rootMidi":57,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/bass/A3.mp3"}],"impact":[{"rootMidi":60,"fixed":true,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/impact/impact.mp3"}],"pulse":[{"rootMidi":60,"fixed":true,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/pulse/pulse.mp3"}]}},"brass":{"name":"Медь","voices":{"lead":[{"rootMidi":46,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/lead/As2.mp3"},{"rootMidi":50,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/lead/D3.mp3"},{"rootMidi":53,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/lead/F3.mp3"},{"rootMidi":57,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/lead/A3.mp3"},{"rootMidi":60,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/lead/C4.mp3"},{"rootMidi":74,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/lead/D5.mp3"},{"rootMidi":77,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/lead/F5.mp3"}],"pad":[{"rootMidi":41,"fixed":false,"loop":true,"loopStart":1.40098,"loopEnd":4.61995,"file":"samples/brass/pad/F2.mp3"},{"rootMidi":46,"fixed":false,"loop":true,"loopStart":1.39961,"loopEnd":4.60664,"file":"samples/brass/pad/As2.mp3"},{"rootMidi":50,"fixed":false,"loop":true,"loopStart":1.39887,"loopEnd":4.60658,"file":"samples/brass/pad/D3.mp3"},{"rootMidi":53,"fixed":false,"loop":true,"loopStart":1.40005,"loopEnd":4.60705,"file":"samples/brass/pad/F3.mp3"},{"rootMidi":60,"fixed":false,"loop":true,"loopStart":1.3995,"loopEnd":4.57959,"file":"samples/brass/pad/C4.mp3"},{"rootMidi":65,"fixed":false,"loop":true,"loopStart":1.40066,"loopEnd":4.59918,"file":"samples/brass/pad/F4.mp3"}],"bass":[{"rootMidi":34,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/bass/As1.mp3"},{"rootMidi":39,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/bass/Ds2.mp3"},{"rootMidi":46,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/bass/As2.mp3"},{"rootMidi":53,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/bass/F3.mp3"}],"arp":[{"rootMidi":55,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/arp/G3.mp3"},{"rootMidi":65,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/arp/F4.mp3"},{"rootMidi":72,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/arp/C5.mp3"},{"rootMidi":79,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/arp/G5.mp3"},{"rootMidi":89,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/arp/F6.mp3"}],"impact":[{"rootMidi":60,"fixed":true,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/impact/impact.mp3"}],"pulse":[{"rootMidi":60,"fixed":true,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/pulse/pulse.mp3"}]}},"chamber":{"name":"Камерный","voices":{"lead":[{"rootMidi":58,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/lead/As3.mp3"},{"rootMidi":62,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/lead/D4.mp3"},{"rootMidi":65,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/lead/F4.mp3"},{"rootMidi":70,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/lead/As4.mp3"},{"rootMidi":74,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/lead/D5.mp3"},{"rootMidi":77,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/lead/F5.mp3"},{"rootMidi":82,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/lead/As5.mp3"}],"pad":[{"rootMidi":47,"fixed":false,"loop":true,"loopStart":1.40061,"loopEnd":4.56701,"file":"samples/chamber/pad/B2.mp3"},{"rootMidi":53,"fixed":false,"loop":true,"loopStart":1.39973,"loopEnd":4.63018,"file":"samples/chamber/pad/F3.mp3"},{"rootMidi":60,"fixed":false,"loop":true,"loopStart":1.40186,"loopEnd":4.56494,"file":"samples/chamber/pad/C4.mp3"},{"rootMidi":65,"fixed":false,"loop":true,"loopStart":1.40025,"loopEnd":4.56283,"file":"samples/chamber/pad/F4.mp3"},{"rootMidi":72,"fixed":false,"loop":true,"loopStart":1.39993,"loopEnd":4.58866,"file":"samples/chamber/pad/C5.mp3"},{"rootMidi":79,"fixed":false,"loop":true,"loopStart":1.39984,"loopEnd":4.64891,"file":"samples/chamber/pad/G5.mp3"}],"bass":[{"rootMidi":38,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/bass/D2.mp3"},{"rootMidi":45,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/bass/A2.mp3"},{"rootMidi":52,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/bass/E3.mp3"},{"rootMidi":57,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/bass/A3.mp3"}],"arp":[{"rootMidi":67,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/arp/G4.mp3"},{"rootMidi":72,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/arp/C5.mp3"},{"rootMidi":79,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/arp/G5.mp3"},{"rootMidi":84,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/arp/C6.mp3"},{"rootMidi":91,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/arp/G6.mp3"}],"impact":[{"rootMidi":60,"fixed":true,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/impact/impact.mp3"}],"pulse":[{"rootMidi":60,"fixed":true,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/pulse/pulse.mp3"}]}}};
-const TRACK_SECONDS=30,PPQ=480,MIDI_LOW=48,MIDI_HIGH=84;
+const TRACK_SECONDS=60,PPQ=480,MIDI_LOW=48,MIDI_HIGH=84;
 const EPOCHS=[{name:'Рекомбинация',temp:3000,sec:3},{name:'Первые звёзды',temp:57,sec:7.5},{name:'Первые галактики',temp:30,sec:11},{name:'Пик звездообразования',temp:9,sec:16},{name:'Эпоха тёмной энергии',temp:6,sec:20},{name:'Рождение Солнца',temp:4,sec:24},{name:'Сегодня',temp:2.725,sec:30}];
 const MODES=[{name:'Ионийский',intervals:[0,2,4,5,7,9,11]},{name:'Дорийский',intervals:[0,2,3,5,7,9,10]},{name:'Фригийский',intervals:[0,1,3,5,7,8,10]},{name:'Лидийский',intervals:[0,2,4,6,7,9,11]},{name:'Миксолидийский',intervals:[0,2,4,5,7,9,10]},{name:'Эолийский',intervals:[0,2,3,5,7,8,10]},{name:'Гармонический минор',intervals:[0,2,3,5,7,8,11]},{name:'Лидийский доминантовый',intervals:[0,2,4,6,7,9,10]}];
 const NOTE_NAMES=['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'];
@@ -195,7 +195,7 @@ const voiceCfg=(ens,voice)=>({...VOICES[voice],...(ENS_CFG[ens].tune[voice]||{})
    первая — сама ячейка, вторая — певучая, её обращение с широким скачком, в родственной
    тональности и у другого инструмента. В разработке мотив переходит из рук в руки
    каноном, перед кульминацией звучит соло. Время дышит: ускорение в разработке,
-   замедление перед финалом — и всё равно ровно 30 секунд. */
+   замедление перед финалом — и всё равно ровно 60 секунд. */
 const CHARACTERS={
   nocturne:{label:'Ноктюрн',meter:4,cells:[1.5,4,3,2,1.5,1.5,3],dyn:.72,accel:1.04,stacc:1},
   scherzo:{label:'Скерцо',meter:3,cells:[2,4,3,3,2.5,2,4],dyn:.95,accel:1.12,stacc:.55},
@@ -219,120 +219,99 @@ function tonality(r,ivs){const pc=x=>mod(r+x,12),dg=d=>ivs[mod(d,7)],tri=d=>[pc(
 const CHNAME={I:'I',ii:'ii',IV:'IV',vi:'vi',iv:'iv',IVM:'IV',V:'V',V7:'V7',Vsus:'V⁴',VV:'V/V',dimV:'vii°7/V',Ipic:'I мажор'};
 
 function buildArrangement(dt){
+  /* Пять частей на 60 секунд, без обрывов: вступление → тема (период из 8 фраз) →
+     вторая тема в родственной тональности → разработка и кульминация → тема в финале и кода.
+     Аккомпанемент и аккорды тянутся сквозь границы; меняется только свет. */
   const sky=skyParams(dt),mode=MODES[sky.modeIdx],ill=sky.illum;
-  const charKey=characterOf(sky.phase),CHR=CHARACTERS[charKey],M=CHR.meter,C=M===3?3:2,el=ELEMENTS[sky.zodiacIdx%4];
-  const mot=dateMotif(dt,M),H=Math.floor(sky.hourFloat/8);// час: длина разработки 0–2 ячейки
-  const cells=CHR.cells.slice();cells[3]+=H;const LEN=cells.map(c=>c*C),S=[];LEN.reduce((a,l,i)=>(S[i]=a,a+l),0);const TOTAL=LEN.reduce((a,b)=>a+b,0);
+  const charKey=characterOf(sky.phase),CHR=CHARACTERS[charKey],M=CHR.meter,U=M===3?3:2,el=ELEMENTS[sky.zodiacIdx%4];
+  const mot=dateMotif(dt,M),H=Math.floor(sky.hourFloat/8),soft=charKey==='nocturne'||charKey==='elegy';
+  const DEV=(charKey==='nocturne'?2:charKey==='elegy'?3:4)+H*(charKey==='nocturne'?1:2);
+  const UNITS=[2,8,8,DEV+2,10],S=[];UNITS.reduce((a,u,i)=>(S[i]=a*U,a+u),0);const TOTALU=UNITS.reduce((a,b)=>a+b,0),TOTAL=TOTALU*U;
   const home=tonality(sky.rootPc,mode.intervals),minorish=mode.intervals[2]===3;
-  const away=minorish?tonality(mod(sky.rootPc+3,12),MODES[0].intervals):tonality(mod(sky.rootPc+7,12),MODES[0].intervals);// родственная тональность
-  const ev=[],dyn=v=>Math.round(clamp(v*CHR.dyn*(.9+.2*ill),1,127));
+  const away=minorish?tonality(mod(sky.rootPc+3,12),MODES[0].intervals):tonality(mod(sky.rootPc+7,12),MODES[0].intervals);
+  const ev=[],scale=v=>Math.round(clamp(v*CHR.dyn*(.9+.2*ill),1,127));
   const add=(voice,midi,beat,durBeat,vel,extra)=>{if(durBeat<=0||beat>=TOTAL)return;ev.push({voice,midi:clamp(Math.round(midi),0,127),beat,durBeat,vel:clamp(Math.round(vel),1,127),...(extra||{})})};
-  const harm=[],names=LEN.map(()=>[]);let prevV=null;
+  const harm=[],names=UNITS.map(()=>[]);let prevV=null;
   const chordAt=b=>{for(let i=harm.length-1;i>=0;i--)if(b>=harm[i].b0-1e-6&&b<harm[i].b1)return harm[i];return null};
   const alter=(m,h)=>{if(!h)return m;const ch=h.ch,pcs=h.key.pcs,p=mod(m,12);if(ch.includes(p))return m;
     if(ch.includes(mod(p+1,12))&&!pcs.has(mod(p+1,12)))return m+1;if(ch.includes(mod(p-1,12))&&!pcs.has(mod(p-1,12)))return m-1;return m};
-  // гармония: аккорд регистрируется для мелодии и звучит в pad (если не silent)
-  const chord=(si,key,K,b0,b1,vel,{silent=false,extra=null,low=0}={})=>{const ch=K.ch[key];harm.push({b0,b1,ch,key:K});
-    const v=voiceChord(ch,prevV);prevV=v;if(!silent)v.forEach((p,j)=>add('pad',p+low,b0,b1-b0,vel-j*2,extra));
-    names[si].push((K===away?'→':'')+CHNAME[key]);return{v,root:ch[0]}};
   const bassNote=pcRoot=>36+mod(pcRoot-36,12);
-  const bassLine=(b0,b1,root,vel,extra)=>{const bn=bassNote(root);
-    if(charKey==='march'){for(let b=b0,k=0;b<b1-1e-6;b+=1,k++)add('bass',k%2?bn+7:bn,b,.7,vel+(k%2?-6:0),extra)}
-    else if(charKey==='scherzo'){for(let b=b0;b<b1-1e-6;b+=M)add('bass',bn,b,1,vel+4,extra)}
-    else add('bass',bn,b0,Math.min(b1-b0,4),vel,extra)};
-  // фактура по стихии
+  // аккорд на юнит: pad чуть перекрывает следующий, чтобы ткань не рвалась
+  const chord=(si,key,K,b0,b1,vel,{pad=true,extra=null}={})=>{const ch=K.ch[key];harm.push({b0,b1,ch,key:K});const v=voiceChord(ch,prevV);prevV=v;
+    if(pad)v.forEach((p,j)=>add('pad',p,b0,b1-b0+.25,vel-j*2,extra));const n=(K===away?'→':'')+CHNAME[key];if(names[si][names[si].length-1]!==n)names[si].push(n);return{v,root:ch[0]}};
+  const bass=(b0,b1,root,vel,extra)=>{const bn=bassNote(root);
+    if(charKey==='march'){for(let b=b0,k=0;b<b1-1e-6;b+=1,k++)add('bass',k%2?bn+7:bn,b,.85,vel-(k%2?6:0),extra)}
+    else if(charKey==='scherzo'){for(let b=b0;b<b1-1e-6;b+=3)add('bass',bn,b,1.5,vel+2,extra)}
+    else add('bass',bn,b0,b1-b0+.1,vel-2,extra)};
   const accomp=(b0,b1,v,vel)=>{const top=v.map(p=>p+12);
-    if(M===3&&(el==='fire'||el==='earth')){for(let b=b0;b<b1-1e-6;b+=1){if(mod(b-b0,3)<1e-6)continue;top.slice(0,2).forEach(p=>add('arp',p,b,.4,vel-6))}return}// «ум-па-па»
-    if(el==='water'){const st=M===3?.5:.5,pat=[0,2,1,2];for(let b=b0,k=0;b<b1-1e-6;b+=st,k++)add('arp',top[pat[k%4]%top.length],b,st*.95,vel+(k%4===0?5:0))}
-    else if(el==='fire'){for(let b=b0;b<b1-1e-6;b+=1){add('arp',top[0],b+.5,.25,vel+4);add('arp',top[2%top.length],b+.5,.25,vel)}}
-    else if(el==='earth'){for(let b=b0;b<b1-1e-6;b+=M)add('arp',top[0]-12,b,Math.min(M,b1-b),vel-4)}
-    else {for(let b=b0;b<b1-1e-6;b+=M){add('arp',top[top.length-1]+12,b,1.5,vel-8);if(b+M*.6<b1)add('arp',top[1%top.length]+12,b+M*.6,1,vel-14)}}};
-  // мелодия по ступеням тональности, с альтерацией под аккорд; характер задаёт артикуляцию
-  const phrase=(b0,steps,durs,center,vel,{K=home,voice='lead',invert=false,stretch=1,last=1,legato=false,extra=null}={})=>{const base=nearestScaleIndex(K.sc,center);let b=b0;
-    let ds=durs.map(d=>d*stretch);if(charKey==='march'&&!legato)ds=ds.map((d,i,a)=>i%2===0&&a[i+1]===d&&d<=1?d*1.5:i%2===1&&a[i-1]===d&&d<=1?d*.5:d);
-    steps.forEach((st,k)=>{const d=ds[k],m=alter(K.sc[clamp(base+(invert?-st:st),0,K.sc.length-1)],chordAt(b)),isLast=k===steps.length-1;
-      const art=legato?1.02:isLast?1:CHR.stacc*.95;add(voice,m,b,d*(isLast?last:art),vel+(k===0?8:0)+(d>=1?4:0),extra);b+=d});return b};
+    if(M===3&&(el==='fire'||el==='earth')){for(let b=b0+1;b<b1-1e-6;b+=1){if(mod(b,3)<1e-6)continue;top.slice(0,2).forEach(p=>add('arp',p,b,.6,vel-6))}return}
+    if(el==='water'){const pat=[0,2,1,2];for(let b=b0,k=0;b<b1-1e-6;b+=.5,k++)add('arp',top[pat[k%4]%top.length],b,.6,vel+(k%4===0?4:0))}
+    else if(el==='fire'){for(let b=b0;b<b1-1e-6;b+=1){add('arp',top[0],b+.5,.4,vel+2);add('arp',top[2%top.length],b+.5,.4,vel-2)}}
+    else if(el==='earth'){add('arp',top[0],b0,b1-b0,vel-4);add('arp',top[2%top.length],b0,b1-b0,vel-8)}
+    else{add('arp',top[top.length-1]+12,b0,b1-b0,vel-10);if(b1-b0>=2)add('arp',top[1%top.length]+12,b0+(b1-b0)/2,(b1-b0)/2,vel-14)}};
+  // мелодия: ноты-ступени с длительностями в долях юнита
+  const sing=(b0,notes,center,vel,{K=home,voice='lead',legato=true,extra=null,octave=0}={})=>{const base=nearestScaleIndex(K.sc,center);let b=b0;
+    notes.forEach(([st,f],k)=>{const d=f*U,m=alter(K.sc[clamp(base+st,0,K.sc.length-1)],chordAt(b))+octave;const art=legato?1.02:CHR.stacc;
+      add(voice,m,b,d*(d>=U?1:art),vel+(k===0?4:0)+(d>=U?3:0),extra);b+=d})};
   const tonicNear=(K,c)=>{let m=c-mod(c-K.r,12);if(c-m>6)m+=12;return m};
-  const T5=tonicNear(home,72),T4=tonicNear(home,60),soft=charKey==='nocturne'||charKey==='elegy';
-  const rate=[];// карта темпа: {b0,b1,r0,r1}
-  const cellLen=mot.dur.reduce((a,b)=>a+b,0);
+  const T5=tonicNear(home,72),T4=tonicNear(home,60);
+  // тема-период из 8 юнитов, растёт из мотива даты
+  const cellNotes=(shift=0)=>mot.deg.map((d,i)=>[d+shift,mot.dur[i]/U]);
+  const peak=Math.max(4,Math.max(...mot.deg)+2);
+  const THEME=[cellNotes(0),cellNotes(1),[[2,.5],[peak,.5]],[[3,.25],[1,.75]],cellNotes(0),cellNotes(1),[[peak+1,.5],[peak,.25],[2,.25]],[[0,1]]];
+  const THEME2=[[[0,.5],[4,.5]],[[3,1]],[[2,.5],[3,.25],[4,.25]],[[1,1]],[[0,.5],[4,.5]],[[mot.deg[3]>0?6:5,1]],[[4,.5],[2,.5]],[[0,1]]];
+  const period=(si,b0,K,prog,vel0,vel1,melody,center,opts={})=>{
+    prog.forEach((key,u)=>{const b=b0+u*U,vel=Math.round(vel0+(vel1-vel0)*u/7),c=chord(si,key,K,b,b+U,vel-14);accomp(b,b+U,c.v,vel-18);bass(b,b+U,c.root,vel-4)});
+    melody.forEach((notes,u)=>sing(b0+u*U,notes,center,Math.round(vel0+(vel1-vel0)*u/7),{K,...opts}))};
+  const rate=[];
+  const PROG1=['I',['IV','vi','ii','IV'][Math.floor(sky.lambda/90)%4],'ii','V','I','IV','V7','I'];
 
-  /* 0. Большой взрыв */
-  {const s=S[0],L=LEN[0];
-   if(soft){add('impact',60,s,3,dyn(70));const r0=bassNote(home.r);add('pad',r0+12,s,L,dyn(46));add('pad',r0+19,s+.5,L-.5,dyn(40));harm.push({b0:s,b1:s+L,ch:home.ch.I,key:home});
-     phrase(s+.5,mot.deg,mot.dur,T4,dyn(64),{voice:charKey==='nocturne'?'bass':'lead',stretch:1.3,legato:true});names[0].push('из тишины')}
-   else{add('impact',60,s,3,124);phrase(s,mot.deg,mot.dur,T5,dyn(112));phrase(s,mot.deg,mot.dur,T4-12,dyn(110),{voice:'bass'});
-     ['lead','bass'].forEach(v=>{const n=ev.filter(x=>x.voice===v).pop();if(n)n.durBeat=s+L-.4-n.beat});names[0].push('унисон')}}
-  /* 1. Рекомбинация: первая тема — вопрос и ответ, с дыханием между фразами */
-  {const s=S[1],q=Math.floor(sky.lambda/90)%4,X=['IV','vi','ii','IV'][q],p=dyn(soft?56:52),h=C;
-   const parts=[['I',s,s+h],[X,s+h,s+2*h],['I',s+2*h,s+3*h],['Vsus',s+3*h,s+3.5*h],['V',s+3.5*h,s+4*h]];
-   parts.forEach(([k,b0,b1])=>{const c=chord(1,k,home,b0,b1,p-12);accomp(b0,b1,c.v,p-16);if(k!=='Vsus')bassLine(b0,b1,c.root,p-2)});
-   phrase(s,mot.deg,mot.dur,T5,p,{last:.8});phrase(s+h,mot.deg.map(x=>x+1),mot.dur,T5,p+4,{last:.6});// вопрос, затем вдох
-   phrase(s+2*h,mot.deg,mot.dur,T5,p+2,{last:.8});const i5=nearestScaleIndex(home.sc,T5)+1;
-   add('lead',alter(home.sc[i5+1],chordAt(s+3*h)),s+3*h,h*.5,p+6);add('lead',alter(home.sc[i5],chordAt(s+3.5*h)),s+3.5*h,h*.5,p+2)}
-  /* 2. Первые звёзды: вторая тема — певучая, в родственной тональности, у другого инструмента */
-  {const s=S[2],L=LEN[2],p=dyn(soft?62:58),inv=mot.deg.map(x=>-x);
-   const steps=[0,4].concat(inv.slice(1).map(x=>clamp(4+x,0,6))).concat([1,0]),durs=[1.5,1,.5,.5,1,1,2],sc=L/durs.reduce((a,b)=>a+b,0);
-   const plan=[['I',0,.34],['IV',.34,.6],['V7',.6,.84],['I',.84,1]];
-   plan.forEach(([k,f0,f1])=>{const b0=s+L*f0,b1=s+L*f1,c=chord(2,k,away,b0,b1,p-14,{silent:true});accomp(b0,b1,c.v,p-20);bassLine(b0,b1,c.root,p-8)});
-   const singer=el==='air'?'arp':'pad';
-   phrase(s,steps,durs,tonicNear(away,67),p+6,{K:away,voice:singer,stretch:sc,legato:true,extra:{mono:true}});
-   if(!soft)phrase(s+L*.6,mot.deg.slice(0,3),mot.dur.slice(0,3),tonicNear(away,79),p-10,{K:away});}// тень первой темы
-  /* 3. Первые галактики: разработка — канон, секвенции, ускорение; в конце соло */
-  {const s=S[3],L=LEN[3],n=Math.round(L/C),plan=['vi','IV','ii','vi','IV','ii','vi'];
-   rate.push({b0:s,b1:s+L,r0:1,r1:CHR.accel});
-   for(let k=0;k<n-1;k++){const b=s+k*C,vel=dyn(58+Math.round(36*k/Math.max(1,n-1))),key=k===n-2?'VV':plan[k%plan.length],c=chord(3,key,home,b,b+C,vel-14);
-     accomp(b,b+C,c.v,vel-18);
-     phrase(b,mot.deg.map(x=>x+k),mot.dur,T5,vel);// тема
-     phrase(b+C/2,mot.deg.slice(0,2).map(x=>-x+k),mot.dur.slice(0,2),T4-5,vel-6,{voice:'bass'});// бас отвечает обращением
-     if(k>=1)phrase(b+C/4,mot.deg.slice(0,3).map(x=>x+k+2),mot.dur.slice(0,3),T5+12,vel-12,{voice:'arp'});}// искры подхватывают каноном
-   // соло: инструмент стихии остаётся один
-   const b=s+(n-1)*C;harm.push({b0:b,b1:b+C,ch:home.ch.V7,key:home});names[3].push('соло');
-   const solo={fire:['lead',T5+2],earth:['bass',T4-10],air:['arp',T5+12],water:['pad',T5-3]}[el];
-   phrase(b,mot.deg.map(x=>x+2),mot.dur,solo[1],dyn(80),{voice:solo[0],legato:true,last:1.1,extra:{mono:true}})}
-  /* 4. Пик: уменьшённый септаккорд, тремоло — и генеральная пауза */
-  {const s=S[4],L=LEN[4],gp=soft?0:Math.max(.5,Math.round(L*.18*2)/2),a=(L-gp)*.5,top=dyn(soft?96:118);
-   add('impact',60,s,2,top+4);const c1=chord(4,'dimV',home,s,s+a,top-8,{extra:{atk:.03}});
-   for(let b=s;b<s+a-1e-6;b+=.25)add('arp',c1.v[Math.round(b*4)%2?2:0]+12,b,.22,top-20);add('bass',bassNote(c1.root),s,a,top-6);
-   phrase(s,mot.deg.map(x=>x+4),mot.dur,T5,top,{last:1});
-   const tight=gp>0?{tight:true,rel:.25}:null,c2=chord(4,'V7',home,s+a,s+2*a,top-10,{extra:{atk:.03,...(tight||{})}});
-   for(let b=s+a;b<s+2*a-1e-6;b+=.25)add('arp',c2.v[Math.round(b*4)%2?3:1]+12,b,.22,top-22,tight);add('bass',bassNote(c2.root),s+a,a,top-6,tight);
-   add('lead',alter(home.sc[nearestScaleIndex(home.sc,T5)+6],chordAt(s+a)),s+a,a,top-2,tight);if(gp)names[4].push('пауза')}
-  /* 5. Тёмная энергия: сердцебиение на органном пункте, мотив вниз головой; в конце замедление */
-  {const s=S[5],L=LEN[5],ped=bassNote(home.ch.V[0]),grow=charKey!=='elegy';
-   harm.push({b0:s,b1:s+L-1,ch:home.ch.vi,key:home});const v=voiceChord(home.ch.vi,prevV);prevV=v;v.forEach((p,j)=>add('pad',p-12,s,L-1,dyn(36)-j*2));names[5].push('vi над V');
-   chord(5,'V7',home,s+L-1,s+L,dyn(grow?70:44));
-   for(let k=0;k<L;k++){const vel=grow?22+Math.round(k/(L-1)*58):Math.max(18,40-k*5);add('bass',ped,s+k,.6,vel);add('pulse',60,s+k,.1,vel-6)}
-   phrase(s,mot.deg,mot.dur,T4,dyn(32),{invert:true,stretch:1.4,legato:true});
-   rate.push({b0:s+L-C,b1:s+L,r0:1,r1:.74})}
-  /* 6. Рождение Солнца: финал зависит от характера */
-  {const s=S[6],L=LEN[6],fin=charKey==='elegy'?'I':'Ipic';
-   if(charKey==='march'||charKey==='scherzo'){const p=dyn(110),h=L/4;add('impact',60,s,3,120);rate.push({b0:s+L-2,b1:s+L,r0:1,r1:.85});
-     [['Ipic',0,1],['IVM',1,1.5],['V7',1.5,2]].forEach(([k,f0,f1])=>{const c=chord(6,k,home,s+f0*h,s+f1*h,p-6);accomp(s+f0*h,s+f1*h,c.v,p-14);bassLine(s+f0*h,s+f1*h,c.root,p)});
-     phrase(s,mot.deg,mot.dur,T5+12,p+4);phrase(s+C,mot.deg.map(x=>x+2),mot.dur.map(x=>x*.5),T5+12,p,{last:.9});
-     phrase(s+C/2,mot.deg,mot.dur,T4-12,p-4,{voice:'bass'});// бас подхватывает тему каноном
-     const hit=(k,b,d)=>{const c=chord(6,k,home,b,b+d,p,{extra:{atk:.02}});add('arp',c.v[c.v.length-1]+12,b,d,p-8);add('bass',bassNote(c.root),b,d,p+4)};
-     const hb=s+2*h,u=(L-2*h)/6;hit('Ipic',hb,u*1.5);hit('V7',hb+u*1.5,u*.75);hit('Ipic',hb+u*2.25,u*.75);hit('V7',hb+u*3,u*.75);
-     const last=hb+u*3.75,c=chord(6,'Ipic',home,last,s+L,p+6,{extra:{atk:.02}});add('impact',60,last,3,118);add('lead',tonicNear(home,T5+12),last,s+L-last,p+8);add('bass',bassNote(home.r),last,s+L-last,p+6);
-     c.v.map(x=>x+12).concat([c.v[0]+24]).forEach((x,k)=>add('arp',x,hb+k*.25,1.2,p-20+k*4))}
-   else{// ноктюрн и элегия: вторая тема возвращается домой, тихий финал
-     const p=dyn(charKey==='nocturne'?70:66),h=L/3,steps=[0,4].concat(mot.deg.slice(1).map(x=>clamp(4-x,0,6))).concat([1,0]),durs=[1.5,1,.5,.5,1,1,2],sc=(L-1)/durs.reduce((a,b)=>a+b,0);
-     rate.push({b0:s+L-2,b1:s+L,r0:1,r1:.8});
-     const plan=charKey==='elegy'?[['iv',0,1],['V7',1,2],['I',2,3]]:[['IV',0,1],['V7',1,2],['Ipic',2,3]];
-     plan.forEach(([k,f0,f1])=>{const c=chord(6,k,home,s+f0*h,s+f1*h,p-12);accomp(s+f0*h,s+f1*h,c.v,p-18);bassLine(s+f0*h,s+f1*h,c.root,p-6)});
-     phrase(s,steps,durs,tonicNear(home,67)+(charKey==='nocturne'?12:0),p+4,{stretch:sc,legato:true});
-     add('lead',tonicNear(home,charKey==='nocturne'?79:67),s+L-1.5,1.5,p);add('impact',60,s+2*h,3,dyn(60));
-     const lastC=chordAt(s+2*h);if(lastC)voiceChord(lastC.ch,null,60,84).forEach((x,k)=>add('arp',x+12,s+2*h+k*.33,2.5,p-20+k*3))}}
+  /* 1. Большой взрыв — вступление */
+  {const s=S[0],L=UNITS[0]*U;harm.push({b0:s,b1:s+L,ch:home.ch.I,key:home});names[0].push(soft?'из тишины':'унисон');
+   const r0=bassNote(home.r);add('pad',r0+12,s,L+.3,scale(soft?48:60));add('pad',r0+19,s+.5,L-.2,scale(soft?42:54));
+   if(soft){add('impact',60,s,3,scale(70));sing(s+.5,cellNotes(0),T4,scale(62),{voice:charKey==='nocturne'?'bass':'lead'})}
+   else{add('impact',60,s,3,124);sing(s,cellNotes(0),T5,scale(112),{legato:false});sing(s,cellNotes(0),T4-12,scale(110),{voice:'bass',legato:false});
+     ['lead','bass'].forEach(v=>{const n=ev.filter(x=>x.voice===v).pop();if(n)n.durBeat=s+L-n.beat})}}
+  /* 2. Тема — период: вопрос (полукаденция) и ответ (полная каденция) */
+  period(1,S[1],home,PROG1,scale(soft?58:56),scale(soft?66:70),THEME,T5,{legato:charKey!=='scherzo'&&charKey!=='march'});
+  /* 3. Вторая тема — в родственной тональности, поёт другой инструмент */
+  {const s=S[2],singer=el==='air'?'arp':'pad';
+   ['I','IV','ii','V','I','IV','V7','I'].forEach((key,u)=>{const b=s+u*U,vel=scale(58+u),c=chord(2,key,away,b,b+U,vel-16,{pad:singer!=='pad'});accomp(b,b+U,c.v,vel-20);bass(b,b+U,c.root,vel-8)});
+   THEME2.forEach((notes,u)=>sing(s+u*U,notes,tonicNear(away,67),scale(64+u),{K:away,voice:singer,extra:{mono:true}}));
+}
+  /* 4. Разработка — канон, нарастание, кульминация */
+  {const s=S[3],plan=['vi','IV','ii','vi','IV','ii','vi','IV','ii','vi'];rate.push({b0:s,b1:s+DEV*U,r0:1,r1:CHR.accel});
+   for(let k=0;k<DEV;k++){const b=s+k*U,vel=scale(60+Math.round(34*k/Math.max(1,DEV-1))),key=k===DEV-1?'VV':plan[k],c=chord(3,key,home,b,b+U,vel-14);
+     accomp(b,b+U,c.v,vel-18);bass(b,b+U,c.root,vel-6);
+     sing(b,cellNotes(k),T5,vel,{legato:false});
+     sing(b+U/2,cellNotes(1-k).slice(0,2).map(([d,f])=>[-d,f]),T4-5,vel-8,{voice:'bass',legato:false})}
+   const c0=s+DEV*U,top=scale(soft?100:118),gp=charKey==='march'?.5:0;add('impact',60,c0,2.5,top);
+   const c1=chord(3,'dimV',home,c0,c0+U,top-10,{extra:{atk:.03}});for(let b=c0;b<c0+U-1e-6;b+=.25)add('arp',c1.v[Math.round(b*4)%2?2:0]+12,b,.22,top-24);add('bass',bassNote(c1.root),c0,U,top-6);
+   sing(c0,cellNotes(4),T5,top,{legato:false});
+   const tight=gp?{tight:true,rel:.3}:null,c2=chord(3,'V7',home,c0+U,c0+2*U-gp,top-12,{extra:{atk:.03,...(tight||{})}});
+   for(let b=c0+U;b<c0+2*U-gp-1e-6;b+=.25)add('arp',c2.v[Math.round(b*4)%2?3:1]+12,b,.22,top-26,tight);add('bass',bassNote(c2.root),c0+U,U-gp,top-6,tight);
+   add('lead',alter(home.sc[nearestScaleIndex(home.sc,T5)+6],chordAt(c0+U)),c0+U,U-gp,top-4,tight);if(gp)names[3].push('пауза')}
+  /* 5. Рождение Солнца — тема возвращается в полном свете, кода */
+  {const s=S[4],light=charKey==='elegy'?'I':'Ipic',P=PROG1.slice(0,7).concat([light]);
+   if(charKey==='elegy')P[5]='iv';
+   add('impact',60,s,3,scale(soft?76:118));
+   period(4,s,home,P,scale(soft?70:100),scale(soft?74:108),THEME,T5+(soft?0:12),{legato:charKey!=='scherzo'});
+   if(!soft)THEME.forEach((notes,u)=>sing(s+u*U,notes,T5,scale(84),{voice:'arp',legato:false}));// октавное удвоение — больше света
+   const cd=s+8*U;rate.push({b0:cd-U,b1:cd+2*U,r0:1,r1:.78});
+   if(!soft){const hit=(k,b,d)=>{const c=chord(4,k,home,b,b+d,scale(112),{extra:{atk:.02}});add('bass',bassNote(c.root),b,d,scale(114))};
+     hit('V7',cd,U*.5);hit(light,cd+U*.5,U*.5);hit('V7',cd+U,U*.25);hit(light,cd+U*1.25,U*.75);add('impact',60,cd+U*1.25,3,118);add('lead',tonicNear(home,T5+12),cd+U*1.25,U*.75,scale(112))}
+   else{const c=chord(4,light,home,cd,cd+2*U,scale(64));bass(cd,cd+2*U,c.root,scale(60));voiceChord(home.ch[light],null,60,84).forEach((x,k)=>add('arp',x+12,cd+k*.4,2*U-k*.4,scale(56)+k*3));
+     add('lead',tonicNear(home,T5),cd,2*U,scale(62));add('impact',60,cd,3,scale(54))}}
 
-  // карта темпа → секунды; вся пьеса ровно 30 с
+  // карта темпа → секунды; ровно TRACK_SECONDS
   const rateAt=b=>{let r=1;rate.forEach(z=>{if(b>=z.b0&&b<z.b1)r*=z.r0+(z.r1-z.r0)*(b-z.b0)/(z.b1-z.b0)});return r};
   const STEP=.02,N=Math.ceil(TOTAL/STEP)+1,cum=new Float64Array(N+1);for(let i=1;i<=N;i++)cum[i]=cum[i-1]+STEP/rateAt((i-.5)*STEP);
   const k=TRACK_SECONDS/cum[Math.round(TOTAL/STEP)],secOf=b=>{const x=clamp(b,0,N*STEP)/STEP,i=Math.floor(x),f=x-i;return(cum[i]+(cum[Math.min(i+1,N)]-cum[i])*f)*k};
   sky.tempo=60/k;
   const events=[];ev.forEach(e=>{const st=secOf(e.beat);if(st>=TRACK_SECONDS-.02)return;const en=Math.min(TRACK_SECONDS,secOf(e.beat+e.durBeat));if(en<=st)return;events.push({...e,start:st,dur:en-st})});
   events.sort((a,b)=>a.start-b.start||a.midi-b.midi);
-  const SN=['Большой взрыв',...EPOCHS.slice(0,-1).map(e=>e.name)];
-  const scenes=LEN.map((l,i)=>{const st=secOf(S[i]),en=secOf(S[i]+l);return{name:SN[i],start:st,end:en,time:`${st.toFixed(2)}–${en.toFixed(2)} сек`,beats:`${S[i]}–${S[i]+l}`,chord:names[i].filter((x,j,a)=>x!==a[j-1]).join(' → '),leadCenter:''}});
+  const SN=['Большой взрыв','Рекомбинация и первые звёзды','Первые галактики','Пик звездообразования','Рождение Солнца'];
+  const scenes=UNITS.map((u,i)=>{const st=secOf(S[i]),en=secOf(S[i]+u*U);return{name:SN[i],start:st,end:en,time:`${st.toFixed(1)}–${en.toFixed(1)} сек`,beats:'',chord:names[i].join(' → '),leadCenter:''}});
   return{sky,mode,events,scenes,motif:mot,totalBeats:TOTAL,character:charKey,element:el,meter:M,away:NOTE_NAMES[away.r]+' мажор'}}
 
 /* ================= звук ================= */
@@ -382,7 +361,7 @@ function makeBus(){const ctx=audioCtx,master=ctx.createGain(),comp=ctx.createDyn
     if(pan){pan.pan.value=v.pan;dry.connect(pan).connect(master)}else dry.connect(master);dry.connect(send).connect(verbIn);voices[name]=dry}
   return{master,voices}}
 function stop(){active.forEach(n=>{try{n.stop()}catch(e){}});active=[];playing=false;cancelAnimationFrame(raf);els.playBtn.textContent='Слушать';els.playBtn.classList.remove('on');els.playhead.style.opacity=0;els.track.querySelectorAll('.seg').forEach(n=>n.classList.remove('now'))}
-function tick(){const t=audioCtx.currentTime-startAt;if(t>TRACK_SECONDS+3.5){stop();drawChart(currentArrangement,TRACK_SECONDS);return}
+function tick(){const t=audioCtx.currentTime-startAt;if(t>TRACK_SECONDS+4.6){stop();drawChart(currentArrangement,TRACK_SECONDS);return}
   const tt=clamp(t,0,TRACK_SECONDS);drawChart(currentArrangement,tt);
   const segs=els.track.querySelectorAll('.seg');currentArrangement.scenes.forEach((sc,i)=>segs[i]&&(segs[i].classList.toggle('now',tt>=sc.start&&tt<sc.end),segs[i].querySelector('.bar2 i').style.width=(clamp((tt-sc.start)/(sc.end-sc.start),0,1)*100)+'%'));
   lastT=tt;els.playhead.style.left=(tt/TRACK_SECONDS*100)+'%';raf=requestAnimationFrame(tick)}
