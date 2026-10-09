@@ -7,7 +7,7 @@
 <meta name="description" content="Любая дата превращается в 30 секунд оркестровой музыки по положению Солнца и фазе Луны.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Forum&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root{
   --deep:#070b22;      /* самая тёмная часть неба */
@@ -31,17 +31,23 @@ body{margin:0;min-height:100vh;color:var(--star);font:300 16px/1.6 Jost,system-u
     var(--deep);
   background-attachment:fixed}
 #sky{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:0}
-.wrap{position:relative;z-index:1;max-width:920px;margin:0 auto;padding:36px 20px 64px;text-align:center}
-h1{font:200 clamp(40px,7.4vw,80px)/1.05 Jost,sans-serif;letter-spacing:.04em;margin:0 0 14px;
-  background:linear-gradient(100deg,#f6eedc 0%,#e7c9f2 45%,#bfe2f7 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:2;background:radial-gradient(ellipse at 50% 45%,transparent 45%,rgba(2,3,12,.75) 100%)}
+body::after{content:"";position:fixed;inset:-50%;pointer-events:none;z-index:3;opacity:.09;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:grain 1s steps(6) infinite}
+@keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(-3%,2%)}40%{transform:translate(2%,-3%)}60%{transform:translate(-2%,-1%)}80%{transform:translate(3%,3%)}100%{transform:translate(0,0)}}
+.wrap{position:relative;z-index:4;max-width:920px;margin:0 auto;padding:36px 20px 64px;text-align:center}
+h1{font:400 clamp(44px,8vw,92px)/1.02 Forum,Georgia,serif;letter-spacing:.01em;margin:0 0 16px;
+  background:linear-gradient(180deg,#fffaf0 0%,#f3dfb4 55%,#c9a46a 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 18px rgba(255,214,150,.28)) drop-shadow(0 2px 1px rgba(0,0,0,.6))}
 .lede{max-width:44ch;margin:0 auto;color:var(--dim);font-size:16px}
 .chart{position:relative;aspect-ratio:1;width:clamp(280px,calc(100vh - 330px),560px);max-width:100%;margin:18px auto 0}
 .chart canvas{width:100%;height:100%;display:block}
 .actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:8px}
 button,.link{font:400 15px Jost,sans-serif;letter-spacing:.02em;border-radius:999px;padding:12px 26px;cursor:pointer;border:1px solid rgba(205,213,238,.3);background:rgba(7,11,34,.35);color:var(--star);text-decoration:none;backdrop-filter:blur(6px)}
 button:hover,.link:hover{border-color:var(--silver)}
-button.play{background:var(--brass);border-color:var(--brass);color:#14112a;font-weight:500;min-width:150px}
-button.play:hover{background:#f0d197}
+button.play{background:linear-gradient(180deg,#f7dca4,#d9a95c);border-color:#f2cf8e;color:#1c1430;font-weight:500;min-width:150px;box-shadow:0 0 24px rgba(240,190,110,.35),inset 0 1px 0 rgba(255,255,255,.6)}
+button.play:hover{box-shadow:0 0 34px rgba(240,190,110,.55),inset 0 1px 0 rgba(255,255,255,.6)}
 :focus-visible{outline:2px solid var(--brass);outline-offset:3px}
 .link[aria-disabled=true]{opacity:.4;pointer-events:none}
 .info{margin:44px auto 0;max-width:820px}
@@ -55,7 +61,7 @@ dl.reading dd{margin:0;font-size:17px;font-weight:400}
 .info .actions{margin-top:28px}
 .status{font-size:13px;color:var(--dim);min-height:1.6em;margin-top:12px}
 .epochs{margin:64px auto 0;max-width:640px;text-align:left}
-.epochs h2{font:300 28px Jost,sans-serif;text-align:center;margin:0 0 6px;letter-spacing:.02em}
+.epochs h2{font:400 32px Forum,Georgia,serif;text-align:center;margin:0 0 6px;letter-spacing:.02em}
 .epochs p{color:var(--dim);margin:0 auto 24px;font-size:15px;max-width:52ch;text-align:center}
 .track{display:flex;flex-direction:column;position:relative}
 .track .seg{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:baseline;padding:10px 0;border-top:1px solid var(--ink)}
@@ -66,7 +72,7 @@ dl.reading dd{margin:0;font-size:17px;font-weight:400}
 footer{margin-top:64px;font-size:13px;color:var(--dim)}
 footer a{color:var(--star)}
 @media (max-width:720px){dl.reading{grid-template-columns:repeat(2,auto);gap:16px 40px}}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}body::after{animation:none}}
 </style>
 </head>
 <body>
@@ -139,41 +145,7 @@ function render(arr){
 /* ---------- карта неба ---------- */
 function rng(seed){let t=seed>>>0;return()=>{t+=0x6D2B79F5;let r=Math.imul(t^t>>>15,1|t);r^=r+Math.imul(r^r>>>7,61|r);return((r^r>>>14)>>>0)/4294967296}}
 const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
-function drawChart(arr,t){
-  const c=els.chart,dpr=Math.min(2,window.devicePixelRatio||1),W=c.clientWidth||600;if(c.width!==W*dpr){c.width=W*dpr;c.height=W*dpr}
-  const g=c.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);g.clearRect(0,0,W,W);
-  const cx=W/2,cy=W/2,R=W*.47,ink=css('--ink'),star=css('--star'),dim=css('--dim'),brass=css('--brass'),silver=css('--silver');
-  const s=arr.sky,ang=deg=>(-90-deg)*Math.PI/180; // Овен сверху, против часовой — как на планисфере
-  // фоновые звёзды, детерминированные датой
-  // кольца
-  g.strokeStyle=ink;g.lineWidth=1;[R,R*.84,R*.78].forEach(rr=>{g.beginPath();g.arc(cx,cy,rr,0,7);g.stroke()});
-  // сектора и подписи знаков
-  g.font=`300 ${Math.max(11,W*.024)}px Jost, sans-serif`;g.textAlign='center';g.textBaseline='middle';
-  for(let i=0;i<12;i++){const a=ang(i*30);g.beginPath();g.moveTo(cx+Math.cos(a)*R*.78,cy+Math.sin(a)*R*.78);g.lineTo(cx+Math.cos(a)*R,cy+Math.sin(a)*R);g.stroke();
-    const m=ang(i*30+15);g.fillStyle=i===s.zodiacIdx?brass:dim;g.save();g.translate(cx+Math.cos(m)*R*.92,cy+Math.sin(m)*R*.92);const up=Math.sin(m)>0;g.rotate(m+(up?-Math.PI/2:Math.PI/2));g.fillText(ZODIAC[i],0,0);g.restore()}
-  // градусная шкала
-  for(let d=0;d<360;d+=5){const a=ang(d),l=d%30?R*.81:R*.78;g.beginPath();g.moveTo(cx+Math.cos(a)*l,cy+Math.sin(a)*l);g.lineTo(cx+Math.cos(a)*R*.84,cy+Math.sin(a)*R*.84);g.stroke()}
-  // Солнце
-  const sa=ang(s.lambda),sx=cx+Math.cos(sa)*R*.81,sy=cy+Math.sin(sa)*R*.81;
-  g.strokeStyle=brass;g.globalAlpha=.35;g.beginPath();g.moveTo(cx,cy);g.lineTo(sx,sy);g.stroke();g.globalAlpha=1;
-  const glow=g.createRadialGradient(sx,sy,0,sx,sy,W*.04);glow.addColorStop(0,brass);glow.addColorStop(1,'transparent');g.fillStyle=glow;g.beginPath();g.arc(sx,sy,W*.04,0,7);g.fill();
-  g.fillStyle=brass;g.beginPath();g.arc(sx,sy,W*.012,0,7);g.fill();
-  // ноты-созвездие: угол = время, радиус = высота
-  if(t>=0){const ev=arr.events.filter(e=>e.voice!=='pulse'&&e.start<=t);
-    let prev=null;ev.forEach(e=>{const a=ang(-e.start/TRACK_SECONDS*360),rr=R*(.2+.55*clamp((e.midi-30)/66,0,1)),x=cx+Math.cos(a)*rr,y=cy+Math.sin(a)*rr,age=t-e.start;
-      g.globalAlpha=clamp(1.4-age*.3,.6,1);g.fillStyle=e.voice==='lead'?brass:silver;g.beginPath();g.arc(x,y,e.voice==='lead'?2.8:e.voice==='impact'?3.4:1.8,0,7);g.fill();
-      if(e.voice==='lead'){if(prev){g.strokeStyle=brass;g.globalAlpha=.4;g.beginPath();g.moveTo(prev[0],prev[1]);g.lineTo(x,y);g.stroke()}prev=[x,y]}});
-    g.globalAlpha=1;const ha=ang(-t/TRACK_SECONDS*360);g.strokeStyle=silver;g.globalAlpha=.6;g.beginPath();g.moveTo(cx,cy);g.lineTo(cx+Math.cos(ha)*R*.78,cy+Math.sin(ha)*R*.78);g.stroke();g.globalAlpha=1}
-  // Луна в центре с реальной фазой
-  const mr=W*.06;g.fillStyle='rgba(7,11,34,.85)';g.beginPath();g.arc(cx,cy,mr,0,7);g.fill();
-  g.save();g.beginPath();g.arc(cx,cy,mr,0,7);g.clip();g.fillStyle=silver;
-  const p=s.phase,k=Math.cos(2*Math.PI*p);g.beginPath();
-  if(p<.5){g.arc(cx,cy,mr,-Math.PI/2,Math.PI/2);g.ellipse(cx,cy,Math.abs(k)*mr,mr,0,Math.PI/2,-Math.PI/2,k>0)}
-  else{g.arc(cx,cy,mr,Math.PI/2,-Math.PI/2);g.ellipse(cx,cy,Math.abs(k)*mr,mr,0,-Math.PI/2,Math.PI/2,k>0)}
-  g.fill();g.restore();g.strokeStyle=ink;g.beginPath();g.arc(cx,cy,mr,0,7);g.stroke();
-}
-
-function generate(){try{if(playing)stop();gatherStars(0);const dt=parseDatetimeLocal(els.dateInput.value);currentArrangement=buildArrangement(dt);render(currentArrangement);const mb=generateMidiBlob(currentArrangement);if(midiUrl)URL.revokeObjectURL(midiUrl);midiUrl=URL.createObjectURL(mb);els.downloadMidi.href=midiUrl;els.downloadMidi.download=fileBase(dt)+'.mid';els.downloadMidi.setAttribute('aria-disabled','false');setStatus('')}catch(e){console.error(e);setStatus(e.message||'Не получилось разобрать дату. Проверьте формат.')}}
+function generate(){try{if(playing)stop();gatherStars(0);lastT=-1;const dt=parseDatetimeLocal(els.dateInput.value);currentArrangement=buildArrangement(dt);render(currentArrangement);const mb=generateMidiBlob(currentArrangement);if(midiUrl)URL.revokeObjectURL(midiUrl);midiUrl=URL.createObjectURL(mb);els.downloadMidi.href=midiUrl;els.downloadMidi.download=fileBase(dt)+'.mid';els.downloadMidi.setAttribute('aria-disabled','false');setStatus('')}catch(e){console.error(e);setStatus(e.message||'Не получилось разобрать дату. Проверьте формат.')}}
 
 /* ---------- звук ---------- */
 function makeImpulse(ctx,sec,decay){const len=ctx.sampleRate*sec,b=ctx.createBuffer(2,len,ctx.sampleRate);for(let ch=0;ch<2;ch++){const d=b.getChannelData(ch);for(let i=0;i<len;i++){const x=i/len;d[i]=(Math.random()*2-1)*Math.pow(1-x,decay)*(i<ctx.sampleRate*.012?i/(ctx.sampleRate*.012):1)}}return b}
@@ -206,24 +178,105 @@ function stop(){active.forEach(n=>{try{n.stop()}catch(e){}});active=[];playing=f
 function tick(){const t=audioCtx.currentTime-startAt;if(t>TRACK_SECONDS+3.5){stop();drawChart(currentArrangement,TRACK_SECONDS);return}
   const tt=clamp(t,0,TRACK_SECONDS);drawChart(currentArrangement,tt);
   const segs=els.track.querySelectorAll('.seg');currentArrangement.scenes.forEach((sc,i)=>segs[i]&&segs[i].classList.toggle('now',tt>=sc.start&&tt<sc.end));
-  els.playhead.style.left=(tt/TRACK_SECONDS*100)+'%';raf=requestAnimationFrame(tick)}
+  lastT=tt;els.playhead.style.left=(tt/TRACK_SECONDS*100)+'%';raf=requestAnimationFrame(tick)}
 
-/* ---------- звёзды: по всему экрану → в круг ---------- */
-const SKY={c:document.getElementById('sky'),ps:[],G:0,from:0,to:0,t0:0,dur:2600};
-(function initStars(){const r=rng(20260609),n=window.innerWidth<600?150:240;for(let i=0;i<n;i++)SKY.ps.push({sx:r(),sy:r(),wa:r()*Math.PI*2,wd:.08+Math.sqrt(r())*.7,size:r()*1.3+.35,a:.3+r()*.6,tw:r()*6.28,ts:.6+r()*1.6,delay:r()*.6})})();
+/* ---------- спрайты света (рендерятся один раз) ---------- */
+function makeSprite(size,stops,spikes){const c=document.createElement('canvas');c.width=c.height=size;const g=c.getContext('2d'),h=size/2,gr=g.createRadialGradient(h,h,0,h,h,h);stops.forEach(([o,col])=>gr.addColorStop(o,col));g.fillStyle=gr;g.fillRect(0,0,size,size);
+  if(spikes){g.globalCompositeOperation='lighter';[[size,size*.035],[size*.035,size]].forEach(([w,hh])=>{const l=g.createRadialGradient(h,h,0,h,h,h);l.addColorStop(0,'rgba(255,255,255,.55)');l.addColorStop(1,'rgba(255,255,255,0)');g.fillStyle=l;g.fillRect(h-w/2,h-hh/2,w,hh)})}return c}
+const SPR={
+  star:makeSprite(32,[[0,'rgba(255,255,255,1)'],[.12,'rgba(235,240,255,.9)'],[.35,'rgba(170,190,255,.22)'],[1,'rgba(120,140,255,0)']]),
+  bright:makeSprite(96,[[0,'rgba(255,255,255,1)'],[.05,'rgba(255,250,240,.95)'],[.2,'rgba(200,210,255,.25)'],[1,'rgba(120,140,255,0)']],true),
+  gold:makeSprite(64,[[0,'rgba(255,248,225,1)'],[.12,'rgba(255,214,140,.9)'],[.4,'rgba(231,170,80,.22)'],[1,'rgba(231,150,60,0)']]),
+  sun:makeSprite(256,[[0,'rgba(255,252,240,1)'],[.04,'rgba(255,236,190,1)'],[.12,'rgba(255,200,120,.55)'],[.35,'rgba(240,150,70,.12)'],[1,'rgba(200,100,40,0)']])};
+
+/* ---------- туманности: шум один раз, потом просто дрейф ---------- */
+function makeNebula(seed,palette){const N=200,c=document.createElement('canvas');c.width=c.height=N;const g=c.getContext('2d'),img=g.createImageData(N,N),r=rng(seed);
+  const G=16,grid=[];for(let i=0;i<(G+1)*(G+1);i++)grid.push(r());
+  const vn=(x,y,f)=>{const gx=x*f,gy=y*f,ix=Math.floor(gx)%G,iy=Math.floor(gy)%G,fx=gx-Math.floor(gx),fy=gy-Math.floor(gy),s=t=>t*t*(3-2*t),v=(a,b)=>grid[((b%G)*(G+1))+(a%G)];
+    const a=v(ix,iy),b=v(ix+1,iy),c2=v(ix,iy+1),d=v(ix+1,iy+1);return a+(b-a)*s(fx)+(c2-a)*s(fy)+(a-b-c2+d)*s(fx)*s(fy)};
+  for(let y=0;y<N;y++)for(let x=0;x<N;x++){const u=x/N,v=y/N;let n=0,amp=.55,f=2;for(let o=0;o<5;o++){n+=vn(u,v,f)*amp;amp*=.5;f*=2}
+    n=Math.max(0,n-.42)*2.6;const k=Math.min(1,n),p=palette(u,v),i=(y*N+x)*4;img.data[i]=p[0];img.data[i+1]=p[1];img.data[i+2]=p[2];img.data[i+3]=Math.round(k*k*150)}
+  g.putImageData(img,0,0);return c}
+const NEB=[makeNebula(7,(u,v)=>[120+60*u,70+40*v,190]),makeNebula(31,(u,v)=>[50,140+50*v,190+30*u])];
+
+/* ---------- карта неба: металл, свет, объём ---------- */
+function drawChart(arr,t){
+  const c=els.chart,dpr=Math.min(2,window.devicePixelRatio||1),W=c.clientWidth||600;if(c.width!==Math.round(W*dpr)){c.width=Math.round(W*dpr);c.height=Math.round(W*dpr)}
+  const g=c.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);g.clearRect(0,0,W,W);
+  const cx=W/2,cy=W/2,R=W*.45,s=arr.sky,ang=deg=>(-90-deg)*Math.PI/180,sa=ang(s.lambda),lx=Math.cos(sa),ly=Math.sin(sa);
+  // глубина: тёмный «колодец» неба внутри круга и мягкая тень от кольца
+  g.save();g.shadowColor='rgba(0,0,0,.65)';g.shadowBlur=W*.08;g.shadowOffsetX=-lx*W*.02;g.shadowOffsetY=-ly*W*.02+W*.02;
+  const well=g.createRadialGradient(cx,cy,R*.1,cx,cy,R);well.addColorStop(0,'rgba(10,14,40,.35)');well.addColorStop(1,'rgba(4,6,20,.75)');g.fillStyle=well;g.beginPath();g.arc(cx,cy,R,0,7);g.fill();g.restore();
+  // металлическое кольцо зодиака, освещённое со стороны Солнца
+  const metal=g.createLinearGradient(cx+lx*R,cy+ly*R,cx-lx*R,cy-ly*R);metal.addColorStop(0,'rgba(240,206,140,.55)');metal.addColorStop(.35,'rgba(150,140,170,.22)');metal.addColorStop(1,'rgba(60,70,120,.18)');
+  g.fillStyle=metal;g.beginPath();g.arc(cx,cy,R,0,Math.PI*2);g.moveTo(cx+R*.84,cy);g.arc(cx,cy,R*.84,Math.PI*2,0,true);g.fill();
+  // фаска: светлый край снаружи, тень внутри
+  const edge=(rr,col,w)=>{g.strokeStyle=col;g.lineWidth=w;g.beginPath();g.arc(cx,cy,rr,0,7);g.stroke()};
+  edge(R,metal,1.5);edge(R*.84,'rgba(0,0,0,.35)',2);edge(R*.84+1.2,'rgba(255,230,180,.12)',1);edge(R*.78,'rgba(205,213,238,.14)',1);
+  // деления и знаки
+  g.strokeStyle='rgba(230,215,180,.35)';g.lineWidth=1;
+  for(let d=0;d<360;d+=5){const a=ang(d),l=d%30?R*.80:R*.78;g.beginPath();g.moveTo(cx+Math.cos(a)*l,cy+Math.sin(a)*l);g.lineTo(cx+Math.cos(a)*R*.835,cy+Math.sin(a)*R*.835);g.stroke()}
+  g.font=`400 ${Math.max(11,W*.026)}px Forum, Georgia, serif`;g.textAlign='center';g.textBaseline='middle';
+  for(let i=0;i<12;i++){const a=ang(i*30);g.strokeStyle='rgba(0,0,0,.3)';g.beginPath();g.moveTo(cx+Math.cos(a)*R*.845,cy+Math.sin(a)*R*.845);g.lineTo(cx+Math.cos(a)*R*.995,cy+Math.sin(a)*R*.995);g.stroke();
+    const m=ang(i*30+15),lit=.45+.55*Math.max(0,Math.cos(m-sa));g.save();g.translate(cx+Math.cos(m)*R*.92,cy+Math.sin(m)*R*.92);g.rotate(m+(Math.sin(m)>0?-Math.PI/2:Math.PI/2));
+    g.fillStyle='rgba(0,0,0,.5)';g.fillText(ZODIAC[i],0,1.2);g.fillStyle=i===s.zodiacIdx?'#ffe2a6':`rgba(236,230,214,${lit})`;g.fillText(ZODIAC[i],0,0);g.restore()}
+  // созвездие мелодии
+  g.globalCompositeOperation='lighter';
+  if(t>=0){let prev=null;const ev=arr.events.filter(e=>e.voice!=='pulse'&&e.start<=t);
+    ev.forEach(e=>{const a=ang(-e.start/TRACK_SECONDS*360),rr=R*(.2+.55*clamp((e.midi-30)/66,0,1)),x=cx+Math.cos(a)*rr,y=cy+Math.sin(a)*rr,age=t-e.start,flash=Math.max(0,1-age*1.5);
+      if(e.voice==='lead'){if(prev){g.strokeStyle='rgba(255,210,140,.35)';g.lineWidth=1.2;g.shadowColor='rgba(255,190,110,.8)';g.shadowBlur=8;g.beginPath();g.moveTo(prev[0],prev[1]);g.lineTo(x,y);g.stroke();g.shadowBlur=0}prev=[x,y];
+        const z=W*(.035+.05*flash);g.globalAlpha=.9;g.drawImage(SPR.gold,x-z/2,y-z/2,z,z)}
+      else{const z=W*(e.voice==='impact'?.06:.022)*(1+flash*1.4);g.globalAlpha=clamp(.55+flash,0,1);g.drawImage(flash>.3?SPR.bright:SPR.star,x-z/2,y-z/2,z,z)}});
+    g.globalAlpha=1;
+    // стрелка-луч от центра
+    const ha=ang(-t/TRACK_SECONDS*360),beam=g.createLinearGradient(cx,cy,cx+Math.cos(ha)*R*.8,cy+Math.sin(ha)*R*.8);beam.addColorStop(0,'rgba(205,213,238,0)');beam.addColorStop(1,'rgba(205,213,238,.55)');
+    g.strokeStyle=beam;g.lineWidth=1.2;g.beginPath();g.moveTo(cx,cy);g.lineTo(cx+Math.cos(ha)*R*.78,cy+Math.sin(ha)*R*.78);g.stroke()}
+  // Солнце: ореол, анаморфный блик, лучик к центру
+  const sx=cx+lx*R*.81,sy=cy+ly*R*.81,pulse=1+.04*Math.sin(performance.now()/700);
+  const ray=g.createLinearGradient(sx,sy,cx,cy);ray.addColorStop(0,'rgba(255,200,120,.35)');ray.addColorStop(1,'rgba(255,200,120,0)');g.strokeStyle=ray;g.lineWidth=W*.012;g.beginPath();g.moveTo(sx,sy);g.lineTo(cx,cy);g.stroke();
+  let z=W*.32*pulse;g.drawImage(SPR.sun,sx-z/2,sy-z/2,z,z);
+  g.save();g.translate(sx,sy);g.scale(1,.035);z=W*.9;g.globalAlpha=.55;g.drawImage(SPR.sun,-z/2,-z/2,z,z);g.restore();g.globalAlpha=1;
+  g.globalCompositeOperation='source-over';
+  g.fillStyle='#fff6e2';g.beginPath();g.arc(sx,sy,W*.011,0,7);g.fill();
+  // Луна-шар с терминатором, пепельным светом и ореолом
+  const mr=W*.075,p=s.phase,kk=Math.cos(2*Math.PI*p);
+  g.globalCompositeOperation='lighter';z=mr*5;g.globalAlpha=.25+.5*s.illum;g.drawImage(SPR.star,cx-z/2,cy-z/2,z,z);g.globalAlpha=1;g.globalCompositeOperation='source-over';
+  const dark=g.createRadialGradient(cx-mr*.3,cy-mr*.3,mr*.1,cx,cy,mr);dark.addColorStop(0,'#1e2748');dark.addColorStop(1,'#080b1d');g.fillStyle=dark;g.beginPath();g.arc(cx,cy,mr,0,7);g.fill();
+  g.save();g.beginPath();g.arc(cx,cy,mr,0,7);g.clip();
+  const lit=g.createRadialGradient(cx+(p<.5?mr*.45:-mr*.45),cy-mr*.25,mr*.05,cx,cy,mr*1.05);lit.addColorStop(0,'#fbfaf4');lit.addColorStop(.6,'#d7d9e2');lit.addColorStop(1,'#8a90a8');g.fillStyle=lit;g.filter='blur(1.2px)';g.beginPath();
+  if(p<.5){g.arc(cx,cy,mr,-Math.PI/2,Math.PI/2);g.ellipse(cx,cy,Math.abs(kk)*mr,mr,0,Math.PI/2,-Math.PI/2,kk>0)}else{g.arc(cx,cy,mr,Math.PI/2,-Math.PI/2);g.ellipse(cx,cy,Math.abs(kk)*mr,mr,0,-Math.PI/2,Math.PI/2,kk>0)}
+  g.fill();g.filter='none';
+  const cr=rng(11);g.fillStyle='rgba(60,64,90,.18)';for(let i=0;i<9;i++){const a=cr()*7,d=cr()*mr*.75;g.beginPath();g.arc(cx+Math.cos(a)*d,cy+Math.sin(a)*d,mr*(.06+cr()*.14),0,7);g.fill()}
+  const rim=g.createRadialGradient(cx,cy,mr*.7,cx,cy,mr);rim.addColorStop(0,'rgba(0,0,0,0)');rim.addColorStop(1,'rgba(0,0,0,.45)');g.fillStyle=rim;g.fillRect(cx-mr,cy-mr,mr*2,mr*2);g.restore();
+}
+
+/* ---------- небо: туманности, звёзды со свечением, сбор в круг ---------- */
+const SKY={c:document.getElementById('sky'),ps:[],G:0,from:0,to:0,t0:0,dur:2800,mx:0,my:0};
+(function initStars(){const r=rng(20260609),n=window.innerWidth<600?170:280;for(let i=0;i<n;i++){const big=r()<.06;SKY.ps.push({sx:r(),sy:r(),wa:r()*Math.PI*2,wd:.1+Math.sqrt(r())*.68,size:big?2.6+r()*2:.6+r()*1.4,big,a:.35+r()*.6,tw:r()*6.28,ts:.5+r()*1.8,delay:r()*.6,depth:.3+r()*.7})}})();
 const reduceMotion=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 function gatherStars(to){if(SKY.to===to&&SKY.G===to)return;SKY.from=SKY.G;SKY.to=to;SKY.t0=performance.now();if(reduceMotion)SKY.G=to}
 const ease=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;
+window.addEventListener('pointermove',e=>{SKY.mx=e.clientX/window.innerWidth-.5;SKY.my=e.clientY/window.innerHeight-.5});
 function skyFrame(now){const c=SKY.c,dpr=Math.min(2,window.devicePixelRatio||1),W=window.innerWidth,H=window.innerHeight;
-  if(c.width!==W*dpr||c.height!==H*dpr){c.width=W*dpr;c.height=H*dpr}
+  if(c.width!==Math.round(W*dpr)||c.height!==Math.round(H*dpr)){c.width=Math.round(W*dpr);c.height=Math.round(H*dpr)}
   if(SKY.G!==SKY.to){const p=clamp((now-SKY.t0)/SKY.dur,0,1);SKY.G=SKY.from+(SKY.to-SKY.from)*p;if(p>=1)SKY.G=SKY.to}
   const g=c.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);g.clearRect(0,0,W,H);
-  const rc=els.chart.getBoundingClientRect(),cx=rc.left+rc.width/2,cy=rc.top+rc.height/2,R=rc.width*.47*.78,t=now/1000;
-  g.fillStyle='#eef0fa';
-  for(const s of SKY.ps){const q=ease(clamp(SKY.G*1.6-s.delay,0,1)),x0=s.sx*W,y0=s.sy*H,x1=cx+Math.cos(s.wa)*s.wd*R,y1=cy+Math.sin(s.wa)*s.wd*R;
-    const x=x0+(x1-x0)*q,y=y0+(y1-y0)*q,tw=reduceMotion?1:.7+.3*Math.sin(t*s.ts+s.tw);
-    g.globalAlpha=s.a*tw;g.beginPath();g.arc(x,y,s.size*(1-.25*q),0,7);g.fill()}
-  g.globalAlpha=1;requestAnimationFrame(skyFrame)}
+  const t=reduceMotion?0:now/1000,D=Math.max(W,H)*1.5;g.imageSmoothingQuality='high';
+  // туманности медленно дрейфуют и чуть сдвигаются за курсором (параллакс)
+  g.globalCompositeOperation='lighter';
+  g.globalAlpha=.55;g.drawImage(NEB[0],-D*.18+Math.sin(t*.02)*40-SKY.mx*30,-D*.25+Math.cos(t*.017)*30-SKY.my*30,D,D);
+  g.globalAlpha=.45;g.drawImage(NEB[1],W-D*.75+Math.cos(t*.015)*40-SKY.mx*18,H*.1-D*.3+Math.sin(t*.021)*30-SKY.my*18,D,D);
+  g.globalAlpha=1;
+  const rc=els.chart.getBoundingClientRect(),cx=rc.left+rc.width/2,cy=rc.top+rc.height/2,R=rc.width*.45*.76;
+  for(const s of SKY.ps){const q=ease(clamp(SKY.G*1.6-s.delay,0,1)),x0=s.sx*W-SKY.mx*40*s.depth,y0=s.sy*H-SKY.my*40*s.depth,x1=cx+Math.cos(s.wa)*s.wd*R,y1=cy+Math.sin(s.wa)*s.wd*R;
+    const x=x0+(x1-x0)*q,y=y0+(y1-y0)*q,tw=reduceMotion?1:.65+.35*Math.sin(t*s.ts+s.tw),z=s.size*(s.big?9:6)*(1-.3*q);
+    g.globalAlpha=s.a*tw*(s.big?.9:1);g.drawImage(s.big?SPR.bright:SPR.star,x-z/2,y-z/2,z,z);
+    // хвост при полёте
+    if(q>0&&q<1&&!reduceMotion){const k=.05;g.globalAlpha=.25*s.a;g.strokeStyle='#cfd8ff';g.lineWidth=.6;g.beginPath();g.moveTo(x,y);g.lineTo(x-(x1-x0)*k,y-(y1-y0)*k);g.stroke()}}
+  g.globalAlpha=1;g.globalCompositeOperation='source-over';
+  if(currentArrangement&&!playing&&!reduceMotion)drawChart(currentArrangement,SKY.G>=1&&lastT>0?lastT:-1);
+  requestAnimationFrame(skyFrame)}
+let lastT=-1;
 requestAnimationFrame(skyFrame);
 
 els.randomBtn.addEventListener('click',randomDate);els.playBtn.addEventListener('click',()=>playing?stop():play());els.dateInput.addEventListener('change',generate);
