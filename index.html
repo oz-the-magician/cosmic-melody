@@ -1,22 +1,95 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Космическая мелодия — offline sample pack</title>
-  <style>
-    :root{--bg:#070814;--text:#f7f3ff;--muted:rgba(247,243,255,.66);--line:rgba(255,255,255,.16);--panel:rgba(255,255,255,.075);--a:#9de8ff;--b:#d9b5ff;--c:#a8ffd2;--r:24px}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 18% 12%,rgba(157,232,255,.24),transparent 30%),radial-gradient(circle at 82% 0%,rgba(217,181,255,.22),transparent 28%),linear-gradient(180deg,#050611,#0b1026 58%,#060714);color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.wrap{width:min(1120px,calc(100vw - 32px));margin:auto;padding:38px 0 58px}.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:22px}.card{border:1px solid var(--line);border-radius:var(--r);background:linear-gradient(180deg,var(--panel),rgba(255,255,255,.045));box-shadow:0 26px 90px rgba(0,0,0,.42);backdrop-filter:blur(22px)}.intro,.control,.section{padding:28px}.intro{min-height:330px;display:flex;flex-direction:column;justify-content:space-between}.kicker{display:inline-flex;width:fit-content;padding:9px 12px;border-radius:999px;color:var(--a);border:1px solid rgba(157,232,255,.32);background:rgba(157,232,255,.08);font-size:13px;text-transform:uppercase;letter-spacing:.04em}h1{font-size:clamp(40px,6vw,72px);line-height:.94;letter-spacing:-.06em;margin:22px 0 14px}h2{margin:0 0 18px}.lead{color:var(--muted);font-size:17px;line-height:1.55;max-width:720px}.note,.status{color:var(--muted);font-size:13px;line-height:1.5}.control{display:flex;flex-direction:column;gap:14px}label{font-size:13px;color:var(--muted);display:block;margin-bottom:8px}input{width:100%;padding:16px;border-radius:18px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:var(--text);font:inherit}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}button,a.download{border:0;border-radius:16px;padding:14px;color:#07101a;background:linear-gradient(135deg,var(--a),var(--b));font-weight:780;cursor:pointer;text-align:center;text-decoration:none;font-size:14px}button.secondary,a.secondary{color:var(--text);background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18)}button:disabled,a[aria-disabled=true]{opacity:.42;pointer-events:none}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:22px 0}.metric{padding:18px;border-radius:20px;background:rgba(255,255,255,.065);border:1px solid rgba(255,255,255,.12);min-height:108px}.metric .label{color:var(--muted);font-size:12px;margin-bottom:10px}.metric .value{font-weight:780;font-size:22px;letter-spacing:-.035em}.metric .sub{color:rgba(247,243,255,.5);font-size:12px;margin-top:8px;line-height:1.35}.section{margin-top:22px}.table-wrap{overflow:auto;border:1px solid rgba(255,255,255,.12);border-radius:18px}table{width:100%;min-width:900px;border-collapse:collapse;background:rgba(0,0,0,.12)}th,td{padding:13px 14px;border-bottom:1px solid rgba(255,255,255,.09);font-size:13px;text-align:left}th{color:rgba(247,243,255,.62);background:rgba(255,255,255,.045)}code{color:var(--c);background:rgba(168,255,210,.08);border:1px solid rgba(168,255,210,.16);border-radius:8px;padding:2px 6px}.pill{display:inline-flex;border-radius:999px;padding:5px 9px;background:rgba(157,232,255,.1);border:1px solid rgba(157,232,255,.2);color:var(--a);font-size:12px}.footer{margin-top:22px;color:rgba(247,243,255,.45);font-size:12px;text-align:center}@media(max-width:900px){.hero{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.wrap{width:min(100vw - 20px,1120px)}.grid,.row{grid-template-columns:1fr}.intro,.control,.section{padding:20px}}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Космическая мелодия</title>
+<meta name="description" content="Любая дата превращается в 30 секунд оркестровой музыки по положению Солнца и фазе Луны.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#121a3d;     /* фон карты */
+  --deep:#0c1230;      /* края виньетки */
+  --ink:#2b3870;       /* линии сетки */
+  --star:#ece6d3;      /* основной текст */
+  --dim:#9aa3c4;       /* второстепенный */
+  --brass:#d4ac5e;     /* Солнце, акцент */
+  --silver:#c4cde3;    /* Луна */
+}
+*{box-sizing:border-box}
+html{background:var(--deep)}
+body{margin:0;min-height:100vh;color:var(--star);font:16px/1.6 Manrope,system-ui,sans-serif;
+  background:radial-gradient(ellipse at 50% 30%,var(--night) 0%,var(--deep) 75%)}
+.wrap{max-width:1080px;margin:0 auto;padding:48px 24px 64px}
+header{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-bottom:8px}
+h1{font:500 clamp(44px,7vw,84px)/.95 Cormorant,Georgia,serif;letter-spacing:-.01em;margin:0}
+.lede{max-width:34ch;color:var(--dim);margin:0;font-size:15px}
+.stage{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:40px;align-items:center;margin-top:24px}
+.chart{position:relative;aspect-ratio:1;width:100%;max-width:640px;justify-self:center}
+.chart canvas{width:100%;height:100%;display:block}
+.panel{display:flex;flex-direction:column;gap:28px}
+.field label{display:block;font-size:13px;color:var(--dim);margin-bottom:6px}
+input[type=datetime-local]{width:100%;padding:12px 0;border:0;border-bottom:1px solid var(--ink);background:transparent;color:var(--star);font:500 22px Cormorant,serif;color-scheme:dark}
+input:focus{outline:none;border-bottom-color:var(--brass)}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+button,.link{font:600 14px Manrope,sans-serif;border-radius:999px;padding:12px 20px;cursor:pointer;border:1px solid var(--ink);background:transparent;color:var(--star);text-decoration:none}
+button:hover,.link:hover{border-color:var(--dim)}
+button.play{background:var(--brass);border-color:var(--brass);color:var(--deep);min-width:128px}
+button.play:hover{background:#e2bd74}
+:focus-visible{outline:2px solid var(--brass);outline-offset:3px}
+.link[aria-disabled=true]{opacity:.4;pointer-events:none}
+dl.reading{margin:0;display:grid;grid-template-columns:auto 1fr;gap:10px 18px;font-size:14px}
+dl.reading dt{color:var(--dim)}
+dl.reading dd{margin:0;font-weight:500}
+.status{font-size:13px;color:var(--dim);min-height:1.6em}
+.epochs{margin-top:56px}
+.epochs h2{font:500 28px Cormorant,serif;margin:0 0 4px}
+.epochs p{color:var(--dim);margin:0 0 20px;font-size:14px;max-width:62ch}
+.track{display:flex;border-top:1px solid var(--ink);position:relative}
+.track .seg{flex:var(--w) 1 0;padding:12px 10px 0 0;border-left:1px solid var(--ink);padding-left:10px;min-width:0}
+.track .seg:first-child{border-left:0;padding-left:0}
+.seg b{display:block;font:500 17px/1.2 Cormorant,serif;margin-bottom:4px}
+.seg span{display:block;font-size:12px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.seg.now b{color:var(--brass)}
+.playhead{position:absolute;top:-3px;width:5px;height:5px;border-radius:50%;background:var(--brass);transform:translateX(-50%);opacity:0;transition:opacity .3s}
+footer{margin-top:64px;font-size:12px;color:var(--dim)}
+footer a{color:var(--star)}
+@media (max-width:820px){
+  .stage{grid-template-columns:1fr;gap:24px}
+  .track{flex-direction:column;border-top:0}
+  .track .seg{border-left:0;border-top:1px solid var(--ink);padding:10px 0}
+  .playhead{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
 </head>
 <body>
 <main class="wrap">
-  <section class="hero">
-    <div class="card intro"><div><div class="kicker">offline sample-pack · no CDN</div><h1>Космическая мелодия даты</h1><p class="lead">Эта версия использует локальные сэмплы из папки <code>samples/</code>. После распаковки архива интернет не нужен.</p></div><div class="note">Если браузер не даст загрузить локальные сэмплы при двойном клике по HTML, запусти <code>start_mac.command</code> или открой папку через локальный сервер. См. README.</div></div>
-    <div class="card control"><div><label for="dateInput">Дата и время</label><input id="dateInput" type="datetime-local" step="60"></div><div class="row"><button id="generateBtn">Сгенерировать</button><button id="randomBtn" class="secondary">Случайная дата</button></div><div class="row"><button id="playBtn">Play local samples</button><button id="stopBtn" class="secondary">Стоп</button></div><a id="downloadMidi" class="download secondary" aria-disabled="true" download="cosmic-offline.mid" href="#">Скачать MIDI</a><div id="status" class="status">Готово. Сэмплы лежат локально в папке samples.</div></div>
+  <header>
+    <h1>Космическая<br>мелодия</h1>
+    <p class="lede">Выберите дату. Солнце задаст тонику, Луна — лад, время суток — темп. Получится 30 секунд музыки об истории Вселенной.</p>
+  </header>
+  <section class="stage">
+    <div class="chart"><canvas id="chart" aria-label="Карта неба: положение Солнца в зодиаке и фаза Луны" role="img"></canvas></div>
+    <div class="panel">
+      <div class="field"><label for="dateInput">Дата и время</label><input id="dateInput" type="datetime-local" step="60"></div>
+      <div class="actions">
+        <button id="playBtn" class="play">Слушать</button>
+        <button id="randomBtn">Случайная дата</button>
+      </div>
+      <dl class="reading" id="reading"></dl>
+      <div class="actions"><a id="downloadMidi" class="link" aria-disabled="true" href="#" download>Скачать MIDI</a></div>
+      <div id="status" class="status" aria-live="polite"></div>
+    </div>
   </section>
-  <section class="grid" id="metrics"></section>
-  <section class="card section"><h2>Партии и локальные инструменты</h2><div class="table-wrap"><table><thead><tr><th>Секция</th><th>Время</th><th>Доли</th><th>Аккорд strings</th><th>Lead piano</th></tr></thead><tbody id="sceneBody"></tbody></table></div></section>
-  <div class="footer">Offline prototype. Samples: <a href="https://versilian-studios.com/vsco-community/">VSCO 2 Community Edition</a> by Versilian Studios (CC0).</div>
+  <section class="epochs">
+    <h2>Семь эпох за 30 секунд</h2>
+    <p>Мелодия проходит путь от Большого взрыва до сегодняшнего дня. Высота главной темы следует за температурой Вселенной в каждую эпоху.</p>
+    <div class="track" id="track"><div class="playhead" id="playhead"></div></div>
+  </section>
+  <footer>Инструменты: <a href="https://versilian-studios.com/vsco-community/">VSCO 2 Community Edition</a>, Versilian Studios, CC0. Исходный код на <a href="https://github.com/oz-the-magician/cosmic-melody">GitHub</a>.</footer>
 </main>
 <script>
 'use strict';
@@ -26,9 +99,6 @@ const EPOCHS=[{name:'Рекомбинация',temp:3000,sec:3},{name:'Перв�
 const MODES=[{name:'Ионийский',intervals:[0,2,4,5,7,9,11]},{name:'Дорийский',intervals:[0,2,3,5,7,9,10]},{name:'Фригийский',intervals:[0,1,3,5,7,8,10]},{name:'Лидийский',intervals:[0,2,4,6,7,9,11]},{name:'Миксолидийский',intervals:[0,2,4,5,7,9,10]},{name:'Эолийский',intervals:[0,2,3,5,7,8,10]},{name:'Гармонический минор',intervals:[0,2,3,5,7,8,11]},{name:'Лидийский доминантовый',intervals:[0,2,4,6,7,9,10]}];
 const NOTE_NAMES=['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'];
 const ZODIAC=['Овен','Телец','Близнецы','Рак','Лев','Дева','Весы','Скорпион','Стрелец','Козерог','Водолей','Рыбы'];
-const VOICES={lead:{label:'Local piano',channel:0,program:0,gain:.78,attack:.008,release:.18},pad:{label:'Local strings',channel:1,program:48,gain:.4,attack:.35,release:.45},bass:{label:'Local acoustic bass',channel:2,program:32,gain:.72,attack:.01,release:.09},arp:{label:'Local harp',channel:3,program:46,gain:.65,attack:.005,release:.12},impact:{label:'Local timpani',channel:9,program:47,gain:.9,attack:.005,release:.18},pulse:{label:'Local woodblock',channel:9,program:115,gain:.28,attack:.002,release:.05}};
-const els={dateInput:document.getElementById('dateInput'),generateBtn:document.getElementById('generateBtn'),randomBtn:document.getElementById('randomBtn'),playBtn:document.getElementById('playBtn'),stopBtn:document.getElementById('stopBtn'),downloadMidi:document.getElementById('downloadMidi'),status:document.getElementById('status'),metrics:document.getElementById('metrics'),sceneBody:document.getElementById('sceneBody')};
-let midiUrl=null,currentArrangement=null,audioCtx=null,buffers={},active=[];
 function pad2(n){return String(n).padStart(2,'0')}function mod(n,m){return((n%m)+m)%m}function degToRad(d){return d*Math.PI/180}function clamp(n,a,b){return Math.max(a,Math.min(b,n))}function midiName(m){return`${NOTE_NAMES[mod(m,12)]}${Math.floor(m/12)-1}`}function escapeHtml(s){return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;')}function setStatus(s){els.status.textContent=s}
 function setDefaultDate(){const n=new Date();els.dateInput.value=`${n.getFullYear()}-${pad2(n.getMonth()+1)}-${pad2(n.getDate())}T${pad2(n.getHours())}:${pad2(n.getMinutes())}`}
 function parseDatetimeLocal(value){const m=/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?$/.exec(value);if(!m)throw new Error('Введите дату и время.');return{year:+m[1],month:+m[2],day:+m[3],hour:+m[4],minute:+m[5],second:+(m[6]||0)}}
@@ -38,18 +108,111 @@ function skyParams(dt){const jd=julianDay(dt),lambda=sunLongitude(jd),phase=moon
 function skeletonPitches(){const logs=EPOCHS.map(e=>Math.log10(e.temp)),lo=Math.min(...logs),hi=Math.max(...logs);return EPOCHS.map((e,i)=>({...e,baseMidi:Math.round(MIDI_LOW+((logs[i]-lo)/(hi-lo))*(MIDI_HIGH-MIDI_LOW))}))}
 function makeScalePitches(rootPc,intervals,min=24,max=108){const out=[];for(let m=min;m<=max;m++){if(intervals.some(i=>mod(rootPc+i,12)===mod(m,12)))out.push(m)}return out}function nearestScaleIndex(scale,pitch){let best=0,dist=999;scale.forEach((p,i)=>{const d=Math.abs(p-pitch);if(d<dist){dist=d;best=i}});return best}function snapToScale(midi,rootPc,intervals){const scale=makeScalePitches(rootPc,intervals,0,127);return scale[nearestScaleIndex(scale,midi)]}function scaleDegreePitch(rootPc,intervals,degree,octave){const d=Math.floor(degree),oct=octave+Math.floor(d/7),interval=intervals[mod(d,7)];return 12*(oct+1)+rootPc+interval}function buildChord(rootPc,intervals,degree,octave,seventh=false){return(seventh?[degree,degree+2,degree+4,degree+6]:[degree,degree+2,degree+4]).map(d=>scaleDegreePitch(rootPc,intervals,d,octave))}
 function quantizeBeat(beat,q=2){return Math.round(beat/q)*q}function beatToSec(beat,tempo){return beat*60/tempo}function addEvent(events,voice,midi,beat,durBeat,vel,tempo){const start=beatToSec(beat,tempo),dur=beatToSec(durBeat,tempo);if(start>=TRACK_SECONDS||dur<=0)return;events.push({voice,midi:clamp(Math.round(midi),0,127),beat,durBeat,start,dur:Math.min(dur,TRACK_SECONDS-start),vel:clamp(Math.round(vel),1,127)})}
-function buildBeatSections(sky){const totalBeats=TRACK_SECONDS*sky.tempo/60,secMarks=[0,...EPOCHS.map(e=>e.sec)];let beats=secMarks.map((sec,i)=>i===0?0:i===secMarks.length-1?totalBeats:quantizeBeat(sec/TRACK_SECONDS*totalBeats,2));for(let i=1;i<beats.length-1;i++)beats[i]=Math.max(beats[i-1]+2,Math.min(beats[i],totalBeats-2*(beats.length-1-i)));beats[beats.length-1]=totalBeats;const names=['Big Bang / intro',...EPOCHS.slice(0,-1).map(e=>e.name)];return names.map((name,i)=>({name,beatStart:beats[i],beatEnd:beats[i+1],start:beatToSec(beats[i],sky.tempo),end:beatToSec(beats[i+1],sky.tempo),epoch:i===0?null:i-1}))}
+function buildBeatSections(sky){const totalBeats=TRACK_SECONDS*sky.tempo/60,secMarks=[0,...EPOCHS.map(e=>e.sec)];let beats=secMarks.map((sec,i)=>i===0?0:i===secMarks.length-1?totalBeats:quantizeBeat(sec/TRACK_SECONDS*totalBeats,2));for(let i=1;i<beats.length-1;i++)beats[i]=Math.max(beats[i-1]+2,Math.min(beats[i],totalBeats-2*(beats.length-1-i)));beats[beats.length-1]=totalBeats;const names=['Большой взрыв',...EPOCHS.slice(0,-1).map(e=>e.name)];return names.map((name,i)=>({name,beatStart:beats[i],beatEnd:beats[i+1],start:beatToSec(beats[i],sky.tempo),end:beatToSec(beats[i+1],sky.tempo),epoch:i===0?null:i-1}))}
 function buildArrangement(dt){const sky=skyParams(dt),mode=MODES[sky.modeIdx],skeleton=skeletonPitches(),sections=buildBeatSections(sky),scale=makeScalePitches(sky.rootPc,mode.intervals,24,108),events=[],scenes=[];const progressions=[[0,3,4,5,1,4,0],[0,5,3,4,0,1,4],[0,2,5,3,4,1,0],[0,4,5,3,1,4,0]],progression=progressions[Math.floor(sky.lambda/90)%4],rotation=(sky.modeIdx+Math.floor(sky.phase*16))%progression.length;const motifs=[[0,1,2,1],[0,2,1,-1],[0,-1,1,2],[0,3,2,1],[0,1,-1,0],[0,-2,-1,1],[0,1,3,2],[0,2,4,3]],motif=motifs[(sky.modeIdx+Math.floor(sky.phase*32))%motifs.length],arpPattern=[[0,1,2,1],[2,1,0,1],[0,2,1,3],[1,0,2,3]][Math.floor(sky.phase*16)%4];addEvent(events,'impact',45,0,.9,112,sky.tempo);
-sections.forEach((sec,si)=>{const durB=sec.beatEnd-sec.beatStart,degree=progression[(si+rotation)%progression.length],chord=buildChord(sky.rootPc,mode.intervals,degree,3,sky.illum>.62),chordHigh=chord.map(p=>p+12);chord.forEach((p,j)=>addEvent(events,'pad',p,sec.beatStart,Math.max(.5,durB-.25),30+Math.round(sky.illum*22)-j*2,sky.tempo));for(let b=sec.beatStart;b<sec.beatEnd-.25;b+=2){const bassPattern=[degree,degree+4,degree+7,degree+4],idx=Math.floor((b-sec.beatStart)/2)%4;addEvent(events,'bass',scaleDegreePitch(sky.rootPc,mode.intervals,bassPattern[idx],1),b,1.45,52+Math.round(sky.illum*18),sky.tempo)}const arpStep=sky.tempo>=126?.5:1;for(let b=sec.beatStart+1;b<sec.beatEnd-.25;b+=arpStep){const idx=Math.floor((b-sec.beatStart)/arpStep)%arpPattern.length,src=chordHigh.concat(chordHigh.map(p=>p+12));addEvent(events,'arp',src[arpPattern[idx]%src.length],b,arpStep*.48,38+Math.round(sky.illum*24),sky.tempo)}if(si>0&&sec.epoch!==null){const base=skeleton[sec.epoch].baseMidi+sky.octShift,center=snapToScale(base,sky.rootPc,mode.intervals),centerIdx=nearestScaleIndex(scale,center);for(let k=0;k<4;k++){let idx=centerIdx+motif[k%motif.length];if(sec.epoch===EPOCHS.length-2&&k===3){const today=snapToScale(skeleton[skeleton.length-1].baseMidi+sky.octShift,sky.rootPc,mode.intervals);idx=nearestScaleIndex(scale,today)}const rel=quantizeBeat((k+.5)*durB/4,.5),b=clamp(sec.beatStart+rel,sec.beatStart+.5,sec.beatEnd-1);addEvent(events,'lead',scale[clamp(idx,0,scale.length-1)],b,Math.min(1.25,Math.max(.55,durB/5)),sky.velocity,sky.tempo)}}for(let b=sec.beatStart+4;b<sec.beatEnd-.25;b+=4)addEvent(events,'pulse',72,b,.08,24+Math.round(sky.illum*15),sky.tempo);const leadCenter=sec.epoch===null?'—':midiName(snapToScale(skeleton[sec.epoch].baseMidi+sky.octShift,sky.rootPc,mode.intervals));scenes.push({name:sec.name,time:`${sec.start.toFixed(2)}–${sec.end.toFixed(2)} сек`,beats:`${sec.beatStart.toFixed(1)}–${sec.beatEnd.toFixed(1)}`,chord:chord.map(midiName).join(' · '),leadCenter})});events.sort((a,b)=>a.beat-b.beat||a.midi-b.midi);return{sky,mode,events,scenes,totalBeats:TRACK_SECONDS*sky.tempo/60}}
-function render(arr){const s=arr.sky,c=arr.events.reduce((a,e)=>{a[e.voice]=(a[e.voice]||0)+1;return a},{});const vals=[['Солнце',`${s.lambda.toFixed(1)}°`,`${ZODIAC[s.zodiacIdx]} · root ${NOTE_NAMES[s.rootPc]}`],['Луна',`${(s.phase*100).toFixed(1)}%`,`освещённость ${Math.round(s.illum*100)}%`],['Лад',arr.mode.name,`индекс ${s.modeIdx} из 8`],['Темп',`${s.tempo.toFixed(1)} BPM`,`${arr.totalBeats.toFixed(1)} долей / 30 сек`],['Piano lead',`${c.lead||0} нот`,'VSCO 2 CE'],['Strings',`${c.pad||0} нот`,'VSCO 2 CE'],['Bass + Harp',`${(c.bass||0)+(c.arp||0)} нот`,'VSCO 2 CE'],['Источник','samples/',`${Object.values(SAMPLE_MAP).flat().length} файлов`]];els.metrics.innerHTML=vals.map(([l,v,sub])=>`<article class="metric"><div class="label">${escapeHtml(l)}</div><div class="value">${escapeHtml(v)}</div><div class="sub">${escapeHtml(sub)}</div></article>`).join('');els.sceneBody.innerHTML=arr.scenes.map(s=>`<tr><td><b>${escapeHtml(s.name)}</b></td><td><span class="pill">${escapeHtml(s.time)}</span></td><td><code>${escapeHtml(s.beats)}</code></td><td>${escapeHtml(s.chord)}</td><td>${escapeHtml(s.leadCenter)}</td></tr>`).join('')}
-function generate(){try{const dt=parseDatetimeLocal(els.dateInput.value);currentArrangement=buildArrangement(dt);render(currentArrangement);const mb=generateMidiBlob(currentArrangement);if(midiUrl)URL.revokeObjectURL(midiUrl);midiUrl=URL.createObjectURL(mb);els.downloadMidi.href=midiUrl;els.downloadMidi.download=fileBase(dt)+'.mid';els.downloadMidi.setAttribute('aria-disabled','false');setStatus(`Готово: ${currentArrangement.mode.name}, ${currentArrangement.sky.tempo.toFixed(1)} BPM. Можно нажать Play.`)}catch(e){console.error(e);setStatus(e.message||'Ошибка генерации.')}}
-async function loadSamples(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')await audioCtx.resume();for(const [voice,list] of Object.entries(SAMPLE_MAP)){buffers[voice]=buffers[voice]||[];for(let i=0;i<list.length;i++){if(buffers[voice][i])continue;const rec=list[i];setStatus(`Загружаю локальный sample: ${rec.file}…`);const res=await fetch(rec.file);if(!res.ok)throw new Error(`Не могу загрузить ${rec.file}. Если открыт file://, запусти через start_mac.command или локальный сервер.`);const arr=await res.arrayBuffer();const buffer=await audioCtx.decodeAudioData(arr);buffers[voice][i]={...rec,buffer};}}}
+sections.forEach((sec,si)=>{const durB=sec.beatEnd-sec.beatStart,degree=progression[(si+rotation)%progression.length],chord=buildChord(sky.rootPc,mode.intervals,degree,3,sky.illum>.62),chordHigh=chord.map(p=>p+12);chord.forEach((p,j)=>addEvent(events,'pad',p,sec.beatStart,Math.max(.5,durB-.25),30+Math.round(sky.illum*22)-j*2,sky.tempo));for(let b=sec.beatStart;b<sec.beatEnd-.25;b+=2){const bassPattern=[degree,degree+4,degree+7,degree+4],idx=Math.floor((b-sec.beatStart)/2)%4;addEvent(events,'bass',scaleDegreePitch(sky.rootPc,mode.intervals,bassPattern[idx],1),b,1.45,52+Math.round(sky.illum*18),sky.tempo)}const arpStep=sky.tempo>=126?.5:1;for(let b=sec.beatStart+1;b<sec.beatEnd-.25;b+=arpStep){const idx=Math.floor((b-sec.beatStart)/arpStep)%arpPattern.length,src=chordHigh.concat(chordHigh.map(p=>p+12));addEvent(events,'arp',src[arpPattern[idx]%src.length],b,arpStep*.48,38+Math.round(sky.illum*24),sky.tempo)}if(si>0&&sec.epoch!==null){const base=skeleton[sec.epoch].baseMidi+sky.octShift,center=snapToScale(base,sky.rootPc,mode.intervals),centerIdx=nearestScaleIndex(scale,center);for(let k=0;k<4;k++){let idx=centerIdx+motif[k%motif.length];if(sec.epoch===EPOCHS.length-2&&k===3){const today=snapToScale(skeleton[skeleton.length-1].baseMidi+sky.octShift,sky.rootPc,mode.intervals);idx=nearestScaleIndex(scale,today)}const rel=quantizeBeat((k+.5)*durB/4,.5),b=clamp(sec.beatStart+rel,sec.beatStart+.5,sec.beatEnd-1);addEvent(events,'lead',scale[clamp(idx,0,scale.length-1)],b,Math.min(1.25,Math.max(.55,durB/5)),sky.velocity,sky.tempo)}}for(let b=sec.beatStart+4;b<sec.beatEnd-.25;b+=4)addEvent(events,'pulse',72,b,.08,24+Math.round(sky.illum*15),sky.tempo);const leadCenter=sec.epoch===null?'—':midiName(snapToScale(skeleton[sec.epoch].baseMidi+sky.octShift,sky.rootPc,mode.intervals));scenes.push({name:sec.name,start:sec.start,end:sec.end,time:`${sec.start.toFixed(2)}–${sec.end.toFixed(2)} сек`,beats:`${sec.beatStart.toFixed(1)}–${sec.beatEnd.toFixed(1)}`,chord:chord.map(midiName).join(' · '),leadCenter})});events.sort((a,b)=>a.beat-b.beat||a.midi-b.midi);return{sky,mode,events,scenes,totalBeats:TRACK_SECONDS*sky.tempo/60}}
 function nearestSample(voice,midi){const list=buffers[voice]||[];let best=list[0],dist=999;for(const s of list){const d=Math.abs(s.rootMidi-midi);if(d<dist){dist=d;best=s}}return best}
-function playSample(e,when){const v=VOICES[e.voice],s=nearestSample(e.voice,e.midi);if(!s)return;const src=audioCtx.createBufferSource();src.buffer=s.buffer;src.playbackRate.value=Math.pow(2,(e.midi-s.rootMidi)/12);if(s.loop&&s.loopEnd>s.loopStart+.02&&e.dur>.7){src.loop=true;src.loopStart=s.loopStart;src.loopEnd=s.loopEnd}const g=audioCtx.createGain();const level=(e.vel/127)*v.gain;const start=when+e.start,end=start+e.dur;g.gain.setValueAtTime(.0001,start);g.gain.exponentialRampToValueAtTime(Math.max(.003,level),start+v.attack);g.gain.setValueAtTime(Math.max(.002,level*.85),Math.max(start+v.attack+.01,end-v.release));g.gain.exponentialRampToValueAtTime(.0001,end);src.connect(g);g.connect(audioCtx.destination);src.start(start);src.stop(end+.05);active.push(src)}
-async function play(){try{if(!currentArrangement)generate();await loadSamples();stop();const now=audioCtx.currentTime+.25;currentArrangement.events.forEach(e=>playSample(e,now));setStatus('Играет offline sample-pack. Интернет не используется.')}catch(e){console.error(e);setStatus(e.message||'Не удалось воспроизвести локальные samples.')}}function stop(){active.forEach(n=>{try{n.stop()}catch(e){}});active=[]}
-function generateMidiBlob(arr){const endTick=Math.round(arr.totalBeats*PPQ),ev=[],tempoMicro=Math.round(60000000/arr.sky.tempo);ev.push({tick:0,order:0,data:[0xff,0x51,0x03,(tempoMicro>>16)&255,(tempoMicro>>8)&255,tempoMicro&255]});Object.entries(VOICES).forEach(([voice,v])=>{if(v.channel!==9)ev.push({tick:0,order:1,data:[0xc0+v.channel,v.program]})});arr.events.forEach(e=>addMidiNote(ev,VOICES[e.voice].channel,e.midi,e.beat,e.durBeat,e.vel));ev.push({tick:endTick,order:99,data:[0xff,0x2f,0]});ev.sort((a,b)=>a.tick-b.tick||a.order-b.order);const track=[];let prev=0;for(const e of ev){track.push(...varLen(Math.max(0,e.tick-prev)),...e.data);prev=e.tick}const bytes=[...ascii('MThd'),...u32(6),...u16(0),...u16(1),...u16(PPQ),...ascii('MTrk'),...u32(track.length),...track];return new Blob([new Uint8Array(bytes)],{type:'audio/midi'})}function addMidiNote(out,ch,pitch,beat,durBeat,vel){const st=Math.round(beat*PPQ),en=Math.round((beat+durBeat)*PPQ);if(en<=st)return;out.push({tick:st,order:2,data:[0x90+ch,pitch,vel]});out.push({tick:en,order:1,data:[0x80+ch,pitch,0]})}function ascii(s){return[...s].map(ch=>ch.charCodeAt(0))}function u16(n){return[(n>>8)&255,n&255]}function u32(n){return[(n>>24)&255,(n>>16)&255,(n>>8)&255,n&255]}function varLen(v){let b=v&0x7f,bytes=[];while((v>>=7)){b<<=8;b|=((v&0x7f)|0x80)}while(true){bytes.push(b&0xff);if(b&0x80)b>>=8;else break}return bytes}function fileBase(dt){return`cosmic-offline_${dt.year}-${pad2(dt.month)}-${pad2(dt.day)}_${pad2(dt.hour)}-${pad2(dt.minute)}_UTC`}
+function generateMidiBlob(arr){const endTick=Math.round(arr.totalBeats*PPQ),ev=[],tempoMicro=Math.round(60000000/arr.sky.tempo);ev.push({tick:0,order:0,data:[0xff,0x51,0x03,(tempoMicro>>16)&255,(tempoMicro>>8)&255,tempoMicro&255]});Object.entries(VOICES).forEach(([voice,v])=>{if(v.channel!==9)ev.push({tick:0,order:1,data:[0xc0+v.channel,v.program]})});arr.events.forEach(e=>addMidiNote(ev,VOICES[e.voice].channel,e.midi,e.beat,e.durBeat,e.vel));ev.push({tick:endTick,order:99,data:[0xff,0x2f,0]});ev.sort((a,b)=>a.tick-b.tick||a.order-b.order);const track=[];let prev=0;for(const e of ev){track.push(...varLen(Math.max(0,e.tick-prev)),...e.data);prev=e.tick}const bytes=[...ascii('MThd'),...u32(6),...u16(0),...u16(1),...u16(PPQ),...ascii('MTrk'),...u32(track.length),...track];return new Blob([new Uint8Array(bytes)],{type:'audio/midi'})}function addMidiNote(out,ch,pitch,beat,durBeat,vel){const st=Math.round(beat*PPQ),en=Math.round((beat+durBeat)*PPQ);if(en<=st)return;out.push({tick:st,order:2,data:[0x90+ch,pitch,vel]});out.push({tick:en,order:1,data:[0x80+ch,pitch,0]})}function ascii(s){return[...s].map(ch=>ch.charCodeAt(0))}function u16(n){return[(n>>8)&255,n&255]}function u32(n){return[(n>>24)&255,(n>>16)&255,(n>>8)&255,n&255]}function varLen(v){let b=v&0x7f,bytes=[];while((v>>=7)){b<<=8;b|=((v&0x7f)|0x80)}while(true){bytes.push(b&0xff);if(b&0x80)b>>=8;else break}return bytes}function fileBase(dt){return`cosmic-melody_${dt.year}-${pad2(dt.month)}-${pad2(dt.day)}_${pad2(dt.hour)}-${pad2(dt.minute)}_UTC`}
 function randomDate(){const y=1900+Math.floor(Math.random()*180),m=1+Math.floor(Math.random()*12),max=new Date(Date.UTC(y,m,0)).getUTCDate(),d=1+Math.floor(Math.random()*max),h=Math.floor(Math.random()*24),mi=Math.floor(Math.random()*60);els.dateInput.value=`${y}-${pad2(m)}-${pad2(d)}T${pad2(h)}:${pad2(mi)}`;generate()}
-els.generateBtn.addEventListener('click',generate);els.randomBtn.addEventListener('click',randomDate);els.playBtn.addEventListener('click',play);els.stopBtn.addEventListener('click',stop);setDefaultDate();generate();
+const VOICES={
+ lead:{channel:0,program:0,gain:.62,attack:.006,release:1.4,ring:1.6,pan:0,send:.32,human:.014},
+ pad:{channel:1,program:48,gain:.30,attack:.9,release:2.2,ring:0,pan:0,send:.55,human:0,wide:true},
+ bass:{channel:2,program:32,gain:.62,attack:.006,release:.45,ring:.3,pan:-.08,send:.12,human:.006},
+ arp:{channel:3,program:46,gain:.40,attack:.004,release:1.6,ring:1.8,pan:.38,send:.45,human:.012},
+ impact:{channel:9,program:47,gain:.85,attack:.004,release:2.5,ring:3,pan:0,send:.4,human:0},
+ pulse:{channel:9,program:115,gain:.16,attack:.002,release:.08,ring:.1,pan:-.3,send:.2,human:.008}};
+const els={dateInput:document.getElementById('dateInput'),randomBtn:document.getElementById('randomBtn'),playBtn:document.getElementById('playBtn'),downloadMidi:document.getElementById('downloadMidi'),status:document.getElementById('status'),reading:document.getElementById('reading'),track:document.getElementById('track'),playhead:document.getElementById('playhead'),chart:document.getElementById('chart')};
+let midiUrl=null,currentArrangement=null,audioCtx=null,buffers={},active=[],bus=null,startAt=0,raf=0,playing=false;
+
+/* ---------- текст и шкала эпох ---------- */
+function render(arr){
+  const s=arr.sky;
+  const rows=[['Солнце',`${ZODIAC[s.zodiacIdx]}, ${s.lambda.toFixed(1)}°`],['Тоника',NOTE_NAMES[s.rootPc]],['Луна',`${Math.round(s.illum*100)}% освещена`],['Лад',arr.mode.name],['Темп',`${Math.round(s.tempo)} уд/мин`]];
+  els.reading.innerHTML=rows.map(([k,v])=>`<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(v)}</dd>`).join('');
+  els.track.querySelectorAll('.seg').forEach(n=>n.remove());
+  arr.scenes.forEach((sc,i)=>{const d=document.createElement('div');d.className='seg';d.style.setProperty('--w',Math.max(.6,sc.end-sc.start));d.dataset.i=i;
+    d.innerHTML=`<b>${escapeHtml(sc.name)}</b><span>${Math.round(sc.start)}–${Math.round(sc.end)} с · ${escapeHtml(sc.chord)}</span>`;els.track.appendChild(d)});
+  drawChart(arr,-1);
+}
+
+/* ---------- карта неба ---------- */
+function rng(seed){let t=seed>>>0;return()=>{t+=0x6D2B79F5;let r=Math.imul(t^t>>>15,1|t);r^=r+Math.imul(r^r>>>7,61|r);return((r^r>>>14)>>>0)/4294967296}}
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function drawChart(arr,t){
+  const c=els.chart,dpr=Math.min(2,window.devicePixelRatio||1),W=c.clientWidth||600;if(c.width!==W*dpr){c.width=W*dpr;c.height=W*dpr}
+  const g=c.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);g.clearRect(0,0,W,W);
+  const cx=W/2,cy=W/2,R=W*.47,ink=css('--ink'),star=css('--star'),dim=css('--dim'),brass=css('--brass'),silver=css('--silver');
+  const s=arr.sky,ang=deg=>(-90-deg)*Math.PI/180; // Овен сверху, против часовой — как на планисфере
+  // фоновые звёзды, детерминированные датой
+  const r=rng(Math.floor(s.jd*24));g.fillStyle=star;
+  for(let i=0;i<160;i++){const a=r()*Math.PI*2,d=Math.sqrt(r())*R*.78;g.globalAlpha=.15+r()*.45;g.beginPath();g.arc(cx+Math.cos(a)*d,cy+Math.sin(a)*d,r()*1.1+.2,0,7);g.fill()}
+  g.globalAlpha=1;
+  // кольца
+  g.strokeStyle=ink;g.lineWidth=1;[R,R*.84,R*.78].forEach(rr=>{g.beginPath();g.arc(cx,cy,rr,0,7);g.stroke()});
+  // сектора и подписи знаков
+  g.font=`500 ${Math.max(11,W*.024)}px Cormorant, serif`;g.textAlign='center';g.textBaseline='middle';
+  for(let i=0;i<12;i++){const a=ang(i*30);g.beginPath();g.moveTo(cx+Math.cos(a)*R*.78,cy+Math.sin(a)*R*.78);g.lineTo(cx+Math.cos(a)*R,cy+Math.sin(a)*R);g.stroke();
+    const m=ang(i*30+15);g.fillStyle=i===s.zodiacIdx?brass:dim;g.save();g.translate(cx+Math.cos(m)*R*.92,cy+Math.sin(m)*R*.92);const up=Math.sin(m)>0;g.rotate(m+(up?-Math.PI/2:Math.PI/2));g.fillText(ZODIAC[i],0,0);g.restore()}
+  // градусная шкала
+  for(let d=0;d<360;d+=5){const a=ang(d),l=d%30?R*.81:R*.78;g.beginPath();g.moveTo(cx+Math.cos(a)*l,cy+Math.sin(a)*l);g.lineTo(cx+Math.cos(a)*R*.84,cy+Math.sin(a)*R*.84);g.stroke()}
+  // Солнце
+  const sa=ang(s.lambda),sx=cx+Math.cos(sa)*R*.81,sy=cy+Math.sin(sa)*R*.81;
+  g.strokeStyle=brass;g.globalAlpha=.35;g.beginPath();g.moveTo(cx,cy);g.lineTo(sx,sy);g.stroke();g.globalAlpha=1;
+  const glow=g.createRadialGradient(sx,sy,0,sx,sy,W*.04);glow.addColorStop(0,brass);glow.addColorStop(1,'transparent');g.fillStyle=glow;g.beginPath();g.arc(sx,sy,W*.04,0,7);g.fill();
+  g.fillStyle=brass;g.beginPath();g.arc(sx,sy,W*.012,0,7);g.fill();
+  // ноты-созвездие: угол = время, радиус = высота
+  if(t>=0){const ev=arr.events.filter(e=>e.voice!=='pulse'&&e.start<=t);
+    let prev=null;ev.forEach(e=>{const a=ang(-e.start/TRACK_SECONDS*360),rr=R*(.2+.55*clamp((e.midi-30)/66,0,1)),x=cx+Math.cos(a)*rr,y=cy+Math.sin(a)*rr,age=t-e.start;
+      g.globalAlpha=clamp(1.4-age*.3,.6,1);g.fillStyle=e.voice==='lead'?brass:silver;g.beginPath();g.arc(x,y,e.voice==='lead'?2.8:e.voice==='impact'?3.4:1.8,0,7);g.fill();
+      if(e.voice==='lead'){if(prev){g.strokeStyle=brass;g.globalAlpha=.4;g.beginPath();g.moveTo(prev[0],prev[1]);g.lineTo(x,y);g.stroke()}prev=[x,y]}});
+    g.globalAlpha=1;const ha=ang(-t/TRACK_SECONDS*360);g.strokeStyle=silver;g.globalAlpha=.6;g.beginPath();g.moveTo(cx,cy);g.lineTo(cx+Math.cos(ha)*R*.78,cy+Math.sin(ha)*R*.78);g.stroke();g.globalAlpha=1}
+  // Луна в центре с реальной фазой
+  const mr=W*.06;g.fillStyle='#0b102b';g.beginPath();g.arc(cx,cy,mr,0,7);g.fill();
+  g.save();g.beginPath();g.arc(cx,cy,mr,0,7);g.clip();g.fillStyle=silver;
+  const p=s.phase,k=Math.cos(2*Math.PI*p);g.beginPath();
+  if(p<.5){g.arc(cx,cy,mr,-Math.PI/2,Math.PI/2);g.ellipse(cx,cy,Math.abs(k)*mr,mr,0,Math.PI/2,-Math.PI/2,k>0)}
+  else{g.arc(cx,cy,mr,Math.PI/2,-Math.PI/2);g.ellipse(cx,cy,Math.abs(k)*mr,mr,0,-Math.PI/2,Math.PI/2,k>0)}
+  g.fill();g.restore();g.strokeStyle=ink;g.beginPath();g.arc(cx,cy,mr,0,7);g.stroke();
+}
+
+function generate(){try{if(playing)stop();const dt=parseDatetimeLocal(els.dateInput.value);currentArrangement=buildArrangement(dt);render(currentArrangement);const mb=generateMidiBlob(currentArrangement);if(midiUrl)URL.revokeObjectURL(midiUrl);midiUrl=URL.createObjectURL(mb);els.downloadMidi.href=midiUrl;els.downloadMidi.download=fileBase(dt)+'.mid';els.downloadMidi.setAttribute('aria-disabled','false');setStatus('')}catch(e){console.error(e);setStatus(e.message||'Не получилось разобрать дату. Проверьте формат.')}}
+
+/* ---------- звук ---------- */
+function makeImpulse(ctx,sec,decay){const len=ctx.sampleRate*sec,b=ctx.createBuffer(2,len,ctx.sampleRate);for(let ch=0;ch<2;ch++){const d=b.getChannelData(ch);for(let i=0;i<len;i++){const x=i/len;d[i]=(Math.random()*2-1)*Math.pow(1-x,decay)*(i<ctx.sampleRate*.012?i/(ctx.sampleRate*.012):1)}}return b}
+function makeBus(){const ctx=audioCtx,master=ctx.createGain(),comp=ctx.createDynamicsCompressor(),verb=ctx.createConvolver(),verbIn=ctx.createGain(),verbOut=ctx.createGain(),tone=ctx.createBiquadFilter();
+  comp.threshold.value=-14;comp.knee.value=10;comp.ratio.value=3;comp.attack.value=.01;comp.release.value=.25;
+  verb.buffer=makeImpulse(ctx,3.4,2.6);tone.type='lowpass';tone.frequency.value=6500;verbOut.gain.value=.9;
+  verbIn.connect(tone).connect(verb).connect(verbOut).connect(comp);master.connect(comp);comp.connect(ctx.destination);
+  const voices={};for(const[name,v]of Object.entries(VOICES)){const pan=ctx.createStereoPanner?ctx.createStereoPanner():null,dry=ctx.createGain(),send=ctx.createGain();send.gain.value=v.send;
+    if(pan){pan.pan.value=v.pan;dry.connect(pan).connect(master)}else dry.connect(master);dry.connect(send).connect(verbIn);voices[name]=dry}
+  return{master,voices}}
+async function loadSamples(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')await audioCtx.resume();if(!bus)bus=makeBus();
+  const jobs=[];for(const[voice,list]of Object.entries(SAMPLE_MAP)){buffers[voice]=buffers[voice]||[];list.forEach((rec,i)=>{if(buffers[voice][i])return;jobs.push(fetch(rec.file).then(r=>{if(!r.ok)throw new Error(`Не загрузился ${rec.file}. Откройте страницу через сервер, а не двойным кликом по файлу.`);return r.arrayBuffer()}).then(a=>audioCtx.decodeAudioData(a)).then(buffer=>{buffers[voice][i]={...rec,buffer}}))})}
+  if(jobs.length){setStatus('Загружаю инструменты…');await Promise.all(jobs)}}
+function playSample(e,when,r){const v=VOICES[e.voice],s=nearestSample(e.voice,e.midi);if(!s)return;const ctx=audioCtx,src=ctx.createBufferSource();src.buffer=s.buffer;src.playbackRate.value=Math.pow(2,(e.midi-s.rootMidi)/12);
+  const hold=Math.max(e.dur,v.ring),start=when+e.start+(r()*2-1)*v.human,len=s.buffer.duration/src.playbackRate.value;
+  let end=start+hold+v.release;if(s.loop&&s.loopEnd>s.loopStart+.2){src.loop=true;src.loopStart=s.loopStart;src.loopEnd=s.loopEnd}else end=Math.min(end,start+len);
+  const lvl=Math.max(.003,(e.vel/127)*v.gain*(.86+r()*.22)),g=ctx.createGain();
+  g.gain.setValueAtTime(.0001,start);g.gain.exponentialRampToValueAtTime(lvl,start+v.attack);
+  const relAt=Math.max(start+v.attack+.02,end-v.release);g.gain.setValueAtTime(lvl,relAt);g.gain.exponentialRampToValueAtTime(.0001,end);
+  let out=g;if(v.wide&&ctx.createStereoPanner){const p=ctx.createStereoPanner();p.pan.value=((e.midi%5)-2)*.22;g.connect(p);out=p}
+  src.connect(g);out.connect(bus.voices[e.voice]);src.start(Math.max(ctx.currentTime,start));src.stop(end+.05);active.push(src)}
+async function play(){try{if(!currentArrangement)generate();await loadSamples();stop();const arr=currentArrangement,r=rng(Math.floor(arr.sky.jd*1000));
+  bus.master.gain.cancelScheduledValues(0);bus.master.gain.setValueAtTime(.9,audioCtx.currentTime);
+  startAt=audioCtx.currentTime+.2;
+  // pad: сцены перекрываются, чтобы аккорды плавно перетекали
+  arr.events.forEach(e=>playSample(e.voice==='pad'?{...e,dur:e.dur+.8}:e,startAt,r));
+  const endT=startAt+TRACK_SECONDS;bus.master.gain.setValueAtTime(.9,endT);bus.master.gain.linearRampToValueAtTime(0,endT+3.5);
+  playing=true;els.playBtn.textContent='Остановить';els.playhead.style.opacity=1;setStatus('');tick()}catch(e){console.error(e);setStatus(e.message||'Не получилось воспроизвести звук.')}}
+function stop(){active.forEach(n=>{try{n.stop()}catch(e){}});active=[];playing=false;cancelAnimationFrame(raf);els.playBtn.textContent='Слушать';els.playhead.style.opacity=0;els.track.querySelectorAll('.seg').forEach(n=>n.classList.remove('now'))}
+function tick(){const t=audioCtx.currentTime-startAt;if(t>TRACK_SECONDS+3.5){stop();drawChart(currentArrangement,TRACK_SECONDS);return}
+  const tt=clamp(t,0,TRACK_SECONDS);drawChart(currentArrangement,tt);
+  const segs=els.track.querySelectorAll('.seg');currentArrangement.scenes.forEach((sc,i)=>segs[i]&&segs[i].classList.toggle('now',tt>=sc.start&&tt<sc.end));
+  els.playhead.style.left=(tt/TRACK_SECONDS*100)+'%';raf=requestAnimationFrame(tick)}
+
+els.randomBtn.addEventListener('click',randomDate);els.playBtn.addEventListener('click',()=>playing?stop():play());els.dateInput.addEventListener('change',generate);
+window.addEventListener('resize',()=>currentArrangement&&drawChart(currentArrangement,playing?clamp(audioCtx.currentTime-startAt,0,TRACK_SECONDS):-1));
+setDefaultDate();if(document.fonts&&document.fonts.ready)document.fonts.ready.then(generate);else generate();
 </script>
 </body>
 </html>
