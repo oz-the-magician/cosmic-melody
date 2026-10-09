@@ -9,95 +9,93 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Forum&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-:root{
-  --deep:#070b22;      /* самая тёмная часть неба */
-  --night:#13204f;     /* индиго */
-  --dusk:#2a1f5c;      /* фиолетовый край */
-  --aurora:#0f3a52;    /* холодный бирюзовый отсвет */
-  --ink:rgba(196,205,227,.18); /* линии карты */
-  --star:#eef0fa;
-  --dim:#9ea8cc;
-  --brass:#e7c27a;
-  --silver:#cdd5ee;
-}
+:root{--space:#03040a;--star:#f2f0ea;--dim:rgba(242,240,234,.58);--gold:#e9c27c;--gold-soft:rgba(233,194,124,.45);--line:rgba(242,240,234,.14)}
 *{box-sizing:border-box}
-html{background:var(--deep)}
-body{margin:0;min-height:100vh;color:var(--star);font:300 16px/1.6 Jost,system-ui,sans-serif;
-  background:
-    radial-gradient(60vmax 50vmax at 12% 8%,rgba(42,31,92,.9),transparent 60%),
-    radial-gradient(55vmax 45vmax at 88% 18%,rgba(15,58,82,.85),transparent 62%),
-    radial-gradient(70vmax 55vmax at 50% 105%,rgba(19,32,79,.95),transparent 65%),
-    radial-gradient(40vmax 35vmax at 75% 70%,rgba(58,34,96,.55),transparent 60%),
-    var(--deep);
-  background-attachment:fixed}
+html{background:var(--space)}
+body{margin:0;color:var(--star);font:300 16px/1.6 Jost,system-ui,sans-serif;background:var(--space);overflow-x:hidden}
 #sky{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:0}
-body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:2;background:radial-gradient(ellipse at 50% 45%,transparent 45%,rgba(2,3,12,.75) 100%)}
-body::after{content:"";position:fixed;inset:-50%;pointer-events:none;z-index:3;opacity:.09;mix-blend-mode:overlay;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  animation:grain 1s steps(6) infinite}
-@keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(-3%,2%)}40%{transform:translate(2%,-3%)}60%{transform:translate(-2%,-1%)}80%{transform:translate(3%,3%)}100%{transform:translate(0,0)}}
-.wrap{position:relative;z-index:4;max-width:920px;margin:0 auto;padding:36px 20px 64px;text-align:center}
-h1{font:400 clamp(44px,8vw,92px)/1.02 Forum,Georgia,serif;letter-spacing:.01em;margin:0 0 16px;
-  background:linear-gradient(180deg,#fffaf0 0%,#f3dfb4 55%,#c9a46a 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
-  filter:drop-shadow(0 0 18px rgba(255,214,150,.28)) drop-shadow(0 2px 1px rgba(0,0,0,.6))}
-.lede{max-width:44ch;margin:0 auto;color:var(--dim);font-size:16px}
-.chart{position:relative;aspect-ratio:1;width:clamp(280px,calc(100vh - 330px),560px);max-width:100%;margin:18px auto 0}
-.chart canvas{width:100%;height:100%;display:block}
-.actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:8px}
-button,.link{font:400 15px Jost,sans-serif;letter-spacing:.02em;border-radius:999px;padding:12px 26px;cursor:pointer;border:1px solid rgba(205,213,238,.3);background:rgba(7,11,34,.35);color:var(--star);text-decoration:none;backdrop-filter:blur(6px)}
-button:hover,.link:hover{border-color:var(--silver)}
-button.play{background:linear-gradient(180deg,#f7dca4,#d9a95c);border-color:#f2cf8e;color:#1c1430;font-weight:500;min-width:150px;box-shadow:0 0 24px rgba(240,190,110,.35),inset 0 1px 0 rgba(255,255,255,.6)}
-button.play:hover{box-shadow:0 0 34px rgba(240,190,110,.55),inset 0 1px 0 rgba(255,255,255,.6)}
-:focus-visible{outline:2px solid var(--brass);outline-offset:3px}
-.link[aria-disabled=true]{opacity:.4;pointer-events:none}
-.info{margin:44px auto 0;max-width:820px}
-.field label{display:block;font-size:13px;color:var(--dim);margin-bottom:4px}
-input[type=datetime-local]{width:100%;max-width:340px;text-align:center;padding:10px 0;border:0;border-bottom:1px solid var(--ink);background:transparent;color:var(--star);font:300 22px Jost,sans-serif;color-scheme:dark}
-input:focus{outline:none;border-bottom-color:var(--brass)}
-dl.reading{margin:28px auto 0;display:grid;grid-template-columns:repeat(5,auto);justify-content:center;gap:18px 36px}
-dl.reading div{display:flex;flex-direction:column-reverse}
-dl.reading dt{color:var(--dim);font-size:13px}
-dl.reading dd{margin:0;font-size:17px;font-weight:400}
-.info .actions{margin-top:28px}
-.status{font-size:13px;color:var(--dim);min-height:1.6em;margin-top:12px}
-.epochs{margin:64px auto 0;max-width:640px;text-align:left}
-.epochs h2{font:400 32px Forum,Georgia,serif;text-align:center;margin:0 0 6px;letter-spacing:.02em}
-.epochs p{color:var(--dim);margin:0 auto 24px;font-size:15px;max-width:52ch;text-align:center}
-.track{display:flex;flex-direction:column;position:relative}
-.track .seg{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:baseline;padding:10px 0;border-top:1px solid var(--ink)}
-.seg b{font-weight:400;font-size:17px}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:5;background:radial-gradient(ellipse at 50% 50%,transparent 55%,rgba(0,0,0,.7) 100%)}
+body::after{content:"";position:fixed;inset:-50%;pointer-events:none;z-index:6;opacity:.07;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:grain 1s steps(6) infinite}
+@keyframes grain{0%,100%{transform:translate(0,0)}25%{transform:translate(-3%,2%)}50%{transform:translate(2%,-3%)}75%{transform:translate(3%,3%)}}
+
+/* ---------- первый экран ---------- */
+.hero{position:relative;z-index:1;height:100svh;min-height:620px;overflow:hidden}
+h1{position:absolute;left:0;right:0;top:9svh;margin:0;text-align:center;white-space:nowrap;
+  font:400 clamp(48px,10.2vw,190px)/1 Forum,Georgia,serif;letter-spacing:-.005em;color:rgba(246,243,236,.94);
+  text-shadow:0 0 40px rgba(255,236,200,.15)}
+.stage{position:absolute;left:50%;top:60%;width:min(64svh,92vw);aspect-ratio:1;transform:translate(-50%,-50%);z-index:2}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%}
+button.orb{position:absolute;left:50%;top:50%;width:46%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;cursor:pointer;
+  border:1px solid rgba(255,226,170,.55);color:#fff8ea;font:400 clamp(18px,2.4svh,26px) Forum,Georgia,serif;letter-spacing:.04em;
+  background:radial-gradient(circle at 34% 26%,rgba(255,244,215,.42) 0%,rgba(240,200,120,.16) 34%,rgba(210,160,80,.08) 62%,rgba(240,190,110,.22) 100%);
+  -webkit-backdrop-filter:blur(6px) saturate(1.3);backdrop-filter:blur(6px) saturate(1.3);
+  box-shadow:inset 0 1px 1px rgba(255,255,255,.55),inset 0 -14px 30px rgba(255,200,120,.12),inset 0 0 50px rgba(255,214,150,.14),0 0 80px rgba(233,180,100,.22),0 30px 80px rgba(0,0,0,.55);
+  text-shadow:0 1px 8px rgba(60,30,0,.6);transition:transform .6s cubic-bezier(.2,.8,.2,1),box-shadow .6s}
+button.orb:hover{box-shadow:inset 0 1px 1px rgba(255,255,255,.65),inset 0 -14px 30px rgba(255,200,120,.16),inset 0 0 60px rgba(255,214,150,.24),0 0 110px rgba(233,180,100,.38),0 30px 80px rgba(0,0,0,.55)}
+button.orb.on{animation:breathe 4s ease-in-out infinite}
+@keyframes breathe{50%{transform:translate(-50%,-50%) scale(1.025)}}
+.tag{position:absolute;margin:0;font-size:14px;color:var(--dim);white-space:nowrap;z-index:3}
+.tag b{display:block;font:400 clamp(18px,2.2vw,24px)/1.2 Forum,Georgia,serif;color:var(--star)}
+.tag::before{content:"";position:absolute;width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px var(--gold)}
+.tag.l{right:calc(50% + min(32svh,46vw) + 30px);top:52%;text-align:right}.tag.l::before{right:-18px;top:.7em}
+.tag.r{left:calc(50% + min(32svh,46vw) + 30px);top:46%}.tag.r::before{left:-18px;top:.7em}
+.tag.r2{left:calc(50% + min(29svh,42vw) + 30px);top:70%}.tag.r2::before{left:-18px;top:.7em}
+.controls{position:absolute;left:0;right:0;bottom:4svh;display:flex;justify-content:center;align-items:center;gap:22px;flex-wrap:wrap;z-index:3}
+input[type=datetime-local]{padding:6px 2px;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--star);font:400 19px Forum,Georgia,serif;color-scheme:dark;text-align:center}
+input:focus{outline:none;border-bottom-color:var(--gold)}
+.ghost{background:none;border:0;padding:6px 2px;color:var(--dim);font:400 15px Jost,sans-serif;cursor:pointer;text-decoration:none;border-bottom:1px solid transparent}
+.ghost:hover{color:var(--star);border-bottom-color:var(--line)}
+.ghost[aria-disabled=true]{opacity:.4;pointer-events:none}
+:focus-visible{outline:2px solid var(--gold);outline-offset:4px}
+.status{position:absolute;left:0;right:0;bottom:calc(4svh + 44px);text-align:center;font-size:13px;color:var(--dim);z-index:3}
+
+/* ---------- ниже: эпохи ---------- */
+.more{position:relative;z-index:1;max-width:680px;margin:0 auto;padding:12svh 20px 72px}
+.more h2{font:400 clamp(30px,4vw,44px)/1.1 Forum,Georgia,serif;text-align:center;margin:0 0 10px}
+.more>p{color:var(--dim);margin:0 auto 32px;max-width:52ch;text-align:center}
+.track{position:relative}
+.track .seg{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:baseline;padding:12px 0;border-top:1px solid var(--line)}
+.seg b{font:400 20px Forum,Georgia,serif}
 .seg span{font-size:13px;color:var(--dim);text-align:right}
-.seg.now b{color:var(--brass)}
+.seg.now b{color:var(--gold)}
 .playhead{display:none}
-footer{margin-top:64px;font-size:13px;color:var(--dim)}
+footer{margin-top:56px;font-size:13px;color:var(--dim);text-align:center}
 footer a{color:var(--star)}
-@media (max-width:720px){dl.reading{grid-template-columns:repeat(2,auto);gap:16px 40px}}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}body::after{animation:none}}
+@media (max-width:760px){
+  h1{white-space:normal;top:7svh;font-size:clamp(46px,14vw,80px)}
+  .stage{top:56%}
+  .tag{position:static;text-align:center!important}.tag::before{display:none}
+  .tags{position:absolute;left:0;right:0;top:calc(56% + min(32svh,46vw) + 4px);display:flex;flex-wrap:wrap;justify-content:center;gap:8px 22px;padding:0 16px;z-index:3}
+  .tag b{font-size:18px}.tag{font-size:12px}
+  .controls{bottom:3svh;gap:14px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
 <canvas id="sky" aria-hidden="true"></canvas>
-<main class="wrap">
+<section class="hero">
   <h1>Космическая мелодия</h1>
-  <p class="lede">Солнце задаёт тонику, Луна — лад, время суток — темп. Нажмите «Слушать», и звёзды соберутся в мелодию вашей даты.</p>
-  <div class="chart"><canvas id="chart" aria-label="Карта неба: положение Солнца в зодиаке и фаза Луны" role="img"></canvas></div>
-  <div class="actions">
-    <button id="playBtn" class="play">Слушать</button>
-    <button id="randomBtn">Случайная дата</button>
+  <div class="stage">
+    <canvas id="chart" aria-label="Орбита: положение Солнца в зодиаке и созвездие мелодии" role="img"></canvas>
+    <button id="playBtn" class="orb">Слушать</button>
   </div>
-  <section class="info">
-    <div class="field"><label for="dateInput">Дата и время</label><input id="dateInput" type="datetime-local" step="60"></div>
-    <dl class="reading" id="reading"></dl>
-    <div class="actions"><a id="downloadMidi" class="link" aria-disabled="true" href="#" download>Скачать MIDI</a></div>
-    <div id="status" class="status" aria-live="polite"></div>
-  </section>
-  <section class="epochs">
-    <h2>Семь эпох за 30 секунд</h2>
-    <p>Мелодия проходит путь от Большого взрыва до сегодняшнего дня. Высота главной темы следует за температурой Вселенной в каждую эпоху.</p>
-    <div class="track" id="track"><div class="playhead" id="playhead"></div></div>
-  </section>
+  <div class="tags" id="reading"></div>
+  <div id="status" class="status" aria-live="polite"></div>
+  <div class="controls">
+    <label class="ghost" for="dateInput" style="cursor:default;border:0">Дата</label>
+    <input id="dateInput" type="datetime-local" step="60" aria-label="Дата и время">
+    <button id="randomBtn" class="ghost">Случайная дата</button>
+    <a id="downloadMidi" class="ghost" aria-disabled="true" href="#" download>MIDI</a>
+  </div>
+</section>
+<section class="more">
+  <h2>Семь эпох за 30 секунд</h2>
+  <p>Солнце задаёт тонику, Луна — лад, время суток — темп. Мелодия проходит путь от Большого взрыва до сегодняшнего дня, а высота главной темы следует за температурой Вселенной.</p>
+  <div class="track" id="track"><div class="playhead" id="playhead"></div></div>
   <footer>Инструменты: <a href="https://versilian-studios.com/vsco-community/">VSCO 2 Community Edition</a>, Versilian Studios, CC0. Исходный код на <a href="https://github.com/oz-the-magician/cosmic-melody">GitHub</a>.</footer>
-</main>
+</section>
 <script>
 'use strict';
 const SAMPLE_MAP={"lead":[{"file":"samples/piano/Cs3.mp3","rootMidi":49,"sampleName":"Upright Piano Cs3","program":0,"loop":false,"loopStart":0,"loopEnd":0},{"file":"samples/piano/Cs4.mp3","rootMidi":61,"sampleName":"Upright Piano Cs4","program":0,"loop":false,"loopStart":0,"loopEnd":0},{"file":"samples/piano/Cs5.mp3","rootMidi":73,"sampleName":"Upright Piano Cs5","program":0,"loop":false,"loopStart":0,"loopEnd":0},{"file":"samples/piano/Cs6.mp3","rootMidi":85,"sampleName":"Upright Piano Cs6","program":0,"loop":false,"loopStart":0,"loopEnd":0}],"pad":[{"file":"samples/strings/C3.mp3","rootMidi":48,"sampleName":"String Ensemble C3","program":48,"loop":true,"loopStart":1.49927,"loopEnd":4.95528},{"file":"samples/strings/C4.mp3","rootMidi":60,"sampleName":"String Ensemble C4","program":48,"loop":true,"loopStart":1.49982,"loopEnd":4.98712},{"file":"samples/strings/C5.mp3","rootMidi":72,"sampleName":"String Ensemble C5","program":48,"loop":true,"loopStart":1.50029,"loopEnd":4.95154},{"file":"samples/strings/B5.mp3","rootMidi":83,"sampleName":"String Ensemble B5","program":48,"loop":true,"loopStart":1.5,"loopEnd":5.00365}],"bass":[{"file":"samples/bass/C2.mp3","rootMidi":36,"sampleName":"Contrabass Pizzicato C2","program":32,"loop":false,"loopStart":0,"loopEnd":0},{"file":"samples/bass/Gs2.mp3","rootMidi":44,"sampleName":"Contrabass Pizzicato Gs2","program":32,"loop":false,"loopStart":0,"loopEnd":0},{"file":"samples/bass/Cs3.mp3","rootMidi":49,"sampleName":"Contrabass Pizzicato Cs3","program":32,"loop":false,"loopStart":0,"loopEnd":0}],"arp":[{"file":"samples/harp/B3.mp3","rootMidi":59,"sampleName":"Harp B3","program":46,"loop":false,"loopStart":0,"loopEnd":0},{"file":"samples/harp/C5.mp3","rootMidi":72,"sampleName":"Harp C5","program":46,"loop":false,"loopStart":0,"loopEnd":0},{"file":"samples/harp/B5.mp3","rootMidi":83,"sampleName":"Harp B5","program":46,"loop":false,"loopStart":0,"loopEnd":0}],"impact":[{"file":"samples/percussion/timpani_Cs2.mp3","rootMidi":37,"sampleName":"Timpani Cs2","program":47,"loop":false,"loopStart":0,"loopEnd":0}],"pulse":[{"file":"samples/percussion/wood_F6.mp3","rootMidi":89,"sampleName":"Wood Click F6","program":115,"loop":false,"loopStart":0,"loopEnd":0}]};
@@ -131,18 +129,6 @@ const VOICES={
 const els={dateInput:document.getElementById('dateInput'),randomBtn:document.getElementById('randomBtn'),playBtn:document.getElementById('playBtn'),downloadMidi:document.getElementById('downloadMidi'),status:document.getElementById('status'),reading:document.getElementById('reading'),track:document.getElementById('track'),playhead:document.getElementById('playhead'),chart:document.getElementById('chart')};
 let midiUrl=null,currentArrangement=null,audioCtx=null,buffers={},active=[],bus=null,startAt=0,raf=0,playing=false;
 
-/* ---------- текст и шкала эпох ---------- */
-function render(arr){
-  const s=arr.sky;
-  const rows=[['Солнце',`${ZODIAC[s.zodiacIdx]}, ${s.lambda.toFixed(1)}°`],['Тоника',NOTE_NAMES[s.rootPc]],['Луна',`${Math.round(s.illum*100)}% освещена`],['Лад',arr.mode.name],['Темп',`${Math.round(s.tempo)} уд/мин`]];
-  els.reading.innerHTML=rows.map(([k,v])=>`<div><dt>${escapeHtml(k)}</dt><dd>${escapeHtml(v)}</dd></div>`).join('');
-  els.track.querySelectorAll('.seg').forEach(n=>n.remove());
-  arr.scenes.forEach((sc,i)=>{const d=document.createElement('div');d.className='seg';d.style.setProperty('--w',Math.max(.6,sc.end-sc.start));d.dataset.i=i;
-    d.innerHTML=`<b>${escapeHtml(sc.name)}</b><span>${Math.round(sc.start)}–${Math.round(sc.end)} с · ${escapeHtml(sc.chord)}</span>`;els.track.appendChild(d)});
-  drawChart(arr,-1);
-}
-
-/* ---------- карта неба ---------- */
 function rng(seed){let t=seed>>>0;return()=>{t+=0x6D2B79F5;let r=Math.imul(t^t>>>15,1|t);r^=r+Math.imul(r^r>>>7,61|r);return((r^r>>>14)>>>0)/4294967296}}
 const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 function generate(){try{if(playing)stop();gatherStars(0);lastT=-1;const dt=parseDatetimeLocal(els.dateInput.value);currentArrangement=buildArrangement(dt);render(currentArrangement);const mb=generateMidiBlob(currentArrangement);if(midiUrl)URL.revokeObjectURL(midiUrl);midiUrl=URL.createObjectURL(mb);els.downloadMidi.href=midiUrl;els.downloadMidi.download=fileBase(dt)+'.mid';els.downloadMidi.setAttribute('aria-disabled','false');setStatus('')}catch(e){console.error(e);setStatus(e.message||'Не получилось разобрать дату. Проверьте формат.')}}
@@ -173,108 +159,105 @@ async function play(){try{if(!currentArrangement)generate();await loadSamples();
   // pad: сцены перекрываются, чтобы аккорды плавно перетекали
   arr.events.forEach(e=>playSample(e.voice==='pad'?{...e,dur:e.dur+.8}:e,startAt,r));
   const endT=startAt+TRACK_SECONDS;bus.master.gain.setValueAtTime(.9,endT);bus.master.gain.linearRampToValueAtTime(0,endT+3.5);
-  gatherStars(1);playing=true;els.playBtn.textContent='Остановить';els.playhead.style.opacity=1;setStatus('');tick()}catch(e){console.error(e);setStatus(e.message||'Не получилось воспроизвести звук.')}}
-function stop(){active.forEach(n=>{try{n.stop()}catch(e){}});active=[];playing=false;cancelAnimationFrame(raf);els.playBtn.textContent='Слушать';els.playhead.style.opacity=0;els.track.querySelectorAll('.seg').forEach(n=>n.classList.remove('now'))}
+  gatherStars(1);playing=true;els.playBtn.textContent='Остановить';els.playBtn.classList.add('on');els.playhead.style.opacity=1;setStatus('');tick()}catch(e){console.error(e);setStatus(e.message||'Не получилось воспроизвести звук.')}}
+function stop(){active.forEach(n=>{try{n.stop()}catch(e){}});active=[];playing=false;cancelAnimationFrame(raf);els.playBtn.textContent='Слушать';els.playBtn.classList.remove('on');els.playhead.style.opacity=0;els.track.querySelectorAll('.seg').forEach(n=>n.classList.remove('now'))}
 function tick(){const t=audioCtx.currentTime-startAt;if(t>TRACK_SECONDS+3.5){stop();drawChart(currentArrangement,TRACK_SECONDS);return}
   const tt=clamp(t,0,TRACK_SECONDS);drawChart(currentArrangement,tt);
   const segs=els.track.querySelectorAll('.seg');currentArrangement.scenes.forEach((sc,i)=>segs[i]&&segs[i].classList.toggle('now',tt>=sc.start&&tt<sc.end));
   lastT=tt;els.playhead.style.left=(tt/TRACK_SECONDS*100)+'%';raf=requestAnimationFrame(tick)}
 
-/* ---------- спрайты света (рендерятся один раз) ---------- */
+/* ---------- подписи вокруг круга ---------- */
+function render(arr){
+  const s=arr.sky,moon=Math.round(s.illum*100);
+  els.reading.innerHTML=`<p class="tag l"><b>${escapeHtml(ZODIAC[s.zodiacIdx])} · ${escapeHtml(NOTE_NAMES[s.rootPc])}</b>Солнце и тоника</p>`+
+    `<p class="tag r"><b>${escapeHtml(arr.mode.name)}</b>Луна ${moon}% · лад</p>`+
+    `<p class="tag r2"><b>${Math.round(s.tempo)} уд/мин</b>темп</p>`;
+  els.track.querySelectorAll('.seg').forEach(n=>n.remove());
+  arr.scenes.forEach((sc,i)=>{const d=document.createElement('div');d.className='seg';d.dataset.i=i;d.innerHTML=`<b>${escapeHtml(sc.name)}</b><span>${Math.round(sc.start)}–${Math.round(sc.end)} с · ${escapeHtml(sc.chord)}</span>`;els.track.appendChild(d)});
+  drawChart(arr,-1);
+}
+
+/* ---------- спрайты света ---------- */
 function makeSprite(size,stops,spikes){const c=document.createElement('canvas');c.width=c.height=size;const g=c.getContext('2d'),h=size/2,gr=g.createRadialGradient(h,h,0,h,h,h);stops.forEach(([o,col])=>gr.addColorStop(o,col));g.fillStyle=gr;g.fillRect(0,0,size,size);
-  if(spikes){g.globalCompositeOperation='lighter';[[size,size*.035],[size*.035,size]].forEach(([w,hh])=>{const l=g.createRadialGradient(h,h,0,h,h,h);l.addColorStop(0,'rgba(255,255,255,.55)');l.addColorStop(1,'rgba(255,255,255,0)');g.fillStyle=l;g.fillRect(h-w/2,h-hh/2,w,hh)})}return c}
+  if(spikes){g.globalCompositeOperation='lighter';[[size,size*.03],[size*.03,size]].forEach(([w,hh])=>{const l=g.createRadialGradient(h,h,0,h,h,h);l.addColorStop(0,'rgba(255,255,255,.6)');l.addColorStop(1,'rgba(255,255,255,0)');g.fillStyle=l;g.fillRect(h-w/2,h-hh/2,w,hh)})}return c}
 const SPR={
-  star:makeSprite(32,[[0,'rgba(255,255,255,1)'],[.12,'rgba(235,240,255,.9)'],[.35,'rgba(170,190,255,.22)'],[1,'rgba(120,140,255,0)']]),
-  bright:makeSprite(96,[[0,'rgba(255,255,255,1)'],[.05,'rgba(255,250,240,.95)'],[.2,'rgba(200,210,255,.25)'],[1,'rgba(120,140,255,0)']],true),
-  gold:makeSprite(64,[[0,'rgba(255,248,225,1)'],[.12,'rgba(255,214,140,.9)'],[.4,'rgba(231,170,80,.22)'],[1,'rgba(231,150,60,0)']]),
-  sun:makeSprite(256,[[0,'rgba(255,252,240,1)'],[.04,'rgba(255,236,190,1)'],[.12,'rgba(255,200,120,.55)'],[.35,'rgba(240,150,70,.12)'],[1,'rgba(200,100,40,0)']])};
+  star:makeSprite(32,[[0,'rgba(255,255,255,1)'],[.1,'rgba(240,244,255,.9)'],[.3,'rgba(190,205,255,.18)'],[1,'rgba(150,170,255,0)']]),
+  bright:makeSprite(128,[[0,'rgba(255,255,255,1)'],[.04,'rgba(255,252,245,.95)'],[.14,'rgba(210,220,255,.22)'],[1,'rgba(150,170,255,0)']],true),
+  gold:makeSprite(64,[[0,'rgba(255,250,232,1)'],[.1,'rgba(255,218,150,.9)'],[.35,'rgba(233,176,90,.2)'],[1,'rgba(233,160,70,0)']]),
+  sun:makeSprite(256,[[0,'rgba(255,252,240,1)'],[.035,'rgba(255,236,190,1)'],[.1,'rgba(255,205,130,.5)'],[.3,'rgba(240,160,80,.1)'],[1,'rgba(200,110,40,0)']])};
 
-/* ---------- туманности: шум один раз, потом просто дрейф ---------- */
-function makeNebula(seed,palette){const N=200,c=document.createElement('canvas');c.width=c.height=N;const g=c.getContext('2d'),img=g.createImageData(N,N),r=rng(seed);
-  const G=16,grid=[];for(let i=0;i<(G+1)*(G+1);i++)grid.push(r());
-  const vn=(x,y,f)=>{const gx=x*f,gy=y*f,ix=Math.floor(gx)%G,iy=Math.floor(gy)%G,fx=gx-Math.floor(gx),fy=gy-Math.floor(gy),s=t=>t*t*(3-2*t),v=(a,b)=>grid[((b%G)*(G+1))+(a%G)];
-    const a=v(ix,iy),b=v(ix+1,iy),c2=v(ix,iy+1),d=v(ix+1,iy+1);return a+(b-a)*s(fx)+(c2-a)*s(fy)+(a-b-c2+d)*s(fx)*s(fy)};
-  for(let y=0;y<N;y++)for(let x=0;x<N;x++){const u=x/N,v=y/N;let n=0,amp=.55,f=2;for(let o=0;o<5;o++){n+=vn(u,v,f)*amp;amp*=.5;f*=2}
-    n=Math.max(0,n-.42)*2.6;const k=Math.min(1,n),p=palette(u,v),i=(y*N+x)*4;img.data[i]=p[0];img.data[i+1]=p[1];img.data[i+2]=p[2];img.data[i+3]=Math.round(k*k*150)}
-  g.putImageData(img,0,0);return c}
-const NEB=[makeNebula(7,(u,v)=>[120+60*u,70+40*v,190]),makeNebula(31,(u,v)=>[50,140+50*v,190+30*u])];
-
-/* ---------- карта неба: металл, свет, объём ---------- */
+/* ---------- орбита: тонкая, золотая ---------- */
 function drawChart(arr,t){
   const c=els.chart,dpr=Math.min(2,window.devicePixelRatio||1),W=c.clientWidth||600;if(c.width!==Math.round(W*dpr)){c.width=Math.round(W*dpr);c.height=Math.round(W*dpr)}
   const g=c.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);g.clearRect(0,0,W,W);
-  const cx=W/2,cy=W/2,R=W*.45,s=arr.sky,ang=deg=>(-90-deg)*Math.PI/180,sa=ang(s.lambda),lx=Math.cos(sa),ly=Math.sin(sa);
-  // глубина: тёмный «колодец» неба внутри круга и мягкая тень от кольца
-  g.save();g.shadowColor='rgba(0,0,0,.65)';g.shadowBlur=W*.08;g.shadowOffsetX=-lx*W*.02;g.shadowOffsetY=-ly*W*.02+W*.02;
-  const well=g.createRadialGradient(cx,cy,R*.1,cx,cy,R);well.addColorStop(0,'rgba(10,14,40,.35)');well.addColorStop(1,'rgba(4,6,20,.75)');g.fillStyle=well;g.beginPath();g.arc(cx,cy,R,0,7);g.fill();g.restore();
-  // металлическое кольцо зодиака, освещённое со стороны Солнца
-  const metal=g.createLinearGradient(cx+lx*R,cy+ly*R,cx-lx*R,cy-ly*R);metal.addColorStop(0,'rgba(240,206,140,.55)');metal.addColorStop(.35,'rgba(150,140,170,.22)');metal.addColorStop(1,'rgba(60,70,120,.18)');
-  g.fillStyle=metal;g.beginPath();g.arc(cx,cy,R,0,Math.PI*2);g.moveTo(cx+R*.84,cy);g.arc(cx,cy,R*.84,Math.PI*2,0,true);g.fill();
-  // фаска: светлый край снаружи, тень внутри
-  const edge=(rr,col,w)=>{g.strokeStyle=col;g.lineWidth=w;g.beginPath();g.arc(cx,cy,rr,0,7);g.stroke()};
-  edge(R,metal,1.5);edge(R*.84,'rgba(0,0,0,.35)',2);edge(R*.84+1.2,'rgba(255,230,180,.12)',1);edge(R*.78,'rgba(205,213,238,.14)',1);
-  // деления и знаки
-  g.strokeStyle='rgba(230,215,180,.35)';g.lineWidth=1;
-  for(let d=0;d<360;d+=5){const a=ang(d),l=d%30?R*.80:R*.78;g.beginPath();g.moveTo(cx+Math.cos(a)*l,cy+Math.sin(a)*l);g.lineTo(cx+Math.cos(a)*R*.835,cy+Math.sin(a)*R*.835);g.stroke()}
-  g.font=`400 ${Math.max(11,W*.026)}px Forum, Georgia, serif`;g.textAlign='center';g.textBaseline='middle';
-  for(let i=0;i<12;i++){const a=ang(i*30);g.strokeStyle='rgba(0,0,0,.3)';g.beginPath();g.moveTo(cx+Math.cos(a)*R*.845,cy+Math.sin(a)*R*.845);g.lineTo(cx+Math.cos(a)*R*.995,cy+Math.sin(a)*R*.995);g.stroke();
-    const m=ang(i*30+15),lit=.45+.55*Math.max(0,Math.cos(m-sa));g.save();g.translate(cx+Math.cos(m)*R*.92,cy+Math.sin(m)*R*.92);g.rotate(m+(Math.sin(m)>0?-Math.PI/2:Math.PI/2));
-    g.fillStyle='rgba(0,0,0,.5)';g.fillText(ZODIAC[i],0,1.2);g.fillStyle=i===s.zodiacIdx?'#ffe2a6':`rgba(236,230,214,${lit})`;g.fillText(ZODIAC[i],0,0);g.restore()}
-  // созвездие мелодии
+  const cx=W/2,cy=W/2,R=W*.4,s=arr.sky,ang=deg=>(-90-deg)*Math.PI/180,sa=ang(s.lambda);
+  // кольца: основное золотое, внутреннее пунктирное
+  const ring=g.createLinearGradient(cx+Math.cos(sa)*R,cy+Math.sin(sa)*R,cx-Math.cos(sa)*R,cy-Math.sin(sa)*R);ring.addColorStop(0,'rgba(240,205,140,.75)');ring.addColorStop(.5,'rgba(240,220,190,.22)');ring.addColorStop(1,'rgba(240,220,190,.12)');
+  g.strokeStyle=ring;g.lineWidth=1;g.beginPath();g.arc(cx,cy,R,0,Math.PI*2);g.stroke();
+  g.setLineDash([1,5]);g.strokeStyle='rgba(242,240,234,.18)';g.beginPath();g.arc(cx,cy,R*1.09,0,Math.PI*2);g.stroke();g.setLineDash([]);
+  // деления знаков и подписи
+  g.font=`400 ${Math.max(10,W*.024)}px Forum, Georgia, serif`;g.textAlign='center';g.textBaseline='middle';
+  for(let i=0;i<12;i++){const a=ang(i*30);g.strokeStyle='rgba(242,240,234,.25)';g.beginPath();g.moveTo(cx+Math.cos(a)*R*1.04,cy+Math.sin(a)*R*1.04);g.lineTo(cx+Math.cos(a)*R*1.13,cy+Math.sin(a)*R*1.13);g.stroke();
+    const m=ang(i*30+15),cur=i===s.zodiacIdx;g.save();g.translate(cx+Math.cos(m)*R*1.165,cy+Math.sin(m)*R*1.165);g.rotate(m+(Math.sin(m)>0?-Math.PI/2:Math.PI/2));
+    g.fillStyle=cur?'#f3d398':'rgba(242,240,234,.38)';g.fillText(ZODIAC[i],0,0);g.restore()}
   g.globalCompositeOperation='lighter';
-  if(t>=0){let prev=null;const ev=arr.events.filter(e=>e.voice!=='pulse'&&e.start<=t);
-    ev.forEach(e=>{const a=ang(-e.start/TRACK_SECONDS*360),rr=R*(.2+.55*clamp((e.midi-30)/66,0,1)),x=cx+Math.cos(a)*rr,y=cy+Math.sin(a)*rr,age=t-e.start,flash=Math.max(0,1-age*1.5);
-      if(e.voice==='lead'){if(prev){g.strokeStyle='rgba(255,210,140,.35)';g.lineWidth=1.2;g.shadowColor='rgba(255,190,110,.8)';g.shadowBlur=8;g.beginPath();g.moveTo(prev[0],prev[1]);g.lineTo(x,y);g.stroke();g.shadowBlur=0}prev=[x,y];
-        const z=W*(.035+.05*flash);g.globalAlpha=.9;g.drawImage(SPR.gold,x-z/2,y-z/2,z,z)}
-      else{const z=W*(e.voice==='impact'?.06:.022)*(1+flash*1.4);g.globalAlpha=clamp(.55+flash,0,1);g.drawImage(flash>.3?SPR.bright:SPR.star,x-z/2,y-z/2,z,z)}});
-    g.globalAlpha=1;
-    // стрелка-луч от центра
-    const ha=ang(-t/TRACK_SECONDS*360),beam=g.createLinearGradient(cx,cy,cx+Math.cos(ha)*R*.8,cy+Math.sin(ha)*R*.8);beam.addColorStop(0,'rgba(205,213,238,0)');beam.addColorStop(1,'rgba(205,213,238,.55)');
-    g.strokeStyle=beam;g.lineWidth=1.2;g.beginPath();g.moveTo(cx,cy);g.lineTo(cx+Math.cos(ha)*R*.78,cy+Math.sin(ha)*R*.78);g.stroke()}
-  // Солнце: ореол, анаморфный блик, лучик к центру
-  const sx=cx+lx*R*.81,sy=cy+ly*R*.81,pulse=1+.04*Math.sin(performance.now()/700);
-  const ray=g.createLinearGradient(sx,sy,cx,cy);ray.addColorStop(0,'rgba(255,200,120,.35)');ray.addColorStop(1,'rgba(255,200,120,0)');g.strokeStyle=ray;g.lineWidth=W*.012;g.beginPath();g.moveTo(sx,sy);g.lineTo(cx,cy);g.stroke();
-  let z=W*.32*pulse;g.drawImage(SPR.sun,sx-z/2,sy-z/2,z,z);
-  g.save();g.translate(sx,sy);g.scale(1,.035);z=W*.9;g.globalAlpha=.55;g.drawImage(SPR.sun,-z/2,-z/2,z,z);g.restore();g.globalAlpha=1;
-  g.globalCompositeOperation='source-over';
-  g.fillStyle='#fff6e2';g.beginPath();g.arc(sx,sy,W*.011,0,7);g.fill();
-  // Луна-шар с терминатором, пепельным светом и ореолом
-  const mr=W*.075,p=s.phase,kk=Math.cos(2*Math.PI*p);
-  g.globalCompositeOperation='lighter';z=mr*5;g.globalAlpha=.25+.5*s.illum;g.drawImage(SPR.star,cx-z/2,cy-z/2,z,z);g.globalAlpha=1;g.globalCompositeOperation='source-over';
-  const dark=g.createRadialGradient(cx-mr*.3,cy-mr*.3,mr*.1,cx,cy,mr);dark.addColorStop(0,'#1e2748');dark.addColorStop(1,'#080b1d');g.fillStyle=dark;g.beginPath();g.arc(cx,cy,mr,0,7);g.fill();
-  g.save();g.beginPath();g.arc(cx,cy,mr,0,7);g.clip();
-  const lit=g.createRadialGradient(cx+(p<.5?mr*.45:-mr*.45),cy-mr*.25,mr*.05,cx,cy,mr*1.05);lit.addColorStop(0,'#fbfaf4');lit.addColorStop(.6,'#d7d9e2');lit.addColorStop(1,'#8a90a8');g.fillStyle=lit;g.filter='blur(1.2px)';g.beginPath();
-  if(p<.5){g.arc(cx,cy,mr,-Math.PI/2,Math.PI/2);g.ellipse(cx,cy,Math.abs(kk)*mr,mr,0,Math.PI/2,-Math.PI/2,kk>0)}else{g.arc(cx,cy,mr,Math.PI/2,-Math.PI/2);g.ellipse(cx,cy,Math.abs(kk)*mr,mr,0,-Math.PI/2,Math.PI/2,kk>0)}
-  g.fill();g.filter='none';
-  const cr=rng(11);g.fillStyle='rgba(60,64,90,.18)';for(let i=0;i<9;i++){const a=cr()*7,d=cr()*mr*.75;g.beginPath();g.arc(cx+Math.cos(a)*d,cy+Math.sin(a)*d,mr*(.06+cr()*.14),0,7);g.fill()}
-  const rim=g.createRadialGradient(cx,cy,mr*.7,cx,cy,mr);rim.addColorStop(0,'rgba(0,0,0,0)');rim.addColorStop(1,'rgba(0,0,0,.45)');g.fillStyle=rim;g.fillRect(cx-mr,cy-mr,mr*2,mr*2);g.restore();
+  // созвездие мелодии: угол = время, радиус = высота
+  if(t>=0){let prev=null;arr.events.filter(e=>e.voice!=='pulse'&&e.start<=t).forEach(e=>{const a=ang(-e.start/TRACK_SECONDS*360),rr=R*(.25+.72*clamp((e.midi-30)/66,0,1)),x=cx+Math.cos(a)*rr,y=cy+Math.sin(a)*rr,flash=Math.max(0,1-(t-e.start)*1.5);
+      if(e.voice==='lead'){if(prev){g.strokeStyle='rgba(255,214,150,.4)';g.lineWidth=1;g.beginPath();g.moveTo(prev[0],prev[1]);g.lineTo(x,y);g.stroke()}prev=[x,y];const z=W*(.04+.06*flash);g.drawImage(SPR.gold,x-z/2,y-z/2,z,z)}
+      else{const z=W*(e.voice==='impact'?.07:.024)*(1+flash*1.5);g.globalAlpha=clamp(.5+flash,0,1);g.drawImage(flash>.3?SPR.bright:SPR.star,x-z/2,y-z/2,z,z);g.globalAlpha=1}});
+    const ha=ang(-t/TRACK_SECONDS*360),hx=cx+Math.cos(ha)*R,hy=cy+Math.sin(ha)*R,z=W*.05;g.drawImage(SPR.bright,hx-z/2,hy-z/2,z,z)}
+  // Солнце на орбите
+  const sx=cx+Math.cos(sa)*R,sy=cy+Math.sin(sa)*R,pulse=1+.05*Math.sin(performance.now()/800);
+  let z=W*.28*pulse;g.drawImage(SPR.sun,sx-z/2,sy-z/2,z,z);
+  g.save();g.translate(sx,sy);g.scale(1,.03);z=W*.8;g.globalAlpha=.5;g.drawImage(SPR.sun,-z/2,-z/2,z,z);g.restore();g.globalAlpha=1;
+  g.globalCompositeOperation='source-over';g.fillStyle='#fffaf0';g.beginPath();g.arc(sx,sy,W*.008,0,7);g.fill();
 }
 
-/* ---------- небо: туманности, звёзды со свечением, сбор в круг ---------- */
+/* ---------- реалистичное небо: Млечный Путь, пыль, звёзды разных классов ---------- */
+function noiseField(seed,N){const r=rng(seed),G=24,grid=[];for(let i=0;i<G*G;i++)grid.push(r());const sm=t=>t*t*(3-2*t),v=(a,b)=>grid[(((b%G)+G)%G)*G+(((a%G)+G)%G)];
+  return(x,y)=>{let n=0,amp=.5,f=3;for(let o=0;o<6;o++){const gx=x*f,gy=y*f,ix=Math.floor(gx),iy=Math.floor(gy),fx=sm(gx-ix),fy=sm(gy-iy),a=v(ix,iy),b=v(ix+1,iy),c=v(ix,iy+1),d=v(ix+1,iy+1);n+=(a+(b-a)*fx+(c-a)*fy+(a-b-c+d)*fx*fy)*amp;amp*=.5;f*=2}return n}}
+let SKYBG=null;
+function buildSky(W,H){const dpr=Math.min(2,window.devicePixelRatio||1),c=document.createElement('canvas');c.width=Math.round(W*dpr);c.height=Math.round(H*dpr);const g=c.getContext('2d');g.scale(dpr,dpr);
+  // основа: почти чёрный с лёгким холодным тоном
+  const bg=g.createLinearGradient(0,0,W,H);bg.addColorStop(0,'#04050c');bg.addColorStop(.5,'#070912');bg.addColorStop(1,'#04040a');g.fillStyle=bg;g.fillRect(0,0,W,H);
+  // Млечный Путь: диагональная полоса со свечением и пылевыми прожилками
+  const N=320,mw=document.createElement('canvas');mw.width=mw.height=N;const mg=mw.getContext('2d'),img=mg.createImageData(N,N),n1=noiseField(5,N),n2=noiseField(17,N);
+  for(let y=0;y<N;y++)for(let x=0;x<N;x++){const u=x/N,v=y/N,d=(v-(.85-u*.75))*1.3,band=Math.exp(-(d*d)/(.022)),core=Math.exp(-(d*d)/.004);
+    const nn=n1(u*1.6,v*1.6),glow=band*Math.pow(nn,2.2)*1.6+core*.35*nn,dust=Math.max(0,n2(u*2.2,v*2.2)-.44)*3.2*band,k=clamp(glow-dust*1.3,0,1.2),i=(y*N+x)*4,warm=clamp(core*1.2+n1(u+3,v)*.3,0,1);
+    img.data[i]=Math.round(170+70*warm);img.data[i+1]=Math.round(180+40*warm);img.data[i+2]=Math.round(230-50*warm);img.data[i+3]=Math.round(clamp(k*52,0,255))}
+  mg.putImageData(img,0,0);g.imageSmoothingQuality='high';g.globalCompositeOperation='lighter';g.drawImage(mw,-W*.1,-H*.1,W*1.2,H*1.2);
+  // тонкие цветные туманности
+  [[.18,.22,'rgba(120,70,160,.10)'],[.82,.7,'rgba(40,110,150,.09)'],[.6,.3,'rgba(170,90,70,.05)']].forEach(([x,y,col])=>{const r=Math.max(W,H)*.45,gr=g.createRadialGradient(x*W,y*H,0,x*W,y*H,r);gr.addColorStop(0,col);gr.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=gr;g.fillRect(0,0,W,H)});
+  // звёзды: гуще в полосе, цвет по спектральному классу
+  const r=rng(42),cols=['#9bb0ff','#aabfff','#cad7ff','#f8f7ff','#fff4ea','#ffe9c7','#ffd2a1','#ffbe85'],count=Math.round(W*H/220);
+  for(let i=0;i<count;i++){let x=r()*W,y=r()*H;const u=x/W,v=y/H,d=(v-(.85-u*.75))*1.3,inBand=Math.exp(-(d*d)/.03);if(r()>.35+inBand*.65)continue;
+    const m=Math.pow(r(),5),sz=.25+m*1.6,col=cols[Math.floor(Math.pow(r(),.8)*cols.length)];g.globalAlpha=.25+m*.75;
+    if(sz>1.1){const z=sz*7;g.drawImage(SPR.star,x-z/2,y-z/2,z,z)}g.fillStyle=col;g.beginPath();g.arc(x,y,sz*.6,0,7);g.fill()}
+  // несколько ярких звёзд с лучами
+  for(let i=0;i<Math.round(W*H/90000);i++){const x=r()*W,y=r()*H,z=18+r()*36;g.globalAlpha=.5+r()*.5;g.drawImage(SPR.bright,x-z/2,y-z/2,z,z)}
+  g.globalAlpha=1;g.globalCompositeOperation='source-over';return{c,W,H}}
+
 const SKY={c:document.getElementById('sky'),ps:[],G:0,from:0,to:0,t0:0,dur:2800,mx:0,my:0};
-(function initStars(){const r=rng(20260609),n=window.innerWidth<600?170:280;for(let i=0;i<n;i++){const big=r()<.06;SKY.ps.push({sx:r(),sy:r(),wa:r()*Math.PI*2,wd:.1+Math.sqrt(r())*.68,size:big?2.6+r()*2:.6+r()*1.4,big,a:.35+r()*.6,tw:r()*6.28,ts:.5+r()*1.8,delay:r()*.6,depth:.3+r()*.7})}})();
+(function initStars(){const r=rng(20260609),n=window.innerWidth<600?140:230,cols=['#cad7ff','#f8f7ff','#fff4ea','#ffe9c7'];for(let i=0;i<n;i++){const big=r()<.07;SKY.ps.push({sx:r(),sy:r(),wa:r()*Math.PI*2,wd:.12+Math.sqrt(r())*.85,size:big?2.4+r()*2:.7+r()*1.2,big,a:.4+r()*.6,tw:r()*6.28,ts:.5+r()*1.8,delay:r()*.6,depth:.3+r()*.7,col:cols[Math.floor(r()*cols.length)]})}})();
 const reduceMotion=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 function gatherStars(to){if(SKY.to===to&&SKY.G===to)return;SKY.from=SKY.G;SKY.to=to;SKY.t0=performance.now();if(reduceMotion)SKY.G=to}
 const ease=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;
 window.addEventListener('pointermove',e=>{SKY.mx=e.clientX/window.innerWidth-.5;SKY.my=e.clientY/window.innerHeight-.5});
 function skyFrame(now){const c=SKY.c,dpr=Math.min(2,window.devicePixelRatio||1),W=window.innerWidth,H=window.innerHeight;
   if(c.width!==Math.round(W*dpr)||c.height!==Math.round(H*dpr)){c.width=Math.round(W*dpr);c.height=Math.round(H*dpr)}
+  if(!SKYBG||SKYBG.W!==W||Math.abs(SKYBG.H-H)>120)SKYBG=buildSky(W,H);
   if(SKY.G!==SKY.to){const p=clamp((now-SKY.t0)/SKY.dur,0,1);SKY.G=SKY.from+(SKY.to-SKY.from)*p;if(p>=1)SKY.G=SKY.to}
-  const g=c.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);g.clearRect(0,0,W,H);
-  const t=reduceMotion?0:now/1000,D=Math.max(W,H)*1.5;g.imageSmoothingQuality='high';
-  // туманности медленно дрейфуют и чуть сдвигаются за курсором (параллакс)
-  g.globalCompositeOperation='lighter';
-  g.globalAlpha=.55;g.drawImage(NEB[0],-D*.18+Math.sin(t*.02)*40-SKY.mx*30,-D*.25+Math.cos(t*.017)*30-SKY.my*30,D,D);
-  g.globalAlpha=.45;g.drawImage(NEB[1],W-D*.75+Math.cos(t*.015)*40-SKY.mx*18,H*.1-D*.3+Math.sin(t*.021)*30-SKY.my*18,D,D);
-  g.globalAlpha=1;
-  const rc=els.chart.getBoundingClientRect(),cx=rc.left+rc.width/2,cy=rc.top+rc.height/2,R=rc.width*.45*.76;
+  const g=c.getContext('2d');g.setTransform(1,0,0,1,0,0);
+  // фон с едва заметным параллаксом
+  const ox=reduceMotion?0:-SKY.mx*14,oy=reduceMotion?0:-SKY.my*14;g.fillStyle='#03040a';g.fillRect(0,0,c.width,c.height);g.drawImage(SKYBG.c,(ox-10)*dpr,(oy-10)*dpr,(W+20)*dpr,(H+20)*dpr);
+  g.setTransform(dpr,0,0,dpr,0,0);g.globalCompositeOperation='lighter';
+  const rc=els.chart.getBoundingClientRect(),cx=rc.left+rc.width/2,cy=rc.top+rc.height/2,R=rc.width*.4,t=reduceMotion?0:now/1000;
   for(const s of SKY.ps){const q=ease(clamp(SKY.G*1.6-s.delay,0,1)),x0=s.sx*W-SKY.mx*40*s.depth,y0=s.sy*H-SKY.my*40*s.depth,x1=cx+Math.cos(s.wa)*s.wd*R,y1=cy+Math.sin(s.wa)*s.wd*R;
-    const x=x0+(x1-x0)*q,y=y0+(y1-y0)*q,tw=reduceMotion?1:.65+.35*Math.sin(t*s.ts+s.tw),z=s.size*(s.big?9:6)*(1-.3*q);
-    g.globalAlpha=s.a*tw*(s.big?.9:1);g.drawImage(s.big?SPR.bright:SPR.star,x-z/2,y-z/2,z,z);
-    // хвост при полёте
-    if(q>0&&q<1&&!reduceMotion){const k=.05;g.globalAlpha=.25*s.a;g.strokeStyle='#cfd8ff';g.lineWidth=.6;g.beginPath();g.moveTo(x,y);g.lineTo(x-(x1-x0)*k,y-(y1-y0)*k);g.stroke()}}
+    const x=x0+(x1-x0)*q,y=y0+(y1-y0)*q,tw=reduceMotion?1:.65+.35*Math.sin(t*s.ts+s.tw),z=s.size*(s.big?10:6)*(1-.25*q);
+    g.globalAlpha=s.a*tw;g.drawImage(s.big?SPR.bright:SPR.star,x-z/2,y-z/2,z,z);
+    if(q>0&&q<1&&!reduceMotion){g.globalAlpha=.3*s.a;g.strokeStyle=s.col;g.lineWidth=.6;g.beginPath();g.moveTo(x,y);g.lineTo(x-(x1-x0)*.06,y-(y1-y0)*.06);g.stroke()}}
   g.globalAlpha=1;g.globalCompositeOperation='source-over';
-  if(currentArrangement&&!playing&&!reduceMotion)drawChart(currentArrangement,SKY.G>=1&&lastT>0?lastT:-1);
+  if(currentArrangement&&!playing&&!reduceMotion)drawChart(currentArrangement,lastT);
   requestAnimationFrame(skyFrame)}
 let lastT=-1;
 requestAnimationFrame(skyFrame);
