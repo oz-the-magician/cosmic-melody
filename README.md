@@ -9,19 +9,22 @@
 | Sky parameter | Musical parameter |
 |---|---|
 | Sun's ecliptic longitude (zodiac sign) | Root note |
-| Moon phase | Mode (one of 8); illumination colours the dynamics |
-| Time of day | Length of the development section, and so the tempo (70–82 BPM) |
+| Element of the sign (fire, earth, air, water) | Texture: offbeat drive, chorale, sparse high register, flowing arpeggios |
+| Moon phase | Mode (one of 8) and character: nocturne, scherzo in 3/4, march or elegy |
+| Time of day | Length of the development |
 | Digits of the date | A four-note motif cell with its own rhythm — the seed of the whole piece |
 
-The piece is a miniature in Beethoven's manner, *per aspera ad astra*: everything grows from the date's motif, and the seven epochs of the Universe become a compressed sonata journey from darkness to light.
+The piece is a miniature in Beethoven's manner: everything grows from the date's motif, and the seven epochs of the Universe become a compressed sonata journey.
 
-1. **Big Bang** — the motif in fortissimo unison over a timpani stroke, held on a fermata.
-2. **Recombination** — the theme as a question, piano: the motif and its sequence a step higher, over Alberti accompaniment.
-3. **First stars** — the answer, closing on a half cadence with a 4–3 suspension.
-4. **First galaxies** — development: the motif fragmented and sequenced upward while the bass falls, crescendo through the secondary dominant.
-5. **Peak of star formation** — climax on a diminished seventh, tremolo, then a general pause.
-6. **Dark energy** — subito pianissimo heartbeat on a dominant pedal, the motif inverted in the low register, growing out of the dark (after the bridge into the finale of the Fifth).
-7. **Birth of the Sun** — apotheosis: the theme in major (a Picardy third even in minor modes) and a coda of hammer-blow V–I chords.
+1. **Big Bang** — the motif in fortissimo unison with a fermata (or rising out of silence in the nocturne and elegy).
+2. **Recombination** — the first theme as question and answer, with a breath between phrases and a half cadence with a 4–3 suspension.
+3. **First stars** — a lyrical second theme in a related key, sung by another instrument: the motif inverted, opened by a wide leap.
+4. **First galaxies** — development: the motif passed between voices in canon, the bass answering in inversion, rising sequences and an accelerando, ending in a solo for the element's instrument.
+5. **Peak of star formation** — climax on a diminished seventh with tremolo, then a general pause.
+6. **Dark energy** — a heartbeat on a dominant pedal and the motif inverted in the depths, slowing into the finale.
+7. **Birth of the Sun** — march and scherzo end in an apotheosis in major with hammer-blow V–I chords; the nocturne brings the second theme home and ends softly in major; the elegy closes with a plagal minor cadence.
+
+The tempo map breathes (accelerando, ritardando), yet every piece lasts exactly 30 seconds.
 
 ### Four ensembles
 
