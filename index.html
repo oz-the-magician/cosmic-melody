@@ -189,80 +189,100 @@ const ENS_CFG={
 let ensemble=(()=>{try{return ENS_CFG[localStorage.getItem('cm-ens')]?localStorage.getItem('cm-ens'):'orchestra'}catch(e){return'orchestra'}})();
 const voiceCfg=(ens,voice)=>({...VOICES[voice],...(ENS_CFG[ens].tune[voice]||{})});
 
-/* ================= композиция ================= */
-// мотив даты: цифры дня, месяца и года → шаги по ладу и ритм
+/* ================= композиция: «Per aspera ad astra» =================
+   Вся пьеса вырастает из одной ячейки — мотива даты — и идёт от тьмы к свету:
+   унисон судьбы → вопрос → ответ (полукаденция) → разработка → кульминация на
+   уменьшённом септаккорде и генеральная пауза → сердцебиение на органном пункте
+   → апофеоз в мажоре и молотковые аккорды коды. */
 function dateMotif(dt){
-  const digits=(String(dt.day).padStart(2,'0')+String(dt.month).padStart(2,'0')+String(dt.year%100).padStart(2,'0')).split('').map(Number);
-  const STEP=[0,1,2,-1,3,-2,1,4,-1,-3],RHY=[1,.5,1.5,.5,1,1,.5,1.5,1,.5];
-  const deg=[0],dur=[];for(let i=1;i<6;i++)deg.push(clamp(deg[i-1]+(STEP[digits[i]]||1),-3,7));
-  for(let i=0;i<6;i++)dur.push(RHY[digits[i]]);dur[5]=Math.max(dur[5],1.5);// последняя нота длиннее — фраза дышит
-  if(deg[5]===deg[4])deg[5]+=deg[4]>2?-1:1;
-  return{deg,dur,digits}}
-// голосоведение: ближайшее обращение аккорда к предыдущему
+  // ритм — из дня (характер), высоты — из месяца и года (лицо мотива); каждая ячейка = 2 доли
+  const RH=[[.25,.25,.25,1.25],[.75,.25,.5,.5],[.5,.25,.25,1],[.5,.5,.5,.5],[1,.25,.25,.5],[.25,.75,.25,.75]][(dt.day+dt.month)%6];
+  const ST=[[0,0,0,-2],[0,1,2,-1],[0,-1,-2,2],[0,2,1,4],[0,0,1,-3],[0,3,2,0],[0,-2,-1,-4],[0,4,3,1],[0,-1,1,3],[0,2,4,2],[0,-3,-1,0],[0,1,-1,-2]][(dt.day*7+dt.month*5+dt.year)%12];
+  return{deg:ST,dur:RH}}
 function voiceChord(pcs,prev,lo=50,hi=74){
   const opts=[];for(let inv=0;inv<pcs.length;inv++){const order=pcs.slice(inv).concat(pcs.slice(0,inv));for(let base=lo-12;base<=hi;base++){if(mod(base,12)!==order[0])continue;const v=[base];for(let k=1;k<order.length;k++){let p=v[k-1]+1;while(mod(p,12)!==order[k])p++;v.push(p)}if(v[0]>=lo&&v[v.length-1]<=hi)opts.push(v)}}
   if(!prev||!opts.length)return opts.sort((a,b)=>Math.abs(a[0]-58)-Math.abs(b[0]-58))[0]||pcs.map(p=>60+p);
   const cost=v=>v.reduce((s,p,i)=>s+Math.abs(p-(prev[Math.min(i,prev.length-1)])),0);return opts.sort((a,b)=>cost(a)-cost(b))[0]}
 function buildArrangement(dt){
-  const sky=skyParams(dt);sky.tempo=64+(sky.hourFloat/24)*28;// спокойный темп 64–92
-  const mode=MODES[sky.modeIdx],iv=mode.intervals,root=sky.rootPc,sections=buildBeatSections(sky),scale=makeScalePitches(root,iv,24,108);
-  const T=sky.tempo,ill=sky.illum,events=[],scenes=[],mot=dateMotif(dt);
-  const add=(v,m,b,d,vel)=>addEvent(events,v,m,b,d,vel,T);
-  const pcOf=d=>mod(root+iv[mod(d,7)],12);
-  const triad=(d,kind)=>kind==='sus2'?[pcOf(d),pcOf(d+1),pcOf(d+4)]:kind==='sus4'?[pcOf(d),pcOf(d+3),pcOf(d+4)]:kind==='7'?[pcOf(d),pcOf(d+2),pcOf(d+4),pcOf(d+6)]:[pcOf(d),pcOf(d+2),pcOf(d+4)];
-  // гармонический план: тоника → путешествие → доминанта → тоника
-  const PLANS=[[0,0,5,3,1,4,0],[0,0,3,5,4,1,0],[0,0,5,1,3,4,0],[0,0,2,5,3,4,0]],plan=PLANS[Math.floor(sky.lambda/90)%4];
-  const DYN=[44,50,60,72,92,58,78],dyn=i=>Math.round(DYN[i]*(.85+.25*ill));
-  // регистр главной темы остывает вместе со Вселенной: от 77 к 62
-  const centers=[0,77,74,71,72,64,62];
-  let prevVoicing=null;
-  const lead=(sec,si,degs,durs,{scale:sc=1,shift=0,invert=false,start=.5,vel=0,toTonic=false}={})=>{
-    const cIdx=nearestScaleIndex(scale,snapToScale(centers[si],root,iv));let b=sec.beatStart+start;
-    degs.forEach((d,k)=>{let dd=invert?-d:d;let idx=cIdx+dd+shift,m=scale[clamp(idx,0,scale.length-1)];
-      if(toTonic&&k===degs.length-1){m=snapToScale(m,root,[0]);}
-      const len=durs[k]*sc,last=k===degs.length-1,end=sec.beatEnd-(si===6?0:.25);if(b>=end)return;
-      add('lead',m,b,Math.min(len*(last?1.25:.95),Math.max(.25,end-b)),(vel||dyn(si))+(k===0?8:0)+(last?-4:0));b+=len})};
-  sections.forEach((sec,si)=>{
-    const L=sec.beatEnd-sec.beatStart,deg=plan[si];
-    const kind=(si===1||si===2)&&ill<.4?'sus2':si===5?'sus4':(si===3||si===4)&&ill>.55?'7':'';
-    const chordNames=[];
-    const placeChord=(d,k,b0,b1,vel)=>{const v=voiceChord(triad(d,k),prevVoicing);prevVoicing=v;v.forEach((p,j)=>add('pad',p,b0,b1-b0,vel-j*2));chordNames.push(v.map(midiName).join(' '));return v};
-    if(si===0){ // Большой взрыв: удар и низкий гул пустоты
-      add('impact',60,0,3,118);const r0=48+mod(root-48,12);add('pad',r0,.5,L-.5,dyn(0)-6);add('pad',r0+7,1.5,L-1.5,dyn(0)-10);add('bass',r0-12,.5,L-.5,dyn(0));chordNames.push(midiName(r0)+' '+midiName(r0+7));prevVoicing=[r0,r0+7,r0+12]}
-    else if(si===6){ // Рождение Солнца: доминанта → тоника, финальный аккорд
-      const mid=sec.beatStart+Math.max(2,quantizeBeat(L*.45,1));placeChord(4,'',sec.beatStart,mid,dyn(6));const fin=placeChord(0,'',mid,sec.beatEnd,dyn(6)+6);
-      add('bass',scaleDegreePitch(root,iv,4,1),sec.beatStart,mid-sec.beatStart,dyn(6));add('bass',scaleDegreePitch(root,iv,0,1),mid,sec.beatEnd-mid,dyn(6)+8);
-      add('impact',60,mid,3,96);
-      // восходящая арфа к финалу
-      const top=fin.map(p=>p+12).concat(fin.map(p=>p+24));top.forEach((p,k)=>add('arp',p,mid+k*.25,1.5,dyn(6)-10+k*2));
-      lead(sec,si,mot.deg,mot.dur.map(x=>x*.75),{start:0,toTonic:true,shift:0})}
-    else placeChord(deg,kind,sec.beatStart,sec.beatEnd,dyn(si)-14);
-    const ch=prevVoicing;
-    // бас: вступает с галактиками
-    if(si>=3&&si<=5){const step=si===5?4:2;for(let b=sec.beatStart;b<sec.beatEnd-.25;b+=step){const k=Math.round((b-sec.beatStart)/step)%2;add('bass',scaleDegreePitch(root,iv,deg+(k?4:0),1),b,step*.8,dyn(si)-4)}}
-    // искры: плотность растёт к пику, редеет в тёмной энергии; полнолуние — гуще
-    if(si>=1&&si<=5){const base=[0,2,1,1,.5,2][si],step=ill<.25&&base<2?base*2:base,src=ch.map(p=>p+12).concat(ch.map(p=>p+24)),pat=[0,2,1,3,2,4,1,5];
-      for(let b=sec.beatStart+(si===1?1:.5),k=0;b<sec.beatEnd-.2;b+=step,k++)add('arp',src[pat[(k+si)%pat.length]%src.length],b,step*.9,dyn(si)-18+(k%2?0:6))}
-    // пульс в сердце истории
-    if(si===3||si===4)for(let b=sec.beatStart+1;b<sec.beatEnd-.25;b+=2)add('pulse',60,b,.1,dyn(si)-30);
-    if(si===4)add('impact',60,sec.beatStart,2,100);
-    // главная тема: мотив даты в вариациях
-    if(si===1)lead(sec,si,mot.deg.slice(0,3),mot.dur.slice(0,3),{scale:1.5,start:1});           // первый свет: фрагмент, медленно
-    if(si===2)lead(sec,si,mot.deg,mot.dur,{start:.5});                                           // тема целиком
-    if(si===3){lead(sec,si,mot.deg.slice(0,4),mot.dur.slice(0,4),{start:0});lead(sec,si,mot.deg.slice(2),mot.dur.slice(2),{start:Math.min(L-2,mot.dur.slice(0,4).reduce((a,b)=>a+b,0)),shift:2})}// вопрос и ответ
-    if(si===4)lead(sec,si,mot.deg,mot.dur.map(x=>x*.8),{start:0,shift:7,vel:dyn(4)+6});         // кульминация октавой выше
-    if(si===5)lead(sec,si,mot.deg.slice(0,4),mot.dur.slice(0,4).map(x=>x*1.3),{start:.5,invert:true,vel:dyn(5)-6}); // тёмная энергия: тема вверх ногами
-    const leadCenter=si===0?'—':midiName(snapToScale(centers[si],root,iv));
-    scenes.push({name:sec.name,start:sec.start,end:sec.end,time:`${sec.start.toFixed(2)}–${sec.end.toFixed(2)} сек`,beats:`${sec.beatStart.toFixed(1)}–${sec.beatEnd.toFixed(1)}`,chord:chordNames.join(' → '),leadCenter});
-  });
+  const sky=skyParams(dt),mode=MODES[sky.modeIdx],iv=mode.intervals,root=sky.rootPc,ill=sky.illum,mot=dateMotif(dt);
+  // форма в долях; час суток задаёт длину разработки, а значит и темп (вся пьеса = 30 с)
+  const DEV=[6,8,10,12][Math.floor(sky.hourFloat/6)%4],LEN=[4,4,4,DEV,5,4,8],TOTAL=LEN.reduce((a,b)=>a+b,0);
+  sky.tempo=TOTAL*2;const T=sky.tempo,S=[];LEN.reduce((acc,l,i)=>(S[i]=acc,acc+l),0);
+  const events=[],add=(v,m,b,d,vel,extra)=>{const n=events.length;addEvent(events,v,m,b,d,clamp(vel,1,127),T);if(extra&&events.length>n)Object.assign(events[n],extra)};
+  const scale=makeScalePitches(root,iv,24,108),scalePc=new Set(iv.map(i=>mod(root+i,12)));
+  const pc=x=>mod(root+x,12),dg=d=>iv[mod(d,7)],tri=d=>[pc(dg(d)),pc(dg(d+2)),pc(dg(d+4))];
+  const CH={I:tri(0),ii:tri(1),IV:tri(3),vi:tri(5),IVM:[pc(5),pc(9),pc(0)],V:[pc(7),pc(11),pc(2)],V7:[pc(7),pc(11),pc(2),pc(5)],Vsus:[pc(7),pc(0),pc(2)],
+    VV:[pc(2),pc(6),pc(9)],dimV:[pc(6),pc(9),pc(0),pc(3)],Ipic:[pc(0),pc(4),pc(7)]};
+  const NAME={I:'I',ii:'ii',IV:'IV',vi:'vi',IVM:'IV',V:'V',V7:'V7',Vsus:'V⁴',VV:'V/V',dimV:'vii°7/V',Ipic:'I (мажор)'};
+  // мелодия: ступени лада, но альтерируются под аккорд (вводный тон, пикардийская терция)
+  const alter=(m,ch)=>{const p=mod(m,12);if(!ch||ch.includes(p))return m;if(ch.includes(mod(p+1,12))&&!scalePc.has(mod(p+1,12)))return m+1;if(ch.includes(mod(p-1,12))&&!scalePc.has(mod(p-1,12)))return m-1;return m};
+  const tonicNear=c=>{let m=c-mod(c-root,12);if(c-m>6)m+=12;return m};
+  const harm=[];// {b0,b1,ch}
+  const chordAt=b=>{for(let i=harm.length-1;i>=0;i--)if(b>=harm[i].b0-1e-6&&b<harm[i].b1)return harm[i].ch;return null};
+  let prevV=null;const names=LEN.map(()=>[]);
+  const chord=(si,key,b0,b1,vel,extra)=>{const ch=CH[key];harm.push({b0,b1,ch});const v=voiceChord(ch,prevV);prevV=v;v.forEach((p,j)=>add('pad',p,b0,b1-b0,vel-j*2,extra));
+    add('bass',36+mod(ch[0]-36,12),b0,Math.min(b1-b0,2),vel+6,extra&&extra.tight?{tight:true,rel:.2}:null);names[si].push(NAME[key]);return v};
+  const phrase=(b0,steps,durs,center,vel,{invert=false,last=1,stretch=1,voice='lead'}={})=>{const base=nearestScaleIndex(scale,center);let b=b0;
+    steps.forEach((st,k)=>{const d=durs[k]*stretch,idx=clamp(base+(invert?-st:st),0,scale.length-1),m=alter(scale[idx],chordAt(b)),isLast=k===steps.length-1;
+      add(voice,m,b,isLast?d*last:d*.92,vel+(k===0?8:0)+(d>=1?4:0));b+=d});return b};
+  const alberti=(b0,b1,v,vel,step=.5)=>{const top=v.map(p=>p+12),pat=[0,2,1,2];for(let b=b0,k=0;b<b1-1e-6;b+=step,k++)add('arp',top[pat[k%4]%top.length],b,step*.9,vel+(k%4===0?6:0))};
+  const T5=tonicNear(72),T4=tonicNear(60);// регистры: свет — наверху, тьма — внизу
+
+  /* 0. Большой взрыв: мотив судьбы в унисон, ff, и фермата */
+  {const s=S[0];add('impact',60,s,3,124);
+   phrase(s,mot.deg,mot.dur,T5,112,{last:1});phrase(s,mot.deg,mot.dur,T4-12,112,{last:1,voice:'bass'});
+   const lastStart=s+mot.dur.slice(0,3).reduce((a,b)=>a+b,0);// фермата: последняя нота тянется до конца такта
+   events.filter(e=>(e.voice==='lead'||e.voice==='bass')&&Math.abs(e.beat-lastStart)<1e-6).forEach(e=>{e.durBeat=s+3.6-lastStart;e.dur=beatToSec(e.durBeat,T);e.tight=false});
+   names[0].push('унисон')}
+  /* 1. Рекомбинация: тема-вопрос, piano; мотив и секвенция на ступень выше */
+  {const s=S[1],q=Math.floor(sky.lambda/90)%4,X=['IV','vi','ii','IV'][q],p=44+Math.round(ill*8);
+   const v1=chord(1,'I',s,s+2,p-10);alberti(s,s+2,v1,p-18);const v2=chord(1,X,s+2,s+4,p-10);alberti(s+2,s+4,v2,p-18);
+   phrase(s,mot.deg,mot.dur,T5,p);phrase(s+2,mot.deg.map(x=>x+1),mot.dur,T5,p+4)}
+  /* 2. Первые звёзды: ответ и полукаденция с задержанием 4–3 */
+  {const s=S[2],p=48+Math.round(ill*8);
+   const v1=chord(2,'I',s,s+2,p-8);alberti(s,s+2,v1,p-16);chord(2,'Vsus',s+2,s+3,p-6);const v3=chord(2,'V',s+3,s+4,p-4);alberti(s+2,s+4,v3,p-14);
+   phrase(s,mot.deg,mot.dur,T5,p+2);const sec=nearestScaleIndex(scale,T5)+1;add('lead',alter(scale[sec+1],CH.Vsus),s+2,1,p+6);add('lead',alter(scale[sec],CH.V),s+3,1,p+2)}
+  /* 3. Галактики: разработка — дробление и секвенции вверх, бас навстречу вниз, crescendo */
+  {const s=S[3],n=DEV/2,plan=['vi','IV','ii','vi','IV','ii'].slice(0,n-1).concat(['VV']);
+   const frag=mot.deg.slice(0,3).concat([mot.deg[3]]),fd=mot.dur;
+   plan.forEach((key,k)=>{const b=s+k*2,vel=60+Math.round(36*k/(n-1)),v=chord(3,key,b,b+2,vel-8);
+     const top=v.map(p=>p+12);for(let t=0;t<4;t++)add('arp',top[[0,1,2,1][t]%top.length],b+t*.5,.45,vel-12+(t===0?6:0));
+     phrase(b,frag.map(x=>x+k),fd,T5,vel);
+     const bl=scale[clamp(nearestScaleIndex(scale,48)-k,0,scale.length-1)];add('bass',bl,b+1,1,vel-4)})}
+  /* 4. Кульминация: уменьшённый септаккорд ff, тремоло — и генеральная пауза */
+  {const s=S[4];add('impact',60,s,2,122);
+   const v1=chord(4,'dimV',s,s+2,110,{atk:.03});for(let b=s;b<s+2-1e-6;b+=.25)add('arp',v1[(b*4)%2?2:0]+12,b,.22,96);
+   phrase(s,mot.deg.map(x=>x+4),mot.dur,T5,118,{last:1.1});
+   const v2=chord(4,'V7',s+2,s+4,108,{atk:.03,tight:true,rel:.25});for(let b=s+2;b<s+4-1e-6;b+=.25)add('arp',v2[(b*4)%2?3:1]+12,b,.22,94,{tight:true,rel:.15});
+   add('lead',alter(scale[nearestScaleIndex(scale,T5)+6],CH.V7),s+2,2,116,{tight:true,rel:.3});
+   names[4].push('пауза')}
+  /* 5. Тёмная энергия: subito pp, сердцебиение на органном пункте доминанты, мотив вниз головой, crescendo из темноты */
+  {const s=S[5],ped=36+mod(pc(7)-36,12);
+   harm.push({b0:s,b1:s+3,ch:CH.vi});const v=voiceChord(CH.vi,prevV);prevV=v;v.forEach((p,j)=>add('pad',p-12,s,3,34-j*2));names[5].push('vi над V');
+   chord(5,'V7',s+3,s+4,70);
+   for(let k=0;k<4;k++){const vel=24+k*18;add('bass',ped,s+k,.6,vel);add('pulse',60,s+k,.1,vel-6)}
+   phrase(s,mot.deg,mot.dur,T4,30,{invert:true,stretch:1.4})}
+  /* 6. Рождение Солнца: апофеоз — тема в мажоре, затем кода: V–I, V–I, I */
+  {const s=S[6];add('impact',60,s,3,120);
+   const v1=chord(6,'Ipic',s,s+2,104);alberti(s,s+2,v1,88,.25);const v2=chord(6,'IVM',s+2,s+3,100);alberti(s+2,s+3,v2,86,.25);const v3=chord(6,'V7',s+3,s+4,104);alberti(s+3,s+4,v3,88,.25);
+   const e=phrase(s,mot.deg,mot.dur,T5+12,116);phrase(s+2,mot.deg.map(x=>x+2),mot.dur.map(x=>x*.5),T5+12,112);
+   // кода: молотковые аккорды
+   const hit=(key,b,d)=>{const vv=chord(6,key,b,b+d,112,{atk:.02});add('arp',vv[vv.length-1]+12,b,d,100)};
+   hit('Ipic',s+4,1);hit('V7',s+5,.5);hit('Ipic',s+5.5,.5);hit('V7',s+6,.5);
+   const fin=chord(6,'Ipic',s+6.5,s+8,116,{atk:.02});add('impact',60,s+6.5,3,118);
+   add('lead',tonicNear(T5+12),s+6.5,1.5,118);add('bass',36+mod(root-36,12),s+6.5,1.5,116);
+   fin.map(p=>p+12).concat([fin[0]+24]).forEach((p,k)=>add('arp',p,s+4+k*.25,1.2,84+k*4))}
+
+  const SNAMES=['Большой взрыв',...EPOCHS.slice(0,-1).map(e=>e.name)],scenes=LEN.map((l,i)=>{const st=beatToSec(S[i],T),en=beatToSec(S[i]+l,T);
+    return{name:SNAMES[i],start:st,end:en,time:`${st.toFixed(2)}–${en.toFixed(2)} сек`,beats:`${S[i]}–${S[i]+l}`,chord:names[i].filter((x,k,a)=>x!==a[k-1]).join(' → '),leadCenter:''}});
   events.sort((a,b)=>a.beat-b.beat||a.midi-b.midi);
-  return{sky,mode,events,scenes,motif:mot,totalBeats:TRACK_SECONDS*T/60}}
+  return{sky,mode,events,scenes,motif:mot,totalBeats:TOTAL}}
 
 /* ================= звук ================= */
 // укладываем каждую фразу целиком в диапазон инструмента (без ломки мелодии)
 function fitToEnsemble(events,ens){const R=ENS_CFG[ens].range,groups={};
   events.forEach(e=>{if(!R[e.voice])return;const key=e.voice+'|'+Math.floor(e.start/ (e.voice==='lead'?2.5:4));(groups[key]=groups[key]||[]).push(e)});
-  const out=new Map();Object.values(groups).forEach(g=>{const [lo,hi]=R[g[0].voice],mean=g.reduce((s,e)=>s+e.midi,0)/g.length,mid=(lo+hi)/2;const sh=Math.round((mid-mean)/12)*12;
+  const out=new Map();Object.values(groups).forEach(g=>{const [lo,hi]=R[g[0].voice],mean=g.reduce((s,e)=>s+e.midi,0)/g.length;let sh=0;while(mean+sh<lo+2)sh+=12;while(mean+sh>hi-2)sh-=12;
     g.forEach(e=>{let m=e.midi+sh;while(m<lo)m+=12;while(m>hi)m-=12;out.set(e,m)})});
   return events.map(e=>out.has(e)?{...e,midi:out.get(e)}:e)}
 async function loadSamples(ens=ensemble){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')await audioCtx.resume();if(!bus)bus=makeBus();
@@ -271,19 +291,19 @@ async function loadSamples(ens=ensemble){if(!audioCtx)audioCtx=new(window.AudioC
   if(jobs.length){setStatus(`Загружаю: ${ENS_CFG[ens].label}…`);await Promise.all(jobs);setStatus('')}}
 function nearestSample(ens,voice,midi){const list=(buffers[ens]||{})[voice]||[];let best=list[0],dist=999;for(const s of list){const d=Math.abs(s.rootMidi-midi);if(d<dist){dist=d;best=s}}return best}
 function playSample(e,when,r,ens){const v=voiceCfg(ens,e.voice),s=nearestSample(ens,e.voice,e.midi);if(!s)return;const ctx=audioCtx,src=ctx.createBufferSource();src.buffer=s.buffer;src.playbackRate.value=s.fixed?1:Math.pow(2,(e.midi-s.rootMidi)/12);
-  const hold=Math.max(e.dur,v.ring),start=when+e.start+(r()*2-1)*v.human,len=s.buffer.duration/src.playbackRate.value;
-  let end=start+hold+v.release;if(s.loop&&s.loopEnd>s.loopStart+.2){src.loop=true;src.loopStart=s.loopStart;src.loopEnd=s.loopEnd}else end=Math.min(end,start+len);
+  const rel=e.rel??v.release,atk=e.atk??v.attack,hold=e.tight?e.dur:Math.max(e.dur,v.ring),start=when+e.start+(r()*2-1)*v.human,len=s.buffer.duration/src.playbackRate.value;
+  let end=start+hold+rel;if(s.loop&&s.loopEnd>s.loopStart+.2){src.loop=true;src.loopStart=s.loopStart;src.loopEnd=s.loopEnd}else end=Math.min(end,start+len);
   const lvl=Math.max(.003,(e.vel/127)*v.gain*(.88+r()*.18)),g=ctx.createGain();
-  g.gain.setValueAtTime(.0001,start);g.gain.exponentialRampToValueAtTime(lvl,start+v.attack);
-  const relAt=Math.max(start+v.attack+.02,end-v.release);g.gain.setValueAtTime(lvl,relAt);g.gain.exponentialRampToValueAtTime(.0001,end);
+  g.gain.setValueAtTime(.0001,start);g.gain.exponentialRampToValueAtTime(lvl,start+atk);
+  const relAt=Math.max(start+atk+.02,end-rel);g.gain.setValueAtTime(lvl,relAt);g.gain.exponentialRampToValueAtTime(.0001,end);
   let out=g;if(v.wide&&ctx.createStereoPanner){const p=ctx.createStereoPanner();p.pan.value=((e.midi%5)-2)*.22;g.connect(p);out=p}
   src.connect(g);out.connect(bus.voices[e.voice]);src.start(Math.max(ctx.currentTime,start));src.stop(end+.05);active.push(src)}
 let playedEvents=[];
 async function play(){try{if(!currentArrangement)generate();const ens=ensemble;await loadSamples(ens);stop();const arr=currentArrangement,r=rng(Math.floor(arr.sky.jd*1000));
-  bus.master.gain.cancelScheduledValues(0);bus.master.gain.setValueAtTime(.9,audioCtx.currentTime);
+  bus.master.gain.cancelScheduledValues(0);bus.master.gain.setValueAtTime(.78,audioCtx.currentTime);
   startAt=audioCtx.currentTime+.2;playedEvents=fitToEnsemble(arr.events,ens);
-  playedEvents.forEach(e=>playSample(e.voice==='pad'?{...e,dur:e.dur+.9}:e,startAt,r,ens));
-  const endT=startAt+TRACK_SECONDS;bus.master.gain.setValueAtTime(.9,endT+1);bus.master.gain.linearRampToValueAtTime(0,endT+4.5);
+  playedEvents.forEach(e=>playSample(e.voice==='pad'&&!e.tight?{...e,dur:e.dur+.6}:e,startAt,r,ens));
+  const endT=startAt+TRACK_SECONDS;bus.master.gain.setValueAtTime(.78,endT+1);bus.master.gain.linearRampToValueAtTime(0,endT+4.5);
   gatherStars(1);playing=true;els.playBtn.textContent='Остановить';els.playBtn.classList.add('on');els.playhead.style.opacity=1;tick()}catch(e){console.error(e);setStatus(e.message||'Не получилось воспроизвести звук.')}}
 
 /* ================= переключатель групп ================= */

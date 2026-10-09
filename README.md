@@ -9,11 +9,19 @@
 | Sky parameter | Musical parameter |
 |---|---|
 | Sun's ecliptic longitude (zodiac sign) | Root note |
-| Moon phase | Mode (one of 8); illumination sets density and brightness |
-| Time of day | Tempo (64–92 BPM) |
-| Digits of the date | A 6-note motif with its own rhythm — the date's theme |
+| Moon phase | Mode (one of 8); illumination colours the dynamics |
+| Time of day | Length of the development section, and so the tempo (70–82 BPM) |
+| Digits of the date | A four-note motif cell with its own rhythm — the seed of the whole piece |
 
-The piece follows seven epochs of the Universe in 30 seconds, and the orchestration tells that story: a Big Bang hit and low drone, first sparkles, the theme entering, bass and pulse with the galaxies, a climax an octave higher, the theme inverted in the dark-energy era, and a dominant-to-tonic cadence at the birth of the Sun. Chords move by smooth voice leading.
+The piece is a miniature in Beethoven's manner, *per aspera ad astra*: everything grows from the date's motif, and the seven epochs of the Universe become a compressed sonata journey from darkness to light.
+
+1. **Big Bang** — the motif in fortissimo unison over a timpani stroke, held on a fermata.
+2. **Recombination** — the theme as a question, piano: the motif and its sequence a step higher, over Alberti accompaniment.
+3. **First stars** — the answer, closing on a half cadence with a 4–3 suspension.
+4. **First galaxies** — development: the motif fragmented and sequenced upward while the bass falls, crescendo through the secondary dominant.
+5. **Peak of star formation** — climax on a diminished seventh, tremolo, then a general pause.
+6. **Dark energy** — subito pianissimo heartbeat on a dominant pedal, the motif inverted in the low register, growing out of the dark (after the bridge into the finale of the Fifth).
+7. **Birth of the Sun** — apotheosis: the theme in major (a Picardy third even in minor modes) and a coda of hammer-blow V–I chords.
 
 ### Four ensembles
 
