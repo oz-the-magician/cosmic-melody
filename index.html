@@ -38,6 +38,9 @@ h1.glitch span{animation:glitchSpan .38s steps(1) both}
 .bar{position:fixed;top:0;left:0;right:0;z-index:8;display:flex;justify-content:space-between;align-items:center;padding:16px 24px;border-bottom:1px solid var(--line);background:linear-gradient(rgba(0,10,18,.85),rgba(0,10,18,.4));-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 .brand{font:600 15px 'Exo 2',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);text-shadow:0 0 10px rgba(0,229,255,.5)}
 .brand small{font:400 11px 'JetBrains Mono',monospace;letter-spacing:.2em;color:var(--dim);margin-left:12px}
+.bar-r{display:flex;align-items:center;gap:20px}
+.lang{display:flex;gap:2px}.lang button{background:none;border:1px solid transparent;color:var(--dim);font:500 10px 'JetBrains Mono',monospace;letter-spacing:.15em;padding:4px 7px;cursor:pointer}
+.lang button:hover{color:var(--cyan)}.lang button[aria-pressed=true]{color:var(--cyan);border-color:rgba(0,229,255,.4);text-shadow:0 0 8px rgba(0,229,255,.6)}
 .sys{font-size:11px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase}
 .sys i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);margin-right:8px;vertical-align:1px;animation:blink 2s infinite}
 @keyframes blink{50%{opacity:.3}}
@@ -104,7 +107,7 @@ input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 12px rgba(0,229
 footer{margin-top:48px;font-size:11px;letter-spacing:.1em;color:var(--dim);text-align:center}
 footer a{color:var(--cyan)}
 @media (max-width:760px){
-  .bar{padding:12px 16px}.brand small{display:none}
+  .bar{padding:12px 16px}.brand small{display:none}.sys span{display:none}.bar-r{gap:8px}
   .hero{height:auto;min-height:0;display:flex;flex-direction:column;align-items:center;gap:18px;padding:80px 12px 32px;overflow:visible}
   .chip,h1,.stage,.tags,.controls,.status,.ens-row{position:static;transform:none}
   .chip{font-size:9px;white-space:normal;text-align:center}
@@ -123,28 +126,28 @@ footer a{color:var(--cyan)}
 <canvas id="sky" aria-hidden="true"></canvas>
 <div class="grid" aria-hidden="true"></div>
 <div class="glitchbar" id="glitchbar" aria-hidden="true"></div>
-<header class="bar"><div class="brand">Cosmic Melody<small>// SKY_TO_SOUND v2</small></div><div class="sys"><i></i>Звёзды на связи</div></header>
+<header class="bar"><div class="brand">Cosmic Melody<small>// SKY_TO_SOUND v2</small></div><div class="bar-r"><div class="lang" role="group" aria-label="Language"><button data-lang="ru">RU</button><button data-lang="en">EN</button><button data-lang="cs">CS</button></div><div class="sys"><i></i><span data-i18n="sys">Звёзды на связи</span></div></div></header>
 <section class="hero">
-  <div class="chip"><i></i>Дата → небо → музыка · 60 секунд</div>
+  <div class="chip"><i></i><span data-i18n="chip">Дата → небо → музыка · 60 секунд</span></div>
   <h1>Космическая<span>мелодия</span></h1>
   <div class="stage">
-    <canvas id="chart" aria-label="Орбита: положение Солнца в зодиаке и созвездие мелодии" role="img"></canvas>
+    <canvas id="chart" data-i18n-aria="chartAria" aria-label="Орбита: положение Солнца в зодиаке и созвездие мелодии" role="img"></canvas>
     <button id="playBtn" class="orb">Слушать</button>
   </div>
   <div class="tags" id="reading"></div>
   <div id="status" class="status" aria-live="polite"></div>
-  <div class="ens-row" role="group" aria-label="Группа инструментов"><span class="ens-label">// Состав</span><div id="ensembles"></div></div>
+  <div class="ens-row" role="group" data-i18n-aria="ensAria" aria-label="Группа инструментов"><span class="ens-label" data-i18n="ens">// Состав</span><div id="ensembles"></div></div>
   <div class="controls">
-    <label class="field" for="dateInput"><span>// Дата</span><input id="dateInput" type="datetime-local" step="60"></label>
-    <button id="randomBtn" class="hud-btn">Случайная дата</button>
+    <label class="field" for="dateInput"><span data-i18n="date">// Дата</span><input id="dateInput" data-i18n-aria="dateAria" type="datetime-local" step="60"></label>
+    <button id="randomBtn" class="hud-btn" data-i18n="random">Случайная дата</button>
     <a id="downloadMidi" class="hud-btn" aria-disabled="true" href="#" download>MIDI</a>
   </div>
 </section>
 <section class="more">
-  <h2>Пять эпох за минуту</h2>
-  <p>Солнце задаёт тонику, Луна — лад, время суток — темп. Мелодия проходит путь от Большого взрыва до сегодняшнего дня, а высота главной темы следует за температурой Вселенной.</p>
+  <h2 data-i18n="h2">Пять эпох за минуту</h2>
+  <p data-i18n="about">Солнце задаёт тонику, Луна — лад, время суток — темп. Мелодия проходит путь от Большого взрыва до сегодняшнего дня, а высота главной темы следует за температурой Вселенной.</p>
   <div class="track" id="track"><div class="playhead" id="playhead"></div></div>
-  <footer>Инструменты: <a href="https://versilian-studios.com/vsco-community/">VSCO 2 Community Edition</a> · Versilian Studios · CC0 // Код на <a href="https://github.com/oz-the-magician/cosmic-melody">GitHub</a></footer>
+  <footer><span data-i18n="instruments">Инструменты:</span> <a href="https://versilian-studios.com/vsco-community/">VSCO 2 Community Edition</a> · Versilian Studios · CC0 // <span data-i18n="codeOn">Код на</span> <a href="https://github.com/oz-the-magician/cosmic-melody">GitHub</a></footer>
 </section>
 <script>
 'use strict';
@@ -156,7 +159,7 @@ const NOTE_NAMES=['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'
 const ZODIAC=['Овен','Телец','Близнецы','Рак','Лев','Дева','Весы','Скорпион','Стрелец','Козерог','Водолей','Рыбы'];
 function pad2(n){return String(n).padStart(2,'0')}function mod(n,m){return((n%m)+m)%m}function degToRad(d){return d*Math.PI/180}function clamp(n,a,b){return Math.max(a,Math.min(b,n))}function midiName(m){return`${NOTE_NAMES[mod(m,12)]}${Math.floor(m/12)-1}`}function escapeHtml(s){return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;')}function setStatus(s){els.status.textContent=s}
 function setDefaultDate(){const n=new Date();els.dateInput.value=`${n.getFullYear()}-${pad2(n.getMonth()+1)}-${pad2(n.getDate())}T${pad2(n.getHours())}:${pad2(n.getMinutes())}`}
-function parseDatetimeLocal(value){const m=/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?$/.exec(value);if(!m)throw new Error('Введите дату и время.');return{year:+m[1],month:+m[2],day:+m[3],hour:+m[4],minute:+m[5],second:+(m[6]||0)}}
+function parseDatetimeLocal(value){const m=/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?$/.exec(value);if(!m)throw new Error(t('enterDate'));return{year:+m[1],month:+m[2],day:+m[3],hour:+m[4],minute:+m[5],second:+(m[6]||0)}}
 function julianDay(dt){const a=Math.floor((14-dt.month)/12),y=dt.year+4800-a,m=dt.month+12*a-3;return dt.day+Math.floor((153*m+2)/5)+365*y+Math.floor(y/4)-Math.floor(y/100)+Math.floor(y/400)-32045+(dt.hour-12)/24+dt.minute/1440+dt.second/86400}
 function sunLongitude(jd){const n=jd-2451545,L=mod(280.460+0.9856474*n,360),g=degToRad(mod(357.528+0.9856003*n,360));return mod(L+1.915*Math.sin(g)+0.020*Math.sin(2*g),360)}function moonPhase(jd){return mod((jd-2451550.1)/29.530588853,1)}
 function skyParams(dt){const jd=julianDay(dt),lambda=sunLongitude(jd),phase=moonPhase(jd),illum=(1-Math.cos(2*Math.PI*phase))/2,hourFloat=dt.hour+dt.minute/60,rootPc=Math.round(lambda/30)%12,modeIdx=Math.floor(phase*MODES.length)%MODES.length;return{jd,lambda,phase,illum,hourFloat,rootPc,modeIdx,tempo:60+hourFloat*4,octShift:(Math.floor((dt.year-1900)/60)-1)*12,velocity:55+Math.round(illum*45),year:dt.year,zodiacIdx:Math.floor(lambda/30)%12}}
@@ -269,7 +272,7 @@ function buildArrangement(dt){
   const PROG1=['I',['IV','vi','ii','IV'][Math.floor(sky.lambda/90)%4],'ii','V','I','IV','V7','I'];
 
   /* 1. Большой взрыв — вступление */
-  {const s=S[0],L=UNITS[0]*U;harm.push({b0:s,b1:s+L,ch:home.ch.I,key:home});names[0].push(soft?'из тишины':'унисон');
+  {const s=S[0],L=UNITS[0]*U;harm.push({b0:s,b1:s+L,ch:home.ch.I,key:home});names[0].push(soft?t('fromSilence'):t('unison'));
    const r0=bassNote(home.r);add('pad',r0+12,s,L+.3,scale(soft?48:60));add('pad',r0+19,s+.5,L-.2,scale(soft?42:54));
    if(soft){add('impact',60,s,3,scale(70));sing(s+.5,cellNotes(0),T4,scale(62),{voice:charKey==='nocturne'?'bass':'lead'})}
    else{add('impact',60,s,3,124);sing(s,cellNotes(0),T5,scale(112),{legato:false});sing(s,cellNotes(0),T4-12,scale(110),{voice:'bass',legato:false});
@@ -292,7 +295,7 @@ function buildArrangement(dt){
    sing(c0,cellNotes(4),T5,top,{legato:false});
    const tight=gp?{tight:true,rel:.3}:null,c2=chord(3,'V7',home,c0+U,c0+2*U-gp,top-12,{extra:{atk:.03,...(tight||{})}});
    for(let b=c0+U;b<c0+2*U-gp-1e-6;b+=.25)add('arp',c2.v[Math.round(b*4)%2?3:1]+12,b,.22,top-26,tight);add('bass',bassNote(c2.root),c0+U,U-gp,top-6,tight);
-   add('lead',alter(home.sc[nearestScaleIndex(home.sc,T5)+6],chordAt(c0+U)),c0+U,U-gp,top-4,tight);if(gp)names[3].push('пауза')}
+   add('lead',alter(home.sc[nearestScaleIndex(home.sc,T5)+6],chordAt(c0+U)),c0+U,U-gp,top-4,tight);if(gp)names[3].push(t('pause'))}
   /* 5. Рождение Солнца — тема возвращается в полном свете, кода */
   {const s=S[4],light=charKey==='elegy'?'I':'Ipic',P=PROG1.slice(0,7).concat([light]);
    if(charKey==='elegy')P[5]='iv';
@@ -312,9 +315,9 @@ function buildArrangement(dt){
   sky.tempo=60/k;
   const events=[];ev.forEach(e=>{const st=secOf(e.beat);if(st>=TRACK_SECONDS-.02)return;const en=Math.min(TRACK_SECONDS,secOf(e.beat+e.durBeat));if(en<=st)return;events.push({...e,start:st,dur:en-st})});
   events.sort((a,b)=>a.start-b.start||a.midi-b.midi);
-  const SN=['Большой взрыв','Рекомбинация и первые звёзды','Первые галактики','Пик звездообразования','Рождение Солнца'];
-  const scenes=UNITS.map((u,i)=>{const st=secOf(S[i]),en=secOf(S[i]+u*U);return{name:SN[i],start:st,end:en,time:`${st.toFixed(1)}–${en.toFixed(1)} сек`,beats:'',chord:names[i].join(' → '),leadCenter:''}});
-  return{sky,mode,events,scenes,motif:mot,totalBeats:TOTAL,character:charKey,element:el,meter:M,away:NOTE_NAMES[away.r]+' мажор'}}
+  const SN=t('sections');
+  const scenes=UNITS.map((u,i)=>{const st=secOf(S[i]),en=secOf(S[i]+u*U);return{name:SN[i],start:st,end:en,time:`${st.toFixed(1)}–${en.toFixed(1)} ${t('sec')}`,beats:'',chord:names[i].join(' → '),leadCenter:''}});
+  return{sky,mode,events,scenes,motif:mot,totalBeats:TOTAL,character:charKey,element:el,meter:M,away:NOTE_NAMES[away.r]+' '+t('major')}}
 
 /* ================= звук ================= */
 // укладываем каждую фразу целиком в диапазон инструмента (без ломки мелодии)
@@ -325,8 +328,8 @@ function fitToEnsemble(events,ens){const R=ENS_CFG[ens].range,groups={};
   return events.map(e=>out.has(e)?{...e,midi:out.get(e)}:e)}
 async function loadSamples(ens=ensemble){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')await audioCtx.resume();if(!bus)bus=makeBus();
   const B=buffers[ens]=buffers[ens]||{},jobs=[];
-  for(const[voice,list]of Object.entries(ENSEMBLES[ens].voices)){B[voice]=B[voice]||[];list.forEach((rec,i)=>{if(B[voice][i])return;jobs.push(fetch(rec.file).then(r=>{if(!r.ok)throw new Error(`Не загрузился ${rec.file}. Откройте страницу через сервер, а не двойным кликом по файлу.`);return r.arrayBuffer()}).then(a=>audioCtx.decodeAudioData(a)).then(buffer=>{B[voice][i]={...rec,buffer}}))})}
-  if(jobs.length){setStatus(`Загружаю: ${ENS_CFG[ens].label}…`);await Promise.all(jobs);setStatus('')}}
+  for(const[voice,list]of Object.entries(ENSEMBLES[ens].voices)){B[voice]=B[voice]||[];list.forEach((rec,i)=>{if(B[voice][i])return;jobs.push(fetch(rec.file).then(r=>{if(!r.ok)throw new Error(t('loadFail')(rec.file));return r.arrayBuffer()}).then(a=>audioCtx.decodeAudioData(a)).then(buffer=>{B[voice][i]={...rec,buffer}}))})}
+  if(jobs.length){setStatus(t('loading')(ENS_CFG[ens].label));await Promise.all(jobs);setStatus('')}}
 function nearestSample(ens,voice,midi){const list=(buffers[ens]||{})[voice]||[];let best=list[0],dist=999;for(const s of list){const d=Math.abs(s.rootMidi-midi);if(d<dist){dist=d;best=s}}return best}
 function playSample(e,when,r,ens){const v=voiceCfg(ens,e.voice),s=nearestSample(ens,e.voice,e.midi);if(!s)return;const ctx=audioCtx,src=ctx.createBufferSource();src.buffer=s.buffer;src.playbackRate.value=s.fixed?1:Math.pow(2,(e.midi-s.rootMidi)/12);
   const rel=e.rel??v.release,atk=e.atk??v.attack,hold=e.tight?e.dur:Math.max(e.dur,v.ring),start=when+e.start+(r()*2-1)*v.human,len=s.buffer.duration/src.playbackRate.value;
@@ -342,7 +345,7 @@ async function play(){try{if(!currentArrangement)generate();const ens=ensemble;a
   startAt=audioCtx.currentTime+.2;playedEvents=fitToEnsemble(arr.events,ens);
   playedEvents.forEach(e=>playSample(e.voice==='pad'&&!e.tight?{...e,dur:e.dur+.6}:e,startAt,r,ens));
   const endT=startAt+TRACK_SECONDS;bus.master.gain.setValueAtTime(.78,endT+1);bus.master.gain.linearRampToValueAtTime(0,endT+4.5);
-  gatherStars(1);playing=true;els.playBtn.textContent='Остановить';els.playBtn.classList.add('on');els.playhead.style.opacity=1;tick()}catch(e){console.error(e);setStatus(e.message||'Не получилось воспроизвести звук.')}}
+  gatherStars(1);playing=true;els.playBtn.textContent=t('stop');els.playBtn.classList.add('on');els.playhead.style.opacity=1;tick()}catch(e){console.error(e);setStatus(e.message||t('playFail'))}}
 
 /* ================= переключатель групп ================= */
 function renderEnsembles(){const box=document.getElementById('ensembles');if(!box)return;
@@ -351,7 +354,7 @@ function renderEnsembles(){const box=document.getElementById('ensembles');if(!bo
     renderEnsembles();if(currentArrangement){const dt=parseDatetimeLocal(els.dateInput.value);updateMidi(dt)}if(playing){await play()}}))}
 function updateMidi(dt){const mb=generateMidiBlob(currentArrangement);if(midiUrl)URL.revokeObjectURL(midiUrl);midiUrl=URL.createObjectURL(mb);els.downloadMidi.href=midiUrl;els.downloadMidi.download=fileBase(dt)+'-'+ensemble+'.mid';els.downloadMidi.setAttribute('aria-disabled','false')}
 
-function generate(){try{if(playing)stop();gatherStars(0);lastT=-1;const dt=parseDatetimeLocal(els.dateInput.value);currentArrangement=buildArrangement(dt);render(currentArrangement);updateMidi(dt);setStatus('')}catch(e){console.error(e);setStatus(e.message||'Не получилось разобрать дату. Проверьте формат.')}}
+function generate(){try{if(playing)stop();gatherStars(0);lastT=-1;const dt=parseDatetimeLocal(els.dateInput.value);currentArrangement=buildArrangement(dt);render(currentArrangement);updateMidi(dt);setStatus('')}catch(e){console.error(e);setStatus(e.message||t('dateFail'))}}
 
 /* ---------- звук ---------- */
 function makeImpulse(ctx,sec,decay){const len=ctx.sampleRate*sec,b=ctx.createBuffer(2,len,ctx.sampleRate);for(let ch=0;ch<2;ch++){const d=b.getChannelData(ch);for(let i=0;i<len;i++){const x=i/len;d[i]=(Math.random()*2-1)*Math.pow(1-x,decay)*(i<ctx.sampleRate*.012?i/(ctx.sampleRate*.012):1)}}return b}
@@ -362,7 +365,7 @@ function makeBus(){const ctx=audioCtx,master=ctx.createGain(),comp=ctx.createDyn
   const voices={};for(const[name,v]of Object.entries(VOICES)){const pan=ctx.createStereoPanner?ctx.createStereoPanner():null,dry=ctx.createGain(),send=ctx.createGain();send.gain.value=v.send;
     if(pan){pan.pan.value=v.pan;dry.connect(pan).connect(master)}else dry.connect(master);dry.connect(send).connect(verbIn);voices[name]=dry}
   const analyser=ctx.createAnalyser();analyser.fftSize=1024;comp.connect(analyser);return{master,voices,analyser}}
-function stop(){active.forEach(n=>{try{n.stop()}catch(e){}});active=[];playing=false;cancelAnimationFrame(raf);els.playBtn.textContent='Слушать';els.playBtn.classList.remove('on');els.playhead.style.opacity=0;els.track.querySelectorAll('.seg').forEach(n=>n.classList.remove('now'))}
+function stop(){active.forEach(n=>{try{n.stop()}catch(e){}});active=[];playing=false;cancelAnimationFrame(raf);els.playBtn.textContent=t('listen');els.playBtn.classList.remove('on');els.playhead.style.opacity=0;els.track.querySelectorAll('.seg').forEach(n=>n.classList.remove('now'))}
 function tick(){const t=audioCtx.currentTime-startAt;if(t>TRACK_SECONDS+4.6){stop();drawChart(currentArrangement,TRACK_SECONDS);return}
   const tt=clamp(t,0,TRACK_SECONDS);drawChart(currentArrangement,tt);
   const segs=els.track.querySelectorAll('.seg');currentArrangement.scenes.forEach((sc,i)=>segs[i]&&(segs[i].classList.toggle('now',tt>=sc.start&&tt<sc.end),segs[i].querySelector('.bar2 i').style.width=(clamp((tt-sc.start)/(sc.end-sc.start),0,1)*100)+'%'));
@@ -371,12 +374,12 @@ function tick(){const t=audioCtx.currentTime-startAt;if(t>TRACK_SECONDS+4.6){sto
 /* ---------- подписи вокруг круга ---------- */
 function render(arr){
   const s=arr.sky,moon=Math.round(s.illum*100);
-  els.reading.innerHTML=`<p class="tag l w">// Солнце::тоника<b>${escapeHtml(ZODIAC[s.zodiacIdx])} · ${escapeHtml(NOTE_NAMES[s.rootPc])}</b></p>`+
-    `<p class="tag r">// Луна ${moon}%::лад<b>${escapeHtml(arr.mode.name)}</b></p>`+
-    `<p class="tag r2 g">// ${Math.round(s.tempo)} уд/мин · ${arr.meter}/4 · ${escapeHtml(ELEMENT_LABEL[arr.element])}<b>${escapeHtml(CHARACTERS[arr.character].label)}</b></p>`;
+  els.reading.innerHTML=`<p class="tag l w">${t('sunTonic')}<b>${escapeHtml(ZODIAC[s.zodiacIdx])} · ${escapeHtml(NOTE_NAMES[s.rootPc])}</b></p>`+
+    `<p class="tag r">${t('moon')(moon)}<b>${escapeHtml(arr.mode.name)}</b></p>`+
+    `<p class="tag r2 g">// ${Math.round(s.tempo)} ${t('bpm')} · ${arr.meter}/4 · ${escapeHtml(ELEMENT_LABEL[arr.element])}<b>${escapeHtml(CHARACTERS[arr.character].label)}</b></p>`;
   els.track.querySelectorAll('.seg').forEach(n=>n.remove());
   arr.scenes.forEach((sc,i)=>{const d=document.createElement('div');d.className='seg';d.dataset.i=i;
-    d.innerHTML=`<em>${String(i+1).padStart(2,'0')}</em><b>${escapeHtml(sc.name)}</b><span>${Math.round(sc.start)}–${Math.round(sc.end)}с · ${escapeHtml(sc.chord)}</span><div class="bar2" style="grid-column:2/4"><i></i></div>`;els.track.appendChild(d)});
+    d.innerHTML=`<em>${String(i+1).padStart(2,'0')}</em><b>${escapeHtml(sc.name)}</b><span>${Math.round(sc.start)}–${Math.round(sc.end)}${t('s')} · ${escapeHtml(sc.chord)}</span><div class="bar2" style="grid-column:2/4"><i></i></div>`;els.track.appendChild(d)});
   drawChart(arr,-1);
 }
 
@@ -540,9 +543,60 @@ requestAnimationFrame(skyFrame);
     let n=0;const flick=()=>{bar.style.top=(Math.random()*90)+'vh';bar.style.height=(2+Math.random()*18)+'px';bar.classList.add('on');setTimeout(()=>{bar.classList.remove('on');if(++n<3)setTimeout(flick,40+Math.random()*80)},50+Math.random()*60)};flick();
     glitchLoop()},2500+Math.random()*4500)})();
 
+/* ================= языки: определяется по браузеру, можно переключить ================= */
+const I18N={
+ ru:{title:'Космическая мелодия',desc:'Любая дата превращается в минуту оркестровой музыки по положению Солнца и фазе Луны.',
+  h1a:'Космическая',h1b:'мелодия',sys:'Звёзды на связи',chip:'Дата → небо → музыка · 60 секунд',listen:'Слушать',stop:'Остановить',random:'Случайная дата',date:'// Дата',ens:'// Состав',
+  h2:'Пять эпох за минуту',about:'Солнце задаёт тонику, Луна — лад, стихия знака — фактуру. Мелодия проходит путь от Большого взрыва до сегодняшнего дня.',
+  instruments:'Инструменты:',codeOn:'Код на',chartAria:'Орбита: положение Солнца в зодиаке и созвездие мелодии',ensAria:'Группа инструментов',dateAria:'Дата и время',
+  sunTonic:'// Солнце::тоника',moon:m=>`// Луна ${m}%::лад`,bpm:'уд/мин',sec:'сек',s:'с',fromSilence:'из тишины',unison:'унисон',pause:'пауза',major:'мажор',
+  loading:x=>`Загружаю: ${x}…`,loadFail:f=>`Не загрузился ${f}. Откройте страницу через сервер, а не двойным кликом по файлу.`,playFail:'Не получилось воспроизвести звук.',dateFail:'Не получилось разобрать дату. Проверьте формат.',enterDate:'Введите дату и время.',
+  zodiac:['Овен','Телец','Близнецы','Рак','Лев','Дева','Весы','Скорпион','Стрелец','Козерог','Водолей','Рыбы'],
+  modes:['Ионийский','Дорийский','Фригийский','Лидийский','Миксолидийский','Эолийский','Гармонический минор','Лидийский доминантовый'],
+  chars:{nocturne:'Ноктюрн',scherzo:'Скерцо',march:'Марш',elegy:'Элегия'},elements:{fire:'Огонь',earth:'Земля',air:'Воздух',water:'Вода'},
+  ensembles:{orchestra:'Оркестр',stardust:'Звёздная пыль',brass:'Медь',chamber:'Камерный'},
+  sections:['Большой взрыв','Рекомбинация и первые звёзды','Первые галактики','Пик звездообразования','Рождение Солнца']},
+ en:{title:'Cosmic Melody',desc:'Any date becomes a minute of orchestral music, shaped by the position of the Sun and the phase of the Moon.',
+  h1a:'Cosmic',h1b:'Melody',sys:'Stars online',chip:'Date → sky → music · 60 seconds',listen:'Listen',stop:'Stop',random:'Random date',date:'// Date',ens:'// Ensemble',
+  h2:'Five epochs in a minute',about:'The Sun sets the tonic, the Moon the mode, the element of the sign the texture. The melody travels from the Big Bang to the present day.',
+  instruments:'Instruments:',codeOn:'Code on',chartAria:'Orbit: the Sun in the zodiac and the melody as a constellation',ensAria:'Instrument ensemble',dateAria:'Date and time',
+  sunTonic:'// Sun::tonic',moon:m=>`// Moon ${m}%::mode`,bpm:'BPM',sec:'s',s:'s',fromSilence:'from silence',unison:'unison',pause:'pause',major:'major',
+  loading:x=>`Loading: ${x}…`,loadFail:f=>`Could not load ${f}. Open the page through a local server, not by double-clicking the file.`,playFail:'Could not play the sound.',dateFail:'Could not read the date. Check the format.',enterDate:'Enter a date and time.',
+  zodiac:['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'],
+  modes:['Ionian','Dorian','Phrygian','Lydian','Mixolydian','Aeolian','Harmonic minor','Lydian dominant'],
+  chars:{nocturne:'Nocturne',scherzo:'Scherzo',march:'March',elegy:'Elegy'},elements:{fire:'Fire',earth:'Earth',air:'Air',water:'Water'},
+  ensembles:{orchestra:'Orchestra',stardust:'Stardust',brass:'Brass',chamber:'Chamber'},
+  sections:['Big Bang','Recombination & first stars','First galaxies','Peak of star formation','Birth of the Sun']},
+ cs:{title:'Kosmická melodie',desc:'Každé datum se promění v minutu orchestrální hudby podle polohy Slunce a fáze Měsíce.',
+  h1a:'Kosmická',h1b:'melodie',sys:'Hvězdy online',chip:'Datum → nebe → hudba · 60 sekund',listen:'Poslech',stop:'Zastavit',random:'Náhodné datum',date:'// Datum',ens:'// Obsazení',
+  h2:'Pět epoch za minutu',about:'Slunce určuje tóniku, Měsíc modus, živel znamení fakturu. Melodie putuje od Velkého třesku až do dneška.',
+  instruments:'Nástroje:',codeOn:'Kód na',chartAria:'Orbita: Slunce ve zvěrokruhu a melodie jako souhvězdí',ensAria:'Obsazení nástrojů',dateAria:'Datum a čas',
+  sunTonic:'// Slunce::tónika',moon:m=>`// Měsíc ${m}%::modus`,bpm:'BPM',sec:'s',s:'s',fromSilence:'z ticha',unison:'unisono',pause:'pauza',major:'dur',
+  loading:x=>`Načítám: ${x}…`,loadFail:f=>`Nepodařilo se načíst ${f}. Otevřete stránku přes lokální server, ne dvojklikem na soubor.`,playFail:'Zvuk se nepodařilo přehrát.',dateFail:'Datum se nepodařilo přečíst. Zkontrolujte formát.',enterDate:'Zadejte datum a čas.',
+  zodiac:['Beran','Býk','Blíženci','Rak','Lev','Panna','Váhy','Štír','Střelec','Kozoroh','Vodnář','Ryby'],
+  modes:['Jónský','Dórský','Frygický','Lydický','Mixolydický','Aiolský','Harmonická moll','Lydický dominantní'],
+  chars:{nocturne:'Nokturno',scherzo:'Scherzo',march:'Pochod',elegy:'Elegie'},elements:{fire:'Oheň',earth:'Země',air:'Vzduch',water:'Voda'},
+  ensembles:{orchestra:'Orchestr',stardust:'Hvězdný prach',brass:'Žestě',chamber:'Komorní'},
+  sections:['Velký třesk','Rekombinace a první hvězdy','První galaxie','Vrchol tvorby hvězd','Zrození Slunce']}};
+function detectLang(){try{const saved=localStorage.getItem('cm-lang');if(I18N[saved])return saved}catch(e){}
+  for(const l of (navigator.languages||[navigator.language||'en'])){const c=String(l).toLowerCase().slice(0,2);if(c==='ru'||c==='be'||c==='kk')return'ru';if(c==='cs'||c==='sk')return'cs';if(c==='en')return'en'}return'en'}
+let LANG=detectLang();const t=k=>I18N[LANG][k];
+function applyLang(lang,{save=false}={}){LANG=lang;if(save){try{localStorage.setItem('cm-lang',lang)}catch(e){}}const L=I18N[lang];
+  document.documentElement.lang=lang;document.title=L.title;const md=document.querySelector('meta[name=description]');if(md)md.content=L.desc;
+  // словари данных
+  ZODIAC.splice(0,12,...L.zodiac);MODES.forEach((m,i)=>m.name=L.modes[i]);Object.keys(CHARACTERS).forEach(k=>CHARACTERS[k].label=L.chars[k]);
+  Object.keys(ELEMENT_LABEL).forEach(k=>ELEMENT_LABEL[k]=L.elements[k]);Object.keys(ENS_CFG).forEach(k=>ENS_CFG[k].label=L.ensembles[k]);CHNAME.Ipic='I '+L.major;
+  // статичный текст
+  document.querySelectorAll('[data-i18n]').forEach(n=>{const v=L[n.dataset.i18n];if(typeof v==='string')n.textContent=v});
+  document.querySelectorAll('[data-i18n-aria]').forEach(n=>n.setAttribute('aria-label',L[n.dataset.i18nAria]));
+  const h1=document.querySelector('h1');if(h1)h1.innerHTML=`${escapeHtml(L.h1a)}<span>${escapeHtml(L.h1b)}</span>`;
+  els.playBtn.textContent=playing?L.stop:L.listen;
+  document.querySelectorAll('.lang button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.lang===lang));
+  renderEnsembles();if(currentArrangement){if(playing){render(currentArrangement)}else generate()}}
+
 els.randomBtn.addEventListener('click',randomDate);els.playBtn.addEventListener('click',()=>playing?stop():play());els.dateInput.addEventListener('change',generate);
 window.addEventListener('resize',()=>currentArrangement&&drawChart(currentArrangement,playing?clamp(audioCtx.currentTime-startAt,0,TRACK_SECONDS):-1));
-renderEnsembles();setDefaultDate();if(document.fonts&&document.fonts.ready)document.fonts.ready.then(generate);else generate();
+document.querySelectorAll('.lang button').forEach(b=>b.addEventListener('click',()=>applyLang(b.dataset.lang,{save:true})));applyLang(LANG);setDefaultDate();if(document.fonts&&document.fonts.ready)document.fonts.ready.then(generate);else generate();
 </script>
 </body>
 </html>
