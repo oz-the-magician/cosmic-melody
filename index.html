@@ -46,11 +46,13 @@ h1.glitch span{animation:glitchSpan .38s steps(1) both}
 .hero{position:relative;z-index:2;height:100svh;min-height:660px;overflow:hidden}
 h1{position:absolute;left:0;right:0;top:calc(64px + 5svh);margin:0;text-align:center;text-transform:uppercase;
   font:800 clamp(38px,6.6vw,108px)/.95 'Exo 2',sans-serif;letter-spacing:.04em;color:#f2fdff;text-shadow:0 0 18px rgba(0,229,255,.35)}
-h1 span{display:block;color:var(--cyan);text-shadow:0 0 12px rgba(0,229,255,.8),0 0 40px rgba(0,229,255,.45)}
+h1 span{display:block;color:var(--cyan);filter:brightness(calc(1 + .5*var(--amb,0)));text-shadow:0 0 12px rgba(0,229,255,.8),0 0 40px rgba(0,229,255,.45)}
 .chip{position:absolute;left:50%;top:calc(64px + 1.4svh);transform:translateX(-50%);font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--dim);padding:5px 14px;border:1px solid var(--line);white-space:nowrap}
 .chip i{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);margin-right:8px;vertical-align:1px}
 .stage{position:absolute;left:50%;top:59%;width:min(50svh,90vw);aspect-ratio:1;transform:translate(-50%,-50%);z-index:3}
 .stage canvas{position:absolute;inset:0;width:100%;height:100%}
+.stage::before{content:"";position:absolute;inset:-18%;border-radius:50%;pointer-events:none;background:radial-gradient(circle,rgba(0,229,255,.22) 0%,rgba(0,140,200,.08) 38%,transparent 62%);opacity:calc(.45 + .55*var(--amb,0));transform:scale(calc(1 + .08*var(--amb,0)))}
+.stage::after{content:"";position:absolute;left:8%;right:8%;bottom:-14%;height:16%;border-radius:50%;pointer-events:none;background:radial-gradient(ellipse,rgba(0,0,0,.55),transparent 70%);filter:blur(8px)}
 button.orb{position:absolute;left:50%;top:50%;width:36%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;cursor:pointer;
   border:1px solid rgba(0,229,255,.6);color:var(--cyan);font:600 clamp(13px,1.7svh,17px) 'Exo 2',sans-serif;letter-spacing:.22em;text-transform:uppercase;
   background:radial-gradient(circle at 50% 40%,rgba(0,229,255,.16),rgba(0,229,255,.04) 60%,rgba(0,229,255,.1));
@@ -59,7 +61,7 @@ button.orb{position:absolute;left:50%;top:50%;width:36%;aspect-ratio:1;transform
 button.orb:hover{background:radial-gradient(circle at 50% 40%,rgba(0,229,255,.26),rgba(0,229,255,.08) 60%,rgba(0,229,255,.14));box-shadow:0 0 44px rgba(0,229,255,.55),inset 0 0 40px rgba(0,229,255,.28)}
 button.orb.on{color:var(--warn);border-color:rgba(255,204,0,.6);text-shadow:0 0 10px rgba(255,204,0,.8);box-shadow:0 0 30px rgba(255,204,0,.25),inset 0 0 30px rgba(255,204,0,.12)}
 /* телеметрия */
-.tag{position:absolute;margin:0;padding:10px 14px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);white-space:nowrap;z-index:4;border:1px solid rgba(0,229,255,.12)}
+.tag{position:absolute;margin:0;padding:10px 14px;box-shadow:0 0 calc(28px*var(--amb,0)) rgba(0,229,255,.22),inset 0 0 calc(18px*var(--amb,0)) rgba(0,229,255,.12);background:rgba(0,10,18,.25);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);white-space:nowrap;z-index:4;border:1px solid rgba(0,229,255,.12)}
 .tag::before,.tag::after{content:"";position:absolute;width:10px;height:10px;border:solid var(--cyan)}
 .tag::before{top:-1px;left:-1px;border-width:2px 0 0 2px}.tag::after{bottom:-1px;right:-1px;border-width:0 2px 2px 0}
 .tag b{display:block;margin-top:4px;font:600 clamp(16px,1.6vw,22px)/1.15 'Exo 2',sans-serif;letter-spacing:.06em;color:var(--cyan);text-shadow:0 0 10px rgba(0,229,255,.6);text-transform:none}
@@ -359,7 +361,7 @@ function makeBus(){const ctx=audioCtx,master=ctx.createGain(),comp=ctx.createDyn
   verbIn.connect(tone).connect(verb).connect(verbOut).connect(comp);master.connect(comp);comp.connect(ctx.destination);
   const voices={};for(const[name,v]of Object.entries(VOICES)){const pan=ctx.createStereoPanner?ctx.createStereoPanner():null,dry=ctx.createGain(),send=ctx.createGain();send.gain.value=v.send;
     if(pan){pan.pan.value=v.pan;dry.connect(pan).connect(master)}else dry.connect(master);dry.connect(send).connect(verbIn);voices[name]=dry}
-  return{master,voices}}
+  const analyser=ctx.createAnalyser();analyser.fftSize=1024;comp.connect(analyser);return{master,voices,analyser}}
 function stop(){active.forEach(n=>{try{n.stop()}catch(e){}});active=[];playing=false;cancelAnimationFrame(raf);els.playBtn.textContent='Слушать';els.playBtn.classList.remove('on');els.playhead.style.opacity=0;els.track.querySelectorAll('.seg').forEach(n=>n.classList.remove('now'))}
 function tick(){const t=audioCtx.currentTime-startAt;if(t>TRACK_SECONDS+4.6){stop();drawChart(currentArrangement,TRACK_SECONDS);return}
   const tt=clamp(t,0,TRACK_SECONDS);drawChart(currentArrangement,tt);
@@ -475,16 +477,62 @@ function skyFrame(now){const c=SKY.c,dpr=Math.min(2,window.devicePixelRatio||1),
   const g=c.getContext('2d');g.setTransform(1,0,0,1,0,0);
   // фон с едва заметным параллаксом
   const ox=reduceMotion?0:-SKY.mx*14,oy=reduceMotion?0:-SKY.my*14;g.fillStyle='#000a12';g.fillRect(0,0,c.width,c.height);g.drawImage(SKYBG.c,(ox-10)*dpr,(oy-10)*dpr,(W+20)*dpr,(H+20)*dpr);
-  g.setTransform(dpr,0,0,dpr,0,0);g.globalCompositeOperation='lighter';
-  const dt=Math.min(.05,(now-(SKY.last||now))/1000);SKY.last=now;if(!reduceMotion)flyFrame(g,W,H,dt);
-  const rc=els.chart.getBoundingClientRect(),cx=rc.left+rc.width/2,cy=rc.top+rc.height/2,R=rc.width*.4,t=reduceMotion?0:now/1000;
+  g.setTransform(dpr,0,0,dpr,0,0);
+  const dt=Math.min(.05,(now-(SKY.last||now))/1000);SKY.last=now;
+  const rc=els.chart.getBoundingClientRect(),cx=rc.left+rc.width/2,cy=rc.top+rc.height/2,R=rc.width*.4,t=reduceMotion?0:now/1000,amb=ambientLevel();
+  depthBack(g,W,H,t,cx,cy,R,amb);ambientUI(amb);
+  g.globalCompositeOperation='lighter';if(!reduceMotion)flyFrame(g,W,H,dt);
   for(const s of SKY.ps){const q=ease(clamp(SKY.G*1.6-s.delay,0,1)),x0=s.sx*W-SKY.mx*40*s.depth,y0=s.sy*H-SKY.my*40*s.depth,x1=cx+Math.cos(s.wa)*s.wd*R,y1=cy+Math.sin(s.wa)*s.wd*R;
     const x=x0+(x1-x0)*q,y=y0+(y1-y0)*q,tw=reduceMotion?1:.65+.35*Math.sin(t*s.ts+s.tw),z=s.size*(s.big?10:6)*(1-.25*q);
     g.globalAlpha=s.a*tw;g.drawImage(s.big?SPR.bright:SPR.star,x-z/2,y-z/2,z,z);
     if(q>0&&q<1&&!reduceMotion){g.globalAlpha=.3*s.a;g.strokeStyle=s.col;g.lineWidth=.6;g.beginPath();g.moveTo(x,y);g.lineTo(x-(x1-x0)*.06,y-(y1-y0)*.06);g.stroke()}}
-  g.globalAlpha=1;g.globalCompositeOperation='source-over';
+  g.globalAlpha=1;g.globalCompositeOperation='source-over';depthFront(g,W,H,t,dt,amb);
   if(currentArrangement&&!playing&&!reduceMotion)drawChart(currentArrangement,lastT);
   requestAnimationFrame(skyFrame)}
+/* ---------- глубина и свет ----------
+   Планы от дальнего к ближнему: Млечный Путь → объёмные туманности (средний план) →
+   ambient light вокруг круга → наклонные орбитальные кольца → звёзды → пыль-боке у камеры.
+   Свет дышит в такт музыке: громкость берётся с анализатора на выходе. */
+const AMB={level:0,target:0,buf:null};
+function ambientLevel(){if(bus&&bus.analyser&&playing){const a=bus.analyser;AMB.buf=AMB.buf||new Float32Array(a.fftSize);a.getFloatTimeDomainData(AMB.buf);let s=0;for(let i=0;i<AMB.buf.length;i++)s+=AMB.buf[i]*AMB.buf[i];AMB.target=clamp(Math.sqrt(s/AMB.buf.length)*5,0,1)}else AMB.target=0;
+  AMB.level+=(AMB.target-AMB.level)*(AMB.target>AMB.level?.25:.05);return AMB.level}
+function makeVolume(seed,rgb){const N=220,c=document.createElement('canvas');c.width=c.height=N;const g=c.getContext('2d'),img=g.createImageData(N,N),n=noiseField(seed,N),n2=noiseField(seed+9,N);
+  for(let y=0;y<N;y++)for(let x=0;x<N;x++){const u=x/N,v=y/N,dx=u-.5,dy=v-.5,fall=Math.max(0,1-Math.sqrt(dx*dx+dy*dy)*2.1),d=Math.max(0,n(u,v)-.42)*2.4*fall,lit=n2(u*2,v*2),i=(y*N+x)*4;
+    img.data[i]=Math.round(rgb[0]*(.6+.4*lit));img.data[i+1]=Math.round(rgb[1]*(.6+.4*lit));img.data[i+2]=Math.round(rgb[2]*(.6+.4*lit));img.data[i+3]=Math.round(clamp(d*d*190,0,255))}
+  g.putImageData(img,0,0);return c}
+const VOL=[{c:makeVolume(3,[40,170,210]),x:.22,y:.35,s:1.1,par:.35,drift:.013},{c:makeVolume(21,[120,80,200]),x:.8,y:.62,s:1.25,par:.5,drift:.009},{c:makeVolume(44,[30,120,160]),x:.55,y:.15,s:.8,par:.25,drift:.017}];
+const DUST=[];(function(){const r=rng(777),n=window.innerWidth<600?12:22;for(let i=0;i<n;i++)DUST.push({x:r(),y:r(),z:.3+r()*.7,sz:10+r()*34,a:.04+r()*.08,vx:(r()-.5)*.006,vy:(r()-.5)*.004,hue:r()})})();
+function depthBack(g,W,H,t,cx,cy,R,amb){
+  // средний план: объёмные туманности дрейфуют и сдвигаются за курсором сильнее фона
+  g.globalCompositeOperation='lighter';
+  VOL.forEach((v,i)=>{const D=Math.max(W,H)*v.s*(1+.03*Math.sin(t*.05+i)),x=v.x*W-D/2+Math.sin(t*v.drift+i)*40-SKY.mx*80*v.par,y=v.y*H-D/2+Math.cos(t*v.drift*1.3+i)*30-SKY.my*80*v.par;
+    g.globalAlpha=.42+.25*amb;g.drawImage(v.c,x,y,D,D)});
+  // ambient light: объёмное свечение вокруг круга, дышит с музыкой
+  const rad=R*(3.2+1.2*amb),gl=g.createRadialGradient(cx,cy,R*.3,cx,cy,rad);
+  gl.addColorStop(0,`rgba(0,229,255,${.10+.22*amb})`);gl.addColorStop(.35,`rgba(0,140,200,${.05+.12*amb})`);gl.addColorStop(.7,`rgba(60,40,140,${.03+.05*amb})`);gl.addColorStop(1,'rgba(0,0,0,0)');
+  g.globalAlpha=1;g.fillStyle=gl;g.fillRect(0,0,W,H);
+  // световые лучи от центра — едва заметные, медленно вращаются
+  g.save();g.translate(cx,cy);g.rotate(t*.02);for(let k=0;k<6;k++){g.rotate(Math.PI/3);const lg=g.createLinearGradient(0,0,rad*1.1,0);lg.addColorStop(0,`rgba(120,230,255,${.022+.05*amb})`);lg.addColorStop(1,'rgba(120,230,255,0)');
+    g.fillStyle=lg;g.beginPath();g.moveTo(0,0);g.lineTo(rad*1.1,-R*.18);g.lineTo(rad*1.1,R*.18);g.closePath();g.fill()}g.restore();
+  // наклонные орбитальные кольца: плоскость, уходящая в глубину
+  g.globalCompositeOperation='source-over';
+  [[1.75,.32,-.22,.3],[2.35,.42,.12,.18]].forEach(([rx,ry,tilt,al],i)=>{g.save();g.translate(cx-SKY.mx*12*(i+1),cy-SKY.my*12*(i+1));g.rotate(tilt);
+    const grd=g.createLinearGradient(-R*rx,0,R*rx,0);grd.addColorStop(0,`rgba(0,229,255,0)`);grd.addColorStop(.5,`rgba(0,229,255,${al+.15*amb})`);grd.addColorStop(1,`rgba(0,229,255,0)`);
+    g.strokeStyle=grd;g.lineWidth=1.2;g.shadowColor='rgba(0,229,255,.7)';g.shadowBlur=6;g.setLineDash(i?[2,7]:[]);g.beginPath();g.ellipse(0,0,R*rx,R*ry,0,0,Math.PI*2);g.stroke();g.setLineDash([]);g.shadowBlur=0;
+    // спутник на кольце: ближе к зрителю — крупнее и ярче
+    const a=t*(i?.12:.2)+i*2,sx=Math.cos(a)*R*rx,sy=Math.sin(a)*R*ry,near=(Math.sin(a)+1)/2,z=(6+10*near)*(1+amb*.6);
+    g.globalCompositeOperation='lighter';g.globalAlpha=.4+.6*near;g.drawImage(SPR.bright,sx-z/2,sy-z/2,z,z);g.globalAlpha=1;g.globalCompositeOperation='source-over';g.restore()});
+}
+function depthFront(g,W,H,t,dt,amb){
+  // ближний план: расфокусированная пыль у самой камеры, движется быстрее всего
+  g.globalCompositeOperation='lighter';
+  DUST.forEach(p=>{if(!reduceMotion){p.x+=p.vx*dt*(1+SKY.speed*4);p.y+=p.vy*dt;p.z-=dt*.01;if(p.z<.25)p.z=1}if(p.x<-.1)p.x=1.1;if(p.x>1.1)p.x=-.1;if(p.y<-.1)p.y=1.1;if(p.y>1.1)p.y=-.1;
+    const s=p.sz/p.z,x=p.x*W-SKY.mx*160/p.z,y=p.y*H-SKY.my*160/p.z,gr=g.createRadialGradient(x,y,0,x,y,s),col=p.hue<.3?'255,220,170':'160,230,255';
+    gr.addColorStop(0,`rgba(${col},${p.a*(1+amb)})`);gr.addColorStop(.6,`rgba(${col},${p.a*.4*(1+amb)})`);gr.addColorStop(1,`rgba(${col},0)`);g.fillStyle=gr;g.beginPath();g.arc(x,y,s,0,7);g.fill()});
+  g.globalCompositeOperation='source-over'}
+function ambientUI(amb){const o=els.playBtn;if(!o)return;const k=amb.toFixed(3);if(o.dataset.amb===k)return;o.dataset.amb=k;
+  document.documentElement.style.setProperty('--amb',k)}
+
 let lastT=-1;
 requestAnimationFrame(skyFrame);
 (function glitchLoop(){if(reduceMotion)return;const h1=document.querySelector('h1'),bar=document.getElementById('glitchbar');
