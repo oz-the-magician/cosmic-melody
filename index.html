@@ -19,8 +19,20 @@ body{margin:0;color:var(--txt);font:400 15px/1.6 'JetBrains Mono',ui-monospace,m
 .grid{position:fixed;inset:0;pointer-events:none;z-index:1;background-image:linear-gradient(rgba(0,229,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,.045) 1px,transparent 1px);background-size:60px 60px;
   -webkit-mask-image:radial-gradient(ellipse at 50% 50%,#000 30%,transparent 85%);mask-image:radial-gradient(ellipse at 50% 50%,#000 30%,transparent 85%)}
 body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:5;background:radial-gradient(ellipse at 50% 50%,transparent 50%,rgba(0,0,0,.75) 100%)}
-.scan{position:fixed;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,transparent,rgba(0,229,255,.45),transparent);box-shadow:0 0 12px rgba(0,229,255,.5);animation:scan 6s linear infinite;pointer-events:none;z-index:9}
-@keyframes scan{0%{transform:translateY(-10px)}100%{transform:translateY(100vh)}}
+.glitchbar{position:fixed;left:0;right:0;height:0;pointer-events:none;z-index:9;opacity:0;mix-blend-mode:screen;
+  background:repeating-linear-gradient(90deg,rgba(0,229,255,.35) 0 2px,transparent 2px 7px),linear-gradient(90deg,rgba(255,51,102,.18),rgba(0,229,255,.22),rgba(0,255,157,.12))}
+.glitchbar.on{opacity:1}
+h1.glitch{animation:glitch .38s steps(1) both}
+h1.glitch span{animation:glitchSpan .38s steps(1) both}
+@keyframes glitch{
+  0%{transform:translate(0);text-shadow:-3px 0 rgba(255,51,102,.8),3px 0 rgba(0,229,255,.8)}
+  15%{transform:translate(-4px,1px) skewX(-8deg);clip-path:inset(12% 0 58% 0)}
+  30%{transform:translate(5px,-1px);clip-path:inset(62% 0 8% 0);text-shadow:4px 0 rgba(255,51,102,.9),-4px 0 rgba(0,229,255,.9)}
+  45%{transform:translate(-2px,0);clip-path:inset(35% 0 38% 0)}
+  60%{transform:translate(3px,2px) skewX(6deg);clip-path:none;text-shadow:-2px 0 rgba(255,51,102,.7),2px 0 rgba(0,255,157,.7)}
+  80%{transform:translate(-1px,0);clip-path:inset(0 0 70% 0)}
+  100%{transform:none;clip-path:none;text-shadow:0 0 18px rgba(0,229,255,.35)}}
+@keyframes glitchSpan{0%,100%{transform:none}25%{transform:translateX(8px)}55%{transform:translateX(-6px)}75%{transform:translateX(3px)}}
 
 /* шапка */
 .bar{position:fixed;top:0;left:0;right:0;z-index:8;display:flex;justify-content:space-between;align-items:center;padding:16px 24px;border-bottom:1px solid var(--line);background:linear-gradient(rgba(0,10,18,.85),rgba(0,10,18,.4));-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
@@ -97,13 +109,13 @@ footer a{color:var(--cyan)}
   .controls{padding:0}
   .field span{display:none}
 }
-@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.scan{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.glitchbar{display:none}}
 </style>
 </head>
 <body>
 <canvas id="sky" aria-hidden="true"></canvas>
 <div class="grid" aria-hidden="true"></div>
-<div class="scan" aria-hidden="true"></div>
+<div class="glitchbar" id="glitchbar" aria-hidden="true"></div>
 <header class="bar"><div class="brand">Cosmic Melody<small>// SKY_TO_SOUND v2</small></div><div class="sys"><i></i>Звёзды на связи</div></header>
 <section class="hero">
   <div class="chip"><i></i>Дата → небо → музыка · 30 секунд</div>
@@ -278,7 +290,18 @@ function buildSky(W,H){const dpr=Math.min(2,window.devicePixelRatio||1),c=docume
   for(let i=0;i<Math.round(W*H/90000);i++){const x=r()*W,y=r()*H,z=18+r()*36;g.globalAlpha=.5+r()*.5;g.drawImage(SPR.bright,x-z/2,y-z/2,z,z)}
   g.globalAlpha=1;g.globalCompositeOperation='source-over';return{c,W,H}}
 
-const SKY={c:document.getElementById('sky'),ps:[],G:0,from:0,to:0,t0:0,dur:2800,mx:0,my:0};
+const SKY={c:document.getElementById('sky'),ps:[],G:0,from:0,to:0,t0:0,dur:2800,mx:0,my:0,last:0,speed:.16};
+const FLY=[];(function(){const r=Math.random,n=window.innerWidth<600?260:520;for(let i=0;i<n;i++)FLY.push({x:(r()*2-1),y:(r()*2-1),z:r()*.95+.05,pz:0,hue:r()})})();
+function flyFrame(g,W,H,dt){const cx=W/2-SKY.mx*30,cy=H/2-SKY.my*30,f=Math.max(W,H)*.5,target=playing?.05:.16;SKY.speed+=(target-SKY.speed)*Math.min(1,dt*1.5);
+  g.lineCap='round';
+  for(const p of FLY){p.pz=p.z;p.z-=SKY.speed*dt;
+    if(p.z<=.03){p.x=Math.random()*2-1;p.y=Math.random()*2-1;p.z=1;p.pz=1;continue}
+    const x=cx+p.x/p.z*f,y=cy+p.y/p.z*f,px=cx+p.x/p.pz*f,py=cy+p.y/p.pz*f;
+    if(x<-50||x>W+50||y<-50||y>H+50){p.x=Math.random()*2-1;p.y=Math.random()*2-1;p.z=1;p.pz=1;continue}
+    const near=1-p.z,a=Math.min(1,near*1.3),w=.3+near*2.2,col=p.hue<.15?'255,236,200':p.hue<.4?'190,240,255':'225,245,255';
+    // хвост: от прошлой позиции, вытянутый пропорционально скорости
+    const k=dt>0?3.2/(dt*60):0;g.strokeStyle=`rgba(${col},${a*.45})`;g.lineWidth=w;g.beginPath();g.moveTo(px-(x-px)*k,py-(y-py)*k);g.lineTo(x,y);g.stroke();
+    g.fillStyle=`rgba(${col},${a})`;g.beginPath();g.arc(x,y,w*.55,0,7);g.fill()}}
 (function initStars(){const r=rng(20260609),n=window.innerWidth<600?140:230,cols=['#cad7ff','#f8f7ff','#fff4ea','#ffe9c7'];for(let i=0;i<n;i++){const big=r()<.07;SKY.ps.push({sx:r(),sy:r(),wa:r()*Math.PI*2,wd:.12+Math.sqrt(r())*.85,size:big?2.4+r()*2:.7+r()*1.2,big,a:.4+r()*.6,tw:r()*6.28,ts:.5+r()*1.8,delay:r()*.6,depth:.3+r()*.7,col:cols[Math.floor(r()*cols.length)]})}})();
 const reduceMotion=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 function gatherStars(to){if(SKY.to===to&&SKY.G===to)return;SKY.from=SKY.G;SKY.to=to;SKY.t0=performance.now();if(reduceMotion)SKY.G=to}
@@ -292,6 +315,7 @@ function skyFrame(now){const c=SKY.c,dpr=Math.min(2,window.devicePixelRatio||1),
   // фон с едва заметным параллаксом
   const ox=reduceMotion?0:-SKY.mx*14,oy=reduceMotion?0:-SKY.my*14;g.fillStyle='#000a12';g.fillRect(0,0,c.width,c.height);g.drawImage(SKYBG.c,(ox-10)*dpr,(oy-10)*dpr,(W+20)*dpr,(H+20)*dpr);
   g.setTransform(dpr,0,0,dpr,0,0);g.globalCompositeOperation='lighter';
+  const dt=Math.min(.05,(now-(SKY.last||now))/1000);SKY.last=now;if(!reduceMotion)flyFrame(g,W,H,dt);
   const rc=els.chart.getBoundingClientRect(),cx=rc.left+rc.width/2,cy=rc.top+rc.height/2,R=rc.width*.4,t=reduceMotion?0:now/1000;
   for(const s of SKY.ps){const q=ease(clamp(SKY.G*1.6-s.delay,0,1)),x0=s.sx*W-SKY.mx*40*s.depth,y0=s.sy*H-SKY.my*40*s.depth,x1=cx+Math.cos(s.wa)*s.wd*R,y1=cy+Math.sin(s.wa)*s.wd*R;
     const x=x0+(x1-x0)*q,y=y0+(y1-y0)*q,tw=reduceMotion?1:.65+.35*Math.sin(t*s.ts+s.tw),z=s.size*(s.big?10:6)*(1-.25*q);
@@ -302,6 +326,10 @@ function skyFrame(now){const c=SKY.c,dpr=Math.min(2,window.devicePixelRatio||1),
   requestAnimationFrame(skyFrame)}
 let lastT=-1;
 requestAnimationFrame(skyFrame);
+(function glitchLoop(){if(reduceMotion)return;const h1=document.querySelector('h1'),bar=document.getElementById('glitchbar');
+  setTimeout(()=>{h1.classList.remove('glitch');void h1.offsetWidth;h1.classList.add('glitch');
+    let n=0;const flick=()=>{bar.style.top=(Math.random()*90)+'vh';bar.style.height=(2+Math.random()*18)+'px';bar.classList.add('on');setTimeout(()=>{bar.classList.remove('on');if(++n<3)setTimeout(flick,40+Math.random()*80)},50+Math.random()*60)};flick();
+    glitchLoop()},2500+Math.random()*4500)})();
 
 els.randomBtn.addEventListener('click',randomDate);els.playBtn.addEventListener('click',()=>playing?stop():play());els.dateInput.addEventListener('change',generate);
 window.addEventListener('resize',()=>currentArrangement&&drawChart(currentArrangement,playing?clamp(audioCtx.currentTime-startAt,0,TRACK_SECONDS):-1));
