@@ -862,7 +862,7 @@ async function drawPoster(cv){
   segs.flat().forEach(([lo,la])=>{const a=rad(lo),d=rad(la);vx+=Math.cos(d)*Math.cos(a);vy+=Math.cos(d)*Math.sin(a);vz+=Math.sin(d)});
   const [sra0,sde0]=eclToEq(s.lambda,0),sv=[Math.cos(rad(sde0))*Math.cos(rad(sra0)),Math.cos(rad(sde0))*Math.sin(rad(sra0)),Math.sin(rad(sde0))],nn=Math.hypot(vx,vy,vz);vx/=nn;vy/=nn;vz/=nn;
   if(vx*sv[0]+vy*sv[1]+vz*sv[2]<Math.cos(rad(20))){vx+=sv[0];vy+=sv[1];vz+=sv[2]}// Солнце далеко от центра созвездия — кадр между ними
-  const ra0=Math.atan2(vy,vx),de0=Math.atan2(vz,Math.hypot(vx,vy)),FIELD=rad(38),CX=W/2,CY=1330,RR=930,sc=RR/(2*Math.tan(FIELD/2));
+  const ra0=Math.atan2(vy,vx),de0=Math.atan2(vz,Math.hypot(vx,vy)),FIELD=rad(38),CX=W/2,CY=1370,RR=1010,sc=RR/(2*Math.tan(FIELD/2));
   const proj=(raD,deD)=>{const a=rad(raD),d=rad(deD),c=Math.sin(de0)*Math.sin(d)+Math.cos(de0)*Math.cos(d)*Math.cos(a-ra0);if(c<-.2)return null;const k=2/(1+c);
     return[CX-sc*k*Math.cos(d)*Math.sin(a-ra0),CY-sc*k*(Math.cos(de0)*Math.sin(d)-Math.sin(de0)*Math.cos(d)*Math.cos(a-ra0))]};
   g.save();g.beginPath();g.arc(CX,CY,RR,0,7);g.clip();
@@ -896,19 +896,18 @@ async function drawPoster(cv){
   g.strokeStyle=GOLD;g.lineWidth=4;g.beginPath();g.arc(CX,CY,RR,0,7);g.stroke();g.lineWidth=1.5;g.strokeStyle=GOLD2+'.6)';g.beginPath();g.arc(CX,CY,RR+28,0,7);g.stroke();
   for(let i=0;i<360;i+=5){const a=rad(i),l=i%30?14:28;g.lineWidth=i%30?1.5:3;g.beginPath();g.moveTo(CX+Math.cos(a)*(RR+28),CY+Math.sin(a)*(RR+28));g.lineTo(CX+Math.cos(a)*(RR+28+l),CY+Math.sin(a)*(RR+28+l));g.stroke()}
   if(!moonIn){moon(CX+RR*.78,CY-RR*.98,52)}// Луна вне поля — медальоном у края
-  // текст
-  g.textAlign='center';g.fillStyle=GOLD;g.font='500 46px "Exo 2", sans-serif';g.letterSpacing='14px';g.fillText(L.title.toUpperCase(),W/2,250);g.letterSpacing='0px';
-  g.fillStyle=INK;g.font='170px Forum, Georgia, serif';g.fillText(ZODIAC[s.zodiacIdx],W/2,2470);
+  // нижняя четверть: слева созвездие и пояснение, справа QR той же высоты
+  const X=240,TOP=2700,P=L.poster;g.textAlign='left';g.textBaseline='alphabetic';
+  g.fillStyle=INK;g.font='190px Forum, Georgia, serif';g.fillText(ZODIAC[s.zodiacIdx],X,TOP+150);
   const dt=parseDatetimeLocal(els.dateInput.value),dstr=new Date(dt.year,dt.month-1,dt.day,dt.hour,dt.minute).toLocaleString(LANG,{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
-  g.fillStyle=GOLD;g.font='64px Forum, Georgia, serif';g.fillText(dstr,W/2,2580);
-  g.strokeStyle=GOLD2+'.5)';g.lineWidth=2;g.beginPath();g.moveTo(W/2-260,2650);g.lineTo(W/2+260,2650);g.stroke();
-  const P=L.poster,lines=[P.sun(ZODIAC[s.zodiacIdx],NOTE_NAMES[s.rootPc]),P.moon(Math.round(s.illum*100),arr.mode.name),P.style(L.styles[arr.style],arr.subLabel||CHARACTERS[arr.character].label,Math.round(s.tempo))];
-  g.fillStyle='rgba(243,238,226,.82)';g.font='46px "Exo 2", sans-serif';lines.forEach((t,i)=>g.fillText(t,W/2-160,2760+i*76));
-  // QR
-  try{const qrl=await loadQR(),q=qrl(0,'M');q.addData(shareUrl());q.make();const n=q.getModuleCount(),size=380,cell=size/n,qx=W-180-size-40,qy=2700;
-    g.fillStyle='#f3eee2';g.fillRect(qx-24,qy-24,size+48,size+48);g.fillStyle='#0a1230';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(q.isDark(r,c))g.fillRect(qx+c*cell,qy+r*cell,Math.ceil(cell),Math.ceil(cell));
-    g.fillStyle=GOLD;g.font='36px "Exo 2", sans-serif';g.fillText(P.scan,qx+size/2,qy+size+90)}catch(e){console.warn(e)}
-  g.fillStyle='rgba(243,238,226,.4)';g.font='30px "Exo 2", sans-serif';g.textAlign='center';g.fillText('oz-the-magician.github.io/cosmic-melody',W/2,H-150);
+  g.fillStyle=GOLD;g.font='66px Forum, Georgia, serif';g.fillText(dstr,X,TOP+260);
+  g.strokeStyle=GOLD2+'.5)';g.lineWidth=2;g.beginPath();g.moveTo(X,TOP+315);g.lineTo(X+520,TOP+315);g.stroke();
+  const lines=[P.sun(ZODIAC[s.zodiacIdx],NOTE_NAMES[s.rootPc]),P.moon(Math.round(s.illum*100),arr.mode.name),P.style(L.styles[arr.style],arr.subLabel||CHARACTERS[arr.character].label,Math.round(s.tempo))];
+  g.fillStyle='rgba(243,238,226,.84)';g.font='48px "Exo 2", sans-serif';lines.forEach((t,i)=>g.fillText(t,X,TOP+410+i*80));
+  const BOT=TOP+410+2*80+14,BH=BOT-TOP;
+  try{const qrl=await loadQR(),q=qrl(0,'M');q.addData(shareUrl());q.make();const n=q.getModuleCount(),pad=26,size=BH-2*pad,cell=size/n,qx=W-240-size-pad,qy=TOP+pad;
+    g.fillStyle='#f3eee2';g.fillRect(qx-pad,TOP,size+2*pad,BH);g.fillStyle='#0a1230';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(q.isDark(r,c))g.fillRect(qx+c*cell,qy+r*cell,Math.ceil(cell),Math.ceil(cell));
+    g.textAlign='center';g.fillStyle=GOLD;g.font='44px "Exo 2", sans-serif';g.fillText(P.scan,qx+size/2,BOT+80)}catch(e){console.warn(e)}
   return cv}
 async function openPoster(){const m=document.getElementById('posterModal'),cv=document.getElementById('posterCanvas');m.hidden=false;m.querySelector('.p-status').textContent=t('poster').making;
   try{await drawPoster(cv);m.querySelector('.p-status').textContent=''}catch(e){console.error(e);m.querySelector('.p-status').textContent=t('poster').fail}}
@@ -920,7 +919,7 @@ function applyUrlParams(){const q=new URLSearchParams(location.search),d=q.get('
 
 /* ================= языки: определяется по браузеру, можно переключить ================= */
 const I18N={
- ru:{posterBtn:'Постер',posterDl:'Скачать PNG',close:'Закрыть',poster:{making:'Рисую постер…',fail:'Не получилось нарисовать постер.',scan:'Наведите камеру — услышите',sun:(z,n)=>`Солнце в знаке «${z}» — тоника ${n}`,moon:(p,m)=>`Луна освещена на ${p}% — лад «${m}»`,style:(st,sub,b)=>`${st} · ${sub} · ${b} уд/мин`},sens:{hiphop:{rhodes:'Rhodes',strings:'Оркестровый',organ:'Орган и соул',vibes:'Вибрафон и 808'},edm:{synth:'Синтезатор',synthwave:'Синтвейв',ambient:'Эмбиент',orchestral:'Оркестровый транс'},jazz:{trio:'Трио',vibes:'Квартет с вибрафоном',organ:'Органное трио',bigband:'Биг-бэнд'}},styles:{classic:'Классика',hiphop:'Хип-хоп',edm:'Электро 128',jazz:'Джаз'},styleLbl:'// Стиль',styleAria:'Музыкальный стиль',
+ ru:{posterBtn:'Постер',posterDl:'Скачать PNG',close:'Закрыть',poster:{making:'Рисую постер…',fail:'Не получилось нарисовать постер.',scan:'Прослушать',sun:(z,n)=>`Солнце в знаке «${z}» — тоника ${n}`,moon:(p,m)=>`Луна освещена на ${p}% — лад «${m}»`,style:(st,sub,b)=>`${st} · ${sub} · ${b} уд/мин`},sens:{hiphop:{rhodes:'Rhodes',strings:'Оркестровый',organ:'Орган и соул',vibes:'Вибрафон и 808'},edm:{synth:'Синтезатор',synthwave:'Синтвейв',ambient:'Эмбиент',orchestral:'Оркестровый транс'},jazz:{trio:'Трио',vibes:'Квартет с вибрафоном',organ:'Органное трио',bigband:'Биг-бэнд'}},styles:{classic:'Классика',hiphop:'Хип-хоп',edm:'Электро 128',jazz:'Джаз'},styleLbl:'// Стиль',styleAria:'Музыкальный стиль',
   subs:{hiphop:{lofi:'Lo-fi',soul:'Соул',jazzhop:'Джаз-хоп',boombap:'Бум-бэп'},edm:{deep:'Дип-хаус',trance:'Транс',techno:'Техно',melodic:'Мелодик-хаус'},jazz:{ballad:'Баллада',waltz:'Джаз-вальс',swing:'Свинг',modal:'Модальный джаз'}},
   secHip:['Вступление','Куплет','Брейк','Второй куплет','Аутро'],secEdm:['Вступление','Нарастание','Дроп','Брейк','Финальный дроп'],secJazz:['Вступление','Тема','Импровизация','Тема','Кода'],
   title:'Космическая мелодия',desc:'Любая дата превращается в минуту оркестровой музыки по положению Солнца и фазе Луны.',
@@ -934,7 +933,7 @@ const I18N={
   chars:{nocturne:'Ноктюрн',scherzo:'Скерцо',march:'Марш',elegy:'Элегия'},elements:{fire:'Огонь',earth:'Земля',air:'Воздух',water:'Вода'},
   ensembles:{orchestra:'Оркестр',stardust:'Звёздная пыль',brass:'Медь',chamber:'Камерный'},
   sections:['Большой взрыв','Рекомбинация и первые звёзды','Первые галактики','Пик звездообразования','Рождение Солнца']},
- en:{posterBtn:'Poster',posterDl:'Download PNG',close:'Close',poster:{making:'Drawing the poster…',fail:'Could not draw the poster.',scan:'Scan to listen',sun:(z,n)=>`The Sun in ${z} — tonic ${n}`,moon:(p,m)=>`The Moon ${p}% lit — ${m} mode`,style:(st,sub,b)=>`${st} · ${sub} · ${b} BPM`},sens:{hiphop:{rhodes:'Rhodes',strings:'Orchestral',organ:'Organ & soul',vibes:'Vibes & 808'},edm:{synth:'Synth',synthwave:'Synthwave',ambient:'Ambient',orchestral:'Orchestral trance'},jazz:{trio:'Trio',vibes:'Vibes quartet',organ:'Organ trio',bigband:'Big band'}},styles:{classic:'Classical',hiphop:'Hip-hop',edm:'Electro 128',jazz:'Jazz'},styleLbl:'// Style',styleAria:'Music style',
+ en:{posterBtn:'Poster',posterDl:'Download PNG',close:'Close',poster:{making:'Drawing the poster…',fail:'Could not draw the poster.',scan:'Listen',sun:(z,n)=>`The Sun in ${z} — tonic ${n}`,moon:(p,m)=>`The Moon ${p}% lit — ${m} mode`,style:(st,sub,b)=>`${st} · ${sub} · ${b} BPM`},sens:{hiphop:{rhodes:'Rhodes',strings:'Orchestral',organ:'Organ & soul',vibes:'Vibes & 808'},edm:{synth:'Synth',synthwave:'Synthwave',ambient:'Ambient',orchestral:'Orchestral trance'},jazz:{trio:'Trio',vibes:'Vibes quartet',organ:'Organ trio',bigband:'Big band'}},styles:{classic:'Classical',hiphop:'Hip-hop',edm:'Electro 128',jazz:'Jazz'},styleLbl:'// Style',styleAria:'Music style',
   subs:{hiphop:{lofi:'Lo-fi',soul:'Soul',jazzhop:'Jazz-hop',boombap:'Boom bap'},edm:{deep:'Deep house',trance:'Trance',techno:'Techno',melodic:'Melodic house'},jazz:{ballad:'Ballad',waltz:'Jazz waltz',swing:'Swing',modal:'Modal jazz'}},
   secHip:['Intro','Verse','Break','Second verse','Outro'],secEdm:['Intro','Build-up','Drop','Break','Final drop'],secJazz:['Intro','Head','Solo','Head out','Coda'],
   title:'Cosmic Melody',desc:'Any date becomes a minute of orchestral music, shaped by the position of the Sun and the phase of the Moon.',
@@ -948,7 +947,7 @@ const I18N={
   chars:{nocturne:'Nocturne',scherzo:'Scherzo',march:'March',elegy:'Elegy'},elements:{fire:'Fire',earth:'Earth',air:'Air',water:'Water'},
   ensembles:{orchestra:'Orchestra',stardust:'Stardust',brass:'Brass',chamber:'Chamber'},
   sections:['Big Bang','Recombination & first stars','First galaxies','Peak of star formation','Birth of the Sun']},
- cs:{posterBtn:'Plakát',posterDl:'Stáhnout PNG',close:'Zavřít',poster:{making:'Kreslím plakát…',fail:'Plakát se nepodařilo nakreslit.',scan:'Naskenujte a poslechněte si',sun:(z,n)=>`Slunce ve znamení ${z} — tónika ${n}`,moon:(p,m)=>`Měsíc osvětlen z ${p} % — modus ${m}`,style:(st,sub,b)=>`${st} · ${sub} · ${b} BPM`},sens:{hiphop:{rhodes:'Rhodes',strings:'Orchestrální',organ:'Varhany a soul',vibes:'Vibrafon a 808'},edm:{synth:'Syntezátor',synthwave:'Synthwave',ambient:'Ambient',orchestral:'Orchestrální trance'},jazz:{trio:'Trio',vibes:'Kvartet s vibrafonem',organ:'Varhanní trio',bigband:'Big band'}},styles:{classic:'Klasika',hiphop:'Hip-hop',edm:'Elektro 128',jazz:'Jazz'},styleLbl:'// Styl',styleAria:'Hudební styl',
+ cs:{posterBtn:'Plakát',posterDl:'Stáhnout PNG',close:'Zavřít',poster:{making:'Kreslím plakát…',fail:'Plakát se nepodařilo nakreslit.',scan:'Poslechnout',sun:(z,n)=>`Slunce ve znamení ${z} — tónika ${n}`,moon:(p,m)=>`Měsíc osvětlen z ${p} % — modus ${m}`,style:(st,sub,b)=>`${st} · ${sub} · ${b} BPM`},sens:{hiphop:{rhodes:'Rhodes',strings:'Orchestrální',organ:'Varhany a soul',vibes:'Vibrafon a 808'},edm:{synth:'Syntezátor',synthwave:'Synthwave',ambient:'Ambient',orchestral:'Orchestrální trance'},jazz:{trio:'Trio',vibes:'Kvartet s vibrafonem',organ:'Varhanní trio',bigband:'Big band'}},styles:{classic:'Klasika',hiphop:'Hip-hop',edm:'Elektro 128',jazz:'Jazz'},styleLbl:'// Styl',styleAria:'Hudební styl',
   subs:{hiphop:{lofi:'Lo-fi',soul:'Soul',jazzhop:'Jazz-hop',boombap:'Boom bap'},edm:{deep:'Deep house',trance:'Trance',techno:'Techno',melodic:'Melodic house'},jazz:{ballad:'Balada',waltz:'Jazzový valčík',swing:'Swing',modal:'Modální jazz'}},
   secHip:['Intro','Sloka','Break','Druhá sloka','Outro'],secEdm:['Intro','Gradace','Drop','Break','Finální drop'],secJazz:['Intro','Téma','Improvizace','Téma','Coda'],
   title:'Kosmická melodie',desc:'Každé datum se promění v minutu orchestrální hudby podle polohy Slunce a fáze Měsíce.',
