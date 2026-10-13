@@ -906,8 +906,7 @@ async function drawPoster(cv){
   g.fillStyle='rgba(243,238,226,.84)';g.font='48px "Exo 2", sans-serif';lines.forEach((t,i)=>g.fillText(t,X,TOP+410+i*80));
   const BOT=TOP+410+2*80+14,BH=BOT-TOP;
   try{const qrl=await loadQR(),q=qrl(0,'M');q.addData(shareUrl());q.make();const n=q.getModuleCount(),pad=26,size=BH-2*pad,cell=size/n,qx=W-240-size-pad,qy=TOP+pad;
-    g.fillStyle='#f3eee2';g.fillRect(qx-pad,TOP,size+2*pad,BH);g.fillStyle='#0a1230';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(q.isDark(r,c))g.fillRect(qx+c*cell,qy+r*cell,Math.ceil(cell),Math.ceil(cell));
-    g.textAlign='center';g.fillStyle=GOLD;g.font='44px "Exo 2", sans-serif';g.fillText(P.scan,qx+size/2,BOT+80)}catch(e){console.warn(e)}
+    g.fillStyle='#f3eee2';g.fillRect(qx-pad,TOP,size+2*pad,BH);g.fillStyle='#0a1230';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(q.isDark(r,c))g.fillRect(qx+c*cell,qy+r*cell,Math.ceil(cell),Math.ceil(cell));}catch(e){console.warn(e)}
   return cv}
 async function openPoster(){const m=document.getElementById('posterModal'),cv=document.getElementById('posterCanvas');m.hidden=false;m.querySelector('.p-status').textContent=t('poster').making;
   try{await drawPoster(cv);m.querySelector('.p-status').textContent=''}catch(e){console.error(e);m.querySelector('.p-status').textContent=t('poster').fail}}
