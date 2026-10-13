@@ -7,7 +7,7 @@
 <meta name="description" content="Любая дата превращается в минуту оркестровой музыки по положению Солнца и фазе Луны.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;800&family=Forum&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#000a12;--cyan:#00e5ff;--green:#00ff9d;--warn:#ffcc00;--txt:#c9f6ff;--dim:rgba(0,229,255,.6);--line:rgba(0,229,255,.22);--surf:rgba(0,229,255,.04)}
 *{box-sizing:border-box}
@@ -84,6 +84,11 @@ input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 12px rgba(0,229
 :focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
 .ens-row{position:absolute;left:0;right:0;bottom:calc(3.5svh + 60px);display:flex;justify-content:center;align-items:center;gap:12px;z-index:4;flex-wrap:wrap;padding:0 16px}
 .ens-row[hidden]{display:none}
+.pmodal{position:fixed;inset:0;z-index:20;background:rgba(0,4,10,.84);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:20px}
+.pmodal[hidden]{display:none}.pbox{display:flex;gap:28px;align-items:center;justify-content:center;flex-wrap:wrap;max-height:100%}
+#posterCanvas{height:min(86vh,1100px);width:auto;max-width:88vw;box-shadow:0 30px 90px rgba(0,0,0,.7);border:1px solid rgba(0,229,255,.25)}
+.pside{display:flex;flex-direction:column;gap:12px;min-width:180px}.p-status{margin:0;font-size:12px;color:var(--dim);min-height:1.4em}
+@media (max-width:760px){#posterCanvas{height:auto;width:86vw}.pside{flex-direction:row;flex-wrap:wrap;justify-content:center}}
 .hero:has(.ens-row[hidden]) .style-row{bottom:calc(3.5svh + 60px)}
 .style-row{position:absolute;left:0;right:0;bottom:calc(3.5svh + 104px);display:flex;justify-content:center;align-items:center;gap:12px;z-index:4;flex-wrap:wrap;padding:0 16px}
 #styles{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
@@ -147,6 +152,7 @@ footer a{color:var(--cyan)}
     <label class="field" for="dateInput"><span data-i18n="date">// Дата</span><input id="dateInput" data-i18n-aria="dateAria" type="datetime-local" step="60"></label>
     <button id="randomBtn" class="hud-btn" data-i18n="random">Случайная дата</button>
     <a id="downloadMidi" class="hud-btn" aria-disabled="true" href="#" download>MIDI</a>
+    <button id="posterBtn" class="hud-btn" data-i18n="posterBtn">Постер</button>
   </div>
 </section>
 <section class="more">
@@ -155,6 +161,7 @@ footer a{color:var(--cyan)}
   <div class="track" id="track"><div class="playhead" id="playhead"></div></div>
   <footer><span data-i18n="instruments">Инструменты:</span> <a href="https://versilian-studios.com/vsco-community/">VSCO 2 Community Edition</a> · Versilian Studios · CC0 // <span data-i18n="codeOn">Код на</span> <a href="https://github.com/oz-the-magician/cosmic-melody">GitHub</a></footer>
 </section>
+<div id="posterModal" class="pmodal" hidden role="dialog" aria-modal="true" data-i18n-aria="posterBtn" aria-label="Постер"><div class="pbox"><canvas id="posterCanvas" width="2480" height="3508"></canvas><div class="pside"><p class="p-status" aria-live="polite"></p><button class="hud-btn solid" id="posterDl" data-i18n="posterDl">Скачать PNG</button><button class="hud-btn" id="posterClose" data-i18n="close">Закрыть</button></div></div></div>
 <script>
 'use strict';
 const ENSEMBLES={"orchestra":{"name":"Оркестр","voices":{"lead":[{"file":"samples/piano/Cs3.mp3","rootMidi":49,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0},{"file":"samples/piano/Cs4.mp3","rootMidi":61,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0},{"file":"samples/piano/Cs5.mp3","rootMidi":73,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0},{"file":"samples/piano/Cs6.mp3","rootMidi":85,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0}],"pad":[{"file":"samples/strings/C3.mp3","rootMidi":48,"fixed":false,"loop":true,"loopStart":1.49927,"loopEnd":4.95528},{"file":"samples/strings/C4.mp3","rootMidi":60,"fixed":false,"loop":true,"loopStart":1.49982,"loopEnd":4.98712},{"file":"samples/strings/C5.mp3","rootMidi":72,"fixed":false,"loop":true,"loopStart":1.50029,"loopEnd":4.95154},{"file":"samples/strings/B5.mp3","rootMidi":83,"fixed":false,"loop":true,"loopStart":1.5,"loopEnd":5.00365}],"bass":[{"file":"samples/bass/C2.mp3","rootMidi":36,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0},{"file":"samples/bass/Gs2.mp3","rootMidi":44,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0},{"file":"samples/bass/Cs3.mp3","rootMidi":49,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0}],"arp":[{"file":"samples/harp/B3.mp3","rootMidi":59,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0},{"file":"samples/harp/C5.mp3","rootMidi":72,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0},{"file":"samples/harp/B5.mp3","rootMidi":83,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0}],"impact":[{"file":"samples/percussion/timpani_Cs2.mp3","rootMidi":37,"fixed":true,"loop":false,"loopStart":0,"loopEnd":0}],"pulse":[{"file":"samples/percussion/wood_F6.mp3","rootMidi":89,"fixed":true,"loop":false,"loopStart":0,"loopEnd":0}]}},"stardust":{"name":"Звёздная пыль","voices":{"lead":[{"rootMidi":60,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/lead/C4.mp3"},{"rootMidi":64,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/lead/E4.mp3"},{"rootMidi":69,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/lead/A4.mp3"},{"rootMidi":72,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/lead/C5.mp3"},{"rootMidi":76,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/lead/E5.mp3"},{"rootMidi":81,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/lead/A5.mp3"}],"pad":[{"rootMidi":48,"fixed":false,"loop":true,"loopStart":1.39687,"loopEnd":4.55596,"file":"samples/stardust/pad/C3.mp3"},{"rootMidi":54,"fixed":false,"loop":true,"loopStart":1.40249,"loopEnd":4.61961,"file":"samples/stardust/pad/Fs3.mp3"},{"rootMidi":60,"fixed":false,"loop":true,"loopStart":1.39989,"loopEnd":4.59472,"file":"samples/stardust/pad/C4.mp3"},{"rootMidi":66,"fixed":false,"loop":true,"loopStart":1.4012,"loopEnd":4.6405,"file":"samples/stardust/pad/Fs4.mp3"},{"rootMidi":72,"fixed":false,"loop":true,"loopStart":1.39943,"loopEnd":4.64755,"file":"samples/stardust/pad/C5.mp3"},{"rootMidi":78,"fixed":false,"loop":true,"loopStart":1.39971,"loopEnd":4.55447,"file":"samples/stardust/pad/Fs5.mp3"},{"rootMidi":84,"fixed":false,"loop":true,"loopStart":1.4,"loopEnd":4.60721,"file":"samples/stardust/pad/C6.mp3"}],"arp":[{"rootMidi":79,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/arp/G5.mp3"},{"rootMidi":84,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/arp/C6.mp3"},{"rootMidi":91,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/arp/G6.mp3"},{"rootMidi":96,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/arp/C7.mp3"}],"bass":[{"rootMidi":36,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/bass/C2.mp3"},{"rootMidi":43,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/bass/G2.mp3"},{"rootMidi":50,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/bass/D3.mp3"},{"rootMidi":57,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/bass/A3.mp3"}],"impact":[{"rootMidi":60,"fixed":true,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/impact/impact.mp3"}],"pulse":[{"rootMidi":60,"fixed":true,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/stardust/pulse/pulse.mp3"}]}},"brass":{"name":"Медь","voices":{"lead":[{"rootMidi":46,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/lead/As2.mp3"},{"rootMidi":50,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/lead/D3.mp3"},{"rootMidi":53,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/lead/F3.mp3"},{"rootMidi":57,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/lead/A3.mp3"},{"rootMidi":60,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/lead/C4.mp3"},{"rootMidi":74,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/lead/D5.mp3"},{"rootMidi":77,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/lead/F5.mp3"}],"pad":[{"rootMidi":41,"fixed":false,"loop":true,"loopStart":1.40098,"loopEnd":4.61995,"file":"samples/brass/pad/F2.mp3"},{"rootMidi":46,"fixed":false,"loop":true,"loopStart":1.39961,"loopEnd":4.60664,"file":"samples/brass/pad/As2.mp3"},{"rootMidi":50,"fixed":false,"loop":true,"loopStart":1.39887,"loopEnd":4.60658,"file":"samples/brass/pad/D3.mp3"},{"rootMidi":53,"fixed":false,"loop":true,"loopStart":1.40005,"loopEnd":4.60705,"file":"samples/brass/pad/F3.mp3"},{"rootMidi":60,"fixed":false,"loop":true,"loopStart":1.3995,"loopEnd":4.57959,"file":"samples/brass/pad/C4.mp3"},{"rootMidi":65,"fixed":false,"loop":true,"loopStart":1.40066,"loopEnd":4.59918,"file":"samples/brass/pad/F4.mp3"}],"bass":[{"rootMidi":34,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/bass/As1.mp3"},{"rootMidi":39,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/bass/Ds2.mp3"},{"rootMidi":46,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/bass/As2.mp3"},{"rootMidi":53,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/bass/F3.mp3"}],"arp":[{"rootMidi":55,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/arp/G3.mp3"},{"rootMidi":65,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/arp/F4.mp3"},{"rootMidi":72,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/arp/C5.mp3"},{"rootMidi":79,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/arp/G5.mp3"},{"rootMidi":89,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/arp/F6.mp3"}],"impact":[{"rootMidi":60,"fixed":true,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/impact/impact.mp3"}],"pulse":[{"rootMidi":60,"fixed":true,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/brass/pulse/pulse.mp3"}]}},"chamber":{"name":"Камерный","voices":{"lead":[{"rootMidi":58,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/lead/As3.mp3"},{"rootMidi":62,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/lead/D4.mp3"},{"rootMidi":65,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/lead/F4.mp3"},{"rootMidi":70,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/lead/As4.mp3"},{"rootMidi":74,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/lead/D5.mp3"},{"rootMidi":77,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/lead/F5.mp3"},{"rootMidi":82,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/lead/As5.mp3"}],"pad":[{"rootMidi":47,"fixed":false,"loop":true,"loopStart":1.40061,"loopEnd":4.56701,"file":"samples/chamber/pad/B2.mp3"},{"rootMidi":53,"fixed":false,"loop":true,"loopStart":1.39973,"loopEnd":4.63018,"file":"samples/chamber/pad/F3.mp3"},{"rootMidi":60,"fixed":false,"loop":true,"loopStart":1.40186,"loopEnd":4.56494,"file":"samples/chamber/pad/C4.mp3"},{"rootMidi":65,"fixed":false,"loop":true,"loopStart":1.40025,"loopEnd":4.56283,"file":"samples/chamber/pad/F4.mp3"},{"rootMidi":72,"fixed":false,"loop":true,"loopStart":1.39993,"loopEnd":4.58866,"file":"samples/chamber/pad/C5.mp3"},{"rootMidi":79,"fixed":false,"loop":true,"loopStart":1.39984,"loopEnd":4.64891,"file":"samples/chamber/pad/G5.mp3"}],"bass":[{"rootMidi":38,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/bass/D2.mp3"},{"rootMidi":45,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/bass/A2.mp3"},{"rootMidi":52,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/bass/E3.mp3"},{"rootMidi":57,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/bass/A3.mp3"}],"arp":[{"rootMidi":67,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/arp/G4.mp3"},{"rootMidi":72,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/arp/C5.mp3"},{"rootMidi":79,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/arp/G5.mp3"},{"rootMidi":84,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/arp/C6.mp3"},{"rootMidi":91,"fixed":false,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/arp/G6.mp3"}],"impact":[{"rootMidi":60,"fixed":true,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/impact/impact.mp3"}],"pulse":[{"rootMidi":60,"fixed":true,"loop":false,"loopStart":0,"loopEnd":0,"file":"samples/chamber/pulse/pulse.mp3"}]}}};
@@ -831,9 +838,89 @@ function renderStyles(){const box=document.getElementById('styles');if(!box)retu
   box.querySelectorAll('button').forEach(b=>b.addEventListener('click',async()=>{const k=b.dataset.style;if(k===style)return;const was=playing;style=k;try{localStorage.setItem('cm-style',k)}catch(e){}
     renderStyles();renderEnsembles();generate();if(was)await play()}))}
 
+/* ================= постер: звёздная карта мелодии =================
+   В центре — созвездие знака, в котором стояло Солнце (оно дало тонику), путь Солнца,
+   настоящее положение Солнца и Луна в реальной фазе. Внизу — объяснение и QR на мелодию.
+   Звёзды и линии созвездий: d3-celestial (BSD), data/sky.json. Формат A4, 300 dpi. */
+const ZOD_IDS=['Ari','Tau','Gem','Cnc','Leo','Vir','Lib','Sco','Sgr','Cap','Aqr','Psc'];
+let SKYDATA=null,QRLIB=null;
+const rad=d=>d*Math.PI/180,deg=r=>r*180/Math.PI;
+function eclToEq(lam,bet){const e=rad(23.4393),l=rad(lam),b=rad(bet);const ra=Math.atan2(Math.sin(l)*Math.cos(e)-Math.tan(b)*Math.sin(e),Math.cos(l)),dec=Math.asin(Math.sin(b)*Math.cos(e)+Math.cos(b)*Math.sin(e)*Math.sin(l));return[mod(deg(ra),360),deg(dec)]}
+function moonEcl(jd){const d=jd-2451545,L=218.316+13.176396*d,M=rad(134.963+13.064993*d),F=rad(93.272+13.229350*d);return[mod(L+6.289*Math.sin(M),360),5.128*Math.sin(F)]}
+function shareUrl(){const ens=style==='classic'?ensemble:curSE(style);return location.origin+location.pathname+`?d=${encodeURIComponent(els.dateInput.value)}&s=${style}&e=${ens}`}
+function loadQR(){if(QRLIB)return Promise.resolve(QRLIB);return new Promise((ok,no)=>{const s=document.createElement('script');s.src='lib/qrcode.js';s.onload=()=>ok(QRLIB=window.qrcode);s.onerror=()=>no(new Error('QR'));document.head.appendChild(s)})}
+async function drawPoster(cv){
+  if(!SKYDATA)SKYDATA=await (await fetch('data/sky.json')).json();
+  try{await document.fonts.load('120px Forum');await document.fonts.load('60px "Exo 2"')}catch(e){}
+  const arr=currentArrangement,s=arr.sky,L=I18N[LANG],W=2480,H=3508;cv.width=W;cv.height=H;const g=cv.getContext('2d');
+  const GOLD='#e8c27a',GOLD2='rgba(232,194,122,',INK='#f3eee2';
+  // фон и рамка
+  const bg=g.createRadialGradient(W/2,H*.36,100,W/2,H*.4,H*.8);bg.addColorStop(0,'#101a3e');bg.addColorStop(1,'#03050f');g.fillStyle=bg;g.fillRect(0,0,W,H);
+  g.strokeStyle=GOLD2+'.55)';g.lineWidth=3;g.strokeRect(90,90,W-180,H-180);g.lineWidth=1.5;g.strokeRect(116,116,W-232,H-232);
+  // проекция: стереографическая, центр — созвездие знака
+  const id=ZOD_IDS[s.zodiacIdx],segs=SKYDATA.lines[id]||[];let vx=0,vy=0,vz=0;
+  segs.flat().forEach(([lo,la])=>{const a=rad(lo),d=rad(la);vx+=Math.cos(d)*Math.cos(a);vy+=Math.cos(d)*Math.sin(a);vz+=Math.sin(d)});
+  const [sra0,sde0]=eclToEq(s.lambda,0),sv=[Math.cos(rad(sde0))*Math.cos(rad(sra0)),Math.cos(rad(sde0))*Math.sin(rad(sra0)),Math.sin(rad(sde0))],nn=Math.hypot(vx,vy,vz);vx/=nn;vy/=nn;vz/=nn;
+  if(vx*sv[0]+vy*sv[1]+vz*sv[2]<Math.cos(rad(20))){vx+=sv[0];vy+=sv[1];vz+=sv[2]}// Солнце далеко от центра созвездия — кадр между ними
+  const ra0=Math.atan2(vy,vx),de0=Math.atan2(vz,Math.hypot(vx,vy)),FIELD=rad(38),CX=W/2,CY=1330,RR=930,sc=RR/(2*Math.tan(FIELD/2));
+  const proj=(raD,deD)=>{const a=rad(raD),d=rad(deD),c=Math.sin(de0)*Math.sin(d)+Math.cos(de0)*Math.cos(d)*Math.cos(a-ra0);if(c<-.2)return null;const k=2/(1+c);
+    return[CX-sc*k*Math.cos(d)*Math.sin(a-ra0),CY-sc*k*(Math.cos(de0)*Math.sin(d)-Math.sin(de0)*Math.cos(d)*Math.cos(a-ra0))]};
+  g.save();g.beginPath();g.arc(CX,CY,RR,0,7);g.clip();
+  const sky=g.createRadialGradient(CX,CY,0,CX,CY,RR);sky.addColorStop(0,'#0d1a44');sky.addColorStop(1,'#060b22');g.fillStyle=sky;g.fillRect(CX-RR,CY-RR,RR*2,RR*2);
+  // сетка: эклиптика — путь Солнца
+  g.setLineDash([14,14]);g.strokeStyle=GOLD2+'.45)';g.lineWidth=3;g.beginPath();let pen=false;
+  for(let l=0;l<=360;l+=1){const[ra,de]=eclToEq(l,0),p=proj(ra,de);if(p&&Math.hypot(p[0]-CX,p[1]-CY)<RR*1.05){pen?g.lineTo(p[0],p[1]):g.moveTo(p[0],p[1]);pen=true}else pen=false}g.stroke();g.setLineDash([]);
+  // все созвездия — тонко
+  const drawLines=(sg,col,w)=>{g.strokeStyle=col;g.lineWidth=w;sg.forEach(seg=>{g.beginPath();let on=false;seg.forEach(([lo,la])=>{const p=proj(lo,la);if(!p){on=false;return}on?g.lineTo(p[0],p[1]):g.moveTo(p[0],p[1]);on=true});g.stroke()})};
+  Object.entries(SKYDATA.lines).forEach(([k,sg])=>{if(k!==id)drawLines(sg,'rgba(190,205,255,.22)',2)});
+  // звёзды
+  const hl=new Set(segs.flat().map(([a,b])=>a+','+b));
+  SKYDATA.stars.forEach(([lo,la,m,bv])=>{const p=proj(lo,la);if(!p||Math.hypot(p[0]-CX,p[1]-CY)>RR)return;const r=Math.max(1.4,(6.2-m)*2.4),t=clamp((bv+.3)/2,0,1);
+    const col=`rgb(${Math.round(200+55*t)},${Math.round(215+20*(1-Math.abs(t-.4)))},${Math.round(255-90*t)})`;
+    if(m<2.5){const gl=g.createRadialGradient(p[0],p[1],0,p[0],p[1],r*5);gl.addColorStop(0,'rgba(255,255,255,.35)');gl.addColorStop(1,'rgba(255,255,255,0)');g.fillStyle=gl;g.beginPath();g.arc(p[0],p[1],r*5,0,7);g.fill()}
+    g.fillStyle=col;g.beginPath();g.arc(p[0],p[1],r,0,7);g.fill()});
+  // созвездие мелодии — золотом, со свечением
+  g.shadowColor='rgba(255,200,120,.9)';g.shadowBlur=26;drawLines(segs,GOLD,6);g.shadowBlur=0;
+  segs.flat().forEach(([lo,la])=>{const p=proj(lo,la);if(!p)return;g.fillStyle='#fff6df';g.beginPath();g.arc(p[0],p[1],9,0,7);g.fill();g.strokeStyle=GOLD;g.lineWidth=3;g.beginPath();g.arc(p[0],p[1],17,0,7);g.stroke()});
+  // Солнце — в настоящем положении
+  const [sra,sde]=eclToEq(s.lambda,0),sp=proj(sra,sde);
+  if(sp&&Math.hypot(sp[0]-CX,sp[1]-CY)<RR-40){const gl=g.createRadialGradient(sp[0],sp[1],0,sp[0],sp[1],150);gl.addColorStop(0,'rgba(255,236,190,.95)');gl.addColorStop(.18,'rgba(255,200,120,.55)');gl.addColorStop(1,'rgba(255,170,80,0)');
+    g.fillStyle=gl;g.beginPath();g.arc(sp[0],sp[1],150,0,7);g.fill();g.fillStyle='#fffaf0';g.beginPath();g.arc(sp[0],sp[1],22,0,7);g.fill()}
+  // Луна — в реальной фазе
+  const [ml,mb]=moonEcl(s.jd),[mra,mde]=eclToEq(ml,mb),mp=proj(mra,mde);
+  const moon=(x,y,mr)=>{g.fillStyle='#1a2140';g.beginPath();g.arc(x,y,mr,0,7);g.fill();g.save();g.beginPath();g.arc(x,y,mr,0,7);g.clip();g.fillStyle='#ece9df';const p=s.phase,k=Math.cos(2*Math.PI*p);g.beginPath();
+    if(p<.5){g.arc(x,y,mr,-Math.PI/2,Math.PI/2);g.ellipse(x,y,Math.abs(k)*mr,mr,0,Math.PI/2,-Math.PI/2,k>0)}else{g.arc(x,y,mr,Math.PI/2,-Math.PI/2);g.ellipse(x,y,Math.abs(k)*mr,mr,0,-Math.PI/2,Math.PI/2,k>0)}g.fill();g.restore();g.strokeStyle=GOLD2+'.6)';g.lineWidth=2;g.beginPath();g.arc(x,y,mr,0,7);g.stroke()};
+  const moonIn=mp&&Math.hypot(mp[0]-CX,mp[1]-CY)<RR-60;if(moonIn)moon(mp[0],mp[1],46);
+  g.restore();
+  // кольцо и деления
+  g.strokeStyle=GOLD;g.lineWidth=4;g.beginPath();g.arc(CX,CY,RR,0,7);g.stroke();g.lineWidth=1.5;g.strokeStyle=GOLD2+'.6)';g.beginPath();g.arc(CX,CY,RR+28,0,7);g.stroke();
+  for(let i=0;i<360;i+=5){const a=rad(i),l=i%30?14:28;g.lineWidth=i%30?1.5:3;g.beginPath();g.moveTo(CX+Math.cos(a)*(RR+28),CY+Math.sin(a)*(RR+28));g.lineTo(CX+Math.cos(a)*(RR+28+l),CY+Math.sin(a)*(RR+28+l));g.stroke()}
+  if(!moonIn){moon(CX+RR*.78,CY-RR*.98,52)}// Луна вне поля — медальоном у края
+  // текст
+  g.textAlign='center';g.fillStyle=GOLD;g.font='500 46px "Exo 2", sans-serif';g.letterSpacing='14px';g.fillText(L.title.toUpperCase(),W/2,250);g.letterSpacing='0px';
+  g.fillStyle=INK;g.font='170px Forum, Georgia, serif';g.fillText(ZODIAC[s.zodiacIdx],W/2,2470);
+  const dt=parseDatetimeLocal(els.dateInput.value),dstr=new Date(dt.year,dt.month-1,dt.day,dt.hour,dt.minute).toLocaleString(LANG,{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  g.fillStyle=GOLD;g.font='64px Forum, Georgia, serif';g.fillText(dstr,W/2,2580);
+  g.strokeStyle=GOLD2+'.5)';g.lineWidth=2;g.beginPath();g.moveTo(W/2-260,2650);g.lineTo(W/2+260,2650);g.stroke();
+  const P=L.poster,lines=[P.sun(ZODIAC[s.zodiacIdx],NOTE_NAMES[s.rootPc]),P.moon(Math.round(s.illum*100),arr.mode.name),P.style(L.styles[arr.style],arr.subLabel||CHARACTERS[arr.character].label,Math.round(s.tempo))];
+  g.fillStyle='rgba(243,238,226,.82)';g.font='46px "Exo 2", sans-serif';lines.forEach((t,i)=>g.fillText(t,W/2-160,2760+i*76));
+  // QR
+  try{const qrl=await loadQR(),q=qrl(0,'M');q.addData(shareUrl());q.make();const n=q.getModuleCount(),size=380,cell=size/n,qx=W-180-size-40,qy=2700;
+    g.fillStyle='#f3eee2';g.fillRect(qx-24,qy-24,size+48,size+48);g.fillStyle='#0a1230';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(q.isDark(r,c))g.fillRect(qx+c*cell,qy+r*cell,Math.ceil(cell),Math.ceil(cell));
+    g.fillStyle=GOLD;g.font='36px "Exo 2", sans-serif';g.fillText(P.scan,qx+size/2,qy+size+90)}catch(e){console.warn(e)}
+  g.fillStyle='rgba(243,238,226,.4)';g.font='30px "Exo 2", sans-serif';g.textAlign='center';g.fillText('oz-the-magician.github.io/cosmic-melody',W/2,H-150);
+  return cv}
+async function openPoster(){const m=document.getElementById('posterModal'),cv=document.getElementById('posterCanvas');m.hidden=false;m.querySelector('.p-status').textContent=t('poster').making;
+  try{await drawPoster(cv);m.querySelector('.p-status').textContent=''}catch(e){console.error(e);m.querySelector('.p-status').textContent=t('poster').fail}}
+function downloadPoster(){const cv=document.getElementById('posterCanvas');cv.toBlob(b=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`cosmic-melody-${els.dateInput.value.slice(0,10)}.png`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000)},'image/png')}
+function applyUrlParams(){const q=new URLSearchParams(location.search),d=q.get('d'),st=q.get('s'),e=q.get('e');
+  if(st&&['classic','hiphop','edm','jazz'].includes(st))style=st;
+  if(e){if(style==='classic'&&ENS_CFG[e])ensemble=e;else if(STYLE_ENS[style]&&STYLE_ENS[style].includes(e))styleEns[style]=e}
+  return d&&/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(d)?d.slice(0,16):null}
+
 /* ================= языки: определяется по браузеру, можно переключить ================= */
 const I18N={
- ru:{sens:{hiphop:{rhodes:'Rhodes',strings:'Оркестровый',organ:'Орган и соул',vibes:'Вибрафон и 808'},edm:{synth:'Синтезатор',synthwave:'Синтвейв',ambient:'Эмбиент',orchestral:'Оркестровый транс'},jazz:{trio:'Трио',vibes:'Квартет с вибрафоном',organ:'Органное трио',bigband:'Биг-бэнд'}},styles:{classic:'Классика',hiphop:'Хип-хоп',edm:'Электро 128',jazz:'Джаз'},styleLbl:'// Стиль',styleAria:'Музыкальный стиль',
+ ru:{posterBtn:'Постер',posterDl:'Скачать PNG',close:'Закрыть',poster:{making:'Рисую постер…',fail:'Не получилось нарисовать постер.',scan:'Наведите камеру — услышите',sun:(z,n)=>`Солнце в знаке «${z}» — тоника ${n}`,moon:(p,m)=>`Луна освещена на ${p}% — лад «${m}»`,style:(st,sub,b)=>`${st} · ${sub} · ${b} уд/мин`},sens:{hiphop:{rhodes:'Rhodes',strings:'Оркестровый',organ:'Орган и соул',vibes:'Вибрафон и 808'},edm:{synth:'Синтезатор',synthwave:'Синтвейв',ambient:'Эмбиент',orchestral:'Оркестровый транс'},jazz:{trio:'Трио',vibes:'Квартет с вибрафоном',organ:'Органное трио',bigband:'Биг-бэнд'}},styles:{classic:'Классика',hiphop:'Хип-хоп',edm:'Электро 128',jazz:'Джаз'},styleLbl:'// Стиль',styleAria:'Музыкальный стиль',
   subs:{hiphop:{lofi:'Lo-fi',soul:'Соул',jazzhop:'Джаз-хоп',boombap:'Бум-бэп'},edm:{deep:'Дип-хаус',trance:'Транс',techno:'Техно',melodic:'Мелодик-хаус'},jazz:{ballad:'Баллада',waltz:'Джаз-вальс',swing:'Свинг',modal:'Модальный джаз'}},
   secHip:['Вступление','Куплет','Брейк','Второй куплет','Аутро'],secEdm:['Вступление','Нарастание','Дроп','Брейк','Финальный дроп'],secJazz:['Вступление','Тема','Импровизация','Тема','Кода'],
   title:'Космическая мелодия',desc:'Любая дата превращается в минуту оркестровой музыки по положению Солнца и фазе Луны.',
@@ -847,7 +934,7 @@ const I18N={
   chars:{nocturne:'Ноктюрн',scherzo:'Скерцо',march:'Марш',elegy:'Элегия'},elements:{fire:'Огонь',earth:'Земля',air:'Воздух',water:'Вода'},
   ensembles:{orchestra:'Оркестр',stardust:'Звёздная пыль',brass:'Медь',chamber:'Камерный'},
   sections:['Большой взрыв','Рекомбинация и первые звёзды','Первые галактики','Пик звездообразования','Рождение Солнца']},
- en:{sens:{hiphop:{rhodes:'Rhodes',strings:'Orchestral',organ:'Organ & soul',vibes:'Vibes & 808'},edm:{synth:'Synth',synthwave:'Synthwave',ambient:'Ambient',orchestral:'Orchestral trance'},jazz:{trio:'Trio',vibes:'Vibes quartet',organ:'Organ trio',bigband:'Big band'}},styles:{classic:'Classical',hiphop:'Hip-hop',edm:'Electro 128',jazz:'Jazz'},styleLbl:'// Style',styleAria:'Music style',
+ en:{posterBtn:'Poster',posterDl:'Download PNG',close:'Close',poster:{making:'Drawing the poster…',fail:'Could not draw the poster.',scan:'Scan to listen',sun:(z,n)=>`The Sun in ${z} — tonic ${n}`,moon:(p,m)=>`The Moon ${p}% lit — ${m} mode`,style:(st,sub,b)=>`${st} · ${sub} · ${b} BPM`},sens:{hiphop:{rhodes:'Rhodes',strings:'Orchestral',organ:'Organ & soul',vibes:'Vibes & 808'},edm:{synth:'Synth',synthwave:'Synthwave',ambient:'Ambient',orchestral:'Orchestral trance'},jazz:{trio:'Trio',vibes:'Vibes quartet',organ:'Organ trio',bigband:'Big band'}},styles:{classic:'Classical',hiphop:'Hip-hop',edm:'Electro 128',jazz:'Jazz'},styleLbl:'// Style',styleAria:'Music style',
   subs:{hiphop:{lofi:'Lo-fi',soul:'Soul',jazzhop:'Jazz-hop',boombap:'Boom bap'},edm:{deep:'Deep house',trance:'Trance',techno:'Techno',melodic:'Melodic house'},jazz:{ballad:'Ballad',waltz:'Jazz waltz',swing:'Swing',modal:'Modal jazz'}},
   secHip:['Intro','Verse','Break','Second verse','Outro'],secEdm:['Intro','Build-up','Drop','Break','Final drop'],secJazz:['Intro','Head','Solo','Head out','Coda'],
   title:'Cosmic Melody',desc:'Any date becomes a minute of orchestral music, shaped by the position of the Sun and the phase of the Moon.',
@@ -861,7 +948,7 @@ const I18N={
   chars:{nocturne:'Nocturne',scherzo:'Scherzo',march:'March',elegy:'Elegy'},elements:{fire:'Fire',earth:'Earth',air:'Air',water:'Water'},
   ensembles:{orchestra:'Orchestra',stardust:'Stardust',brass:'Brass',chamber:'Chamber'},
   sections:['Big Bang','Recombination & first stars','First galaxies','Peak of star formation','Birth of the Sun']},
- cs:{sens:{hiphop:{rhodes:'Rhodes',strings:'Orchestrální',organ:'Varhany a soul',vibes:'Vibrafon a 808'},edm:{synth:'Syntezátor',synthwave:'Synthwave',ambient:'Ambient',orchestral:'Orchestrální trance'},jazz:{trio:'Trio',vibes:'Kvartet s vibrafonem',organ:'Varhanní trio',bigband:'Big band'}},styles:{classic:'Klasika',hiphop:'Hip-hop',edm:'Elektro 128',jazz:'Jazz'},styleLbl:'// Styl',styleAria:'Hudební styl',
+ cs:{posterBtn:'Plakát',posterDl:'Stáhnout PNG',close:'Zavřít',poster:{making:'Kreslím plakát…',fail:'Plakát se nepodařilo nakreslit.',scan:'Naskenujte a poslechněte si',sun:(z,n)=>`Slunce ve znamení ${z} — tónika ${n}`,moon:(p,m)=>`Měsíc osvětlen z ${p} % — modus ${m}`,style:(st,sub,b)=>`${st} · ${sub} · ${b} BPM`},sens:{hiphop:{rhodes:'Rhodes',strings:'Orchestrální',organ:'Varhany a soul',vibes:'Vibrafon a 808'},edm:{synth:'Syntezátor',synthwave:'Synthwave',ambient:'Ambient',orchestral:'Orchestrální trance'},jazz:{trio:'Trio',vibes:'Kvartet s vibrafonem',organ:'Varhanní trio',bigband:'Big band'}},styles:{classic:'Klasika',hiphop:'Hip-hop',edm:'Elektro 128',jazz:'Jazz'},styleLbl:'// Styl',styleAria:'Hudební styl',
   subs:{hiphop:{lofi:'Lo-fi',soul:'Soul',jazzhop:'Jazz-hop',boombap:'Boom bap'},edm:{deep:'Deep house',trance:'Trance',techno:'Techno',melodic:'Melodic house'},jazz:{ballad:'Balada',waltz:'Jazzový valčík',swing:'Swing',modal:'Modální jazz'}},
   secHip:['Intro','Sloka','Break','Druhá sloka','Outro'],secEdm:['Intro','Gradace','Drop','Break','Finální drop'],secJazz:['Intro','Téma','Improvizace','Téma','Coda'],
   title:'Kosmická melodie',desc:'Každé datum se promění v minutu orchestrální hudby podle polohy Slunce a fáze Měsíce.',
@@ -893,7 +980,11 @@ function applyLang(lang,{save=false}={}){LANG=lang;if(save){try{localStorage.set
 
 els.randomBtn.addEventListener('click',randomDate);els.playBtn.addEventListener('click',()=>playing?stop():play());els.dateInput.addEventListener('change',generate);
 window.addEventListener('resize',()=>currentArrangement&&drawChart(currentArrangement,playing?clamp(audioCtx.currentTime-startAt,0,TRACK_SECONDS):-1));
-document.querySelectorAll('.lang button').forEach(b=>b.addEventListener('click',()=>applyLang(b.dataset.lang,{save:true})));applyLang(LANG);setDefaultDate();if(document.fonts&&document.fonts.ready)document.fonts.ready.then(generate);else generate();
+document.querySelectorAll('.lang button').forEach(b=>b.addEventListener('click',()=>applyLang(b.dataset.lang,{save:true})));const __d=applyUrlParams();applyLang(LANG);setDefaultDate();if(__d)els.dateInput.value=__d;
+document.getElementById('posterBtn').addEventListener('click',openPoster);document.getElementById('posterDl').addEventListener('click',downloadPoster);
+document.getElementById('posterClose').addEventListener('click',()=>document.getElementById('posterModal').hidden=true);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('posterModal').hidden=true});
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(generate);else generate();
 </script>
 </body>
 </html>

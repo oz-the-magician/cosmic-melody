@@ -58,6 +58,10 @@ Each style has its own four ensembles; the rhythm section stays in the genre, th
 
 Each phrase is fitted into the instrument's range as a whole, so melodies keep their shape. Only the selected ensemble is downloaded.
 
+## Poster
+
+The **Poster** button draws a print-ready A4 poster (2480×3508 px, 300 dpi) of the sky behind the melody: the constellation of the Sun's sign highlighted in gold, the ecliptic, the Sun at its true position and the Moon in its real phase, the date, a line on how the sky set the music, and a QR code that opens the same date, style and ensemble. Links like `?d=1987-03-21T07:15&s=jazz&e=organ` open a specific melody.
+
 ## Languages
 
 The interface follows the browser language — Russian, English or Czech (Slovak browsers get Czech, everything else English). A RU / EN / CS switch in the header overrides it and is remembered.
@@ -86,5 +90,8 @@ samples/
 Each sample is a single note at a measured pitch (`rootMidi`); the engine picks the nearest sample and repitches it.
 
 ## Credits
+
+Star catalogue and constellation lines: [d3-celestial](https://github.com/ofrohn/d3-celestial) by Olaf Frohn (BSD 3-Clause, `data/SKY-LICENSE.txt`). QR codes: [qrcode-generator](https://github.com/kazuhikoarase/qrcode-generator) by Kazuhiko Arase (MIT, bundled in `lib/`).
+
 
 Instrument samples come from **[VSCO 2 Community Edition](https://versilian-studios.com/vsco-community/)** by Versilian Studios, released under **CC0 1.0** (public domain). The samples were trimmed, normalized, pitch-verified and encoded to MP3 for this project.
