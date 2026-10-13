@@ -24,7 +24,22 @@ The piece is a one-minute miniature in five continuous parts. Everything grows f
 
 The tempo map breathes (accelerando, ritardando), yet every piece lasts exactly 60 seconds.
 
-### Four ensembles
+### Four styles
+
+The same sky can be heard in four musical languages. The Moon still picks the character and the element of the sign the timbre; the date's motif becomes the hook or the jazz head.
+
+| Style | New Moon | Waxing | Full Moon | Waning | Form (60 s) |
+|---|---|---|---|---|---|
+| Classical | nocturne | scherzo 3/4 | march | elegy | five-part miniature (below) |
+| Hip-hop | lo-fi, 80 BPM | jazz-hop, 92 | boom bap, 96 | soul, 84 | intro, verse, break, verse, outro |
+| Electro 128 | deep house | trance | techno | melodic house | intro, build-up, drop, break, build-up, final drop — 32 bars at exactly 128 BPM |
+| Jazz | ballad, 64 | jazz waltz 3/4, 108 | swing, 112 | modal, 96 | intro, head, solo, head out, coda |
+
+Hip-hop: Rhodes seventh and ninth chords, swung drums, sub bass, the motif chopped on piano, vinyl crackle and a lo-fi filter. Electro: four-on-the-floor, sidechain pumping, filter build-ups, risers and drops, supersaw, plucks and arpeggios. Jazz: piano trio with rootless voicings, walking bass, swing ride or brushes, an improvised solo by piano, vibraphone or bass, chosen by the element.
+
+Drums, synths, Rhodes and vibraphone are synthesized with the Web Audio API — no extra files, no licences. Piano and double bass come from the same CC0 VSCO samples. Notes are scheduled just in time, so playback stays light.
+
+### Four ensembles (Classical)
 
 | Ensemble | Lead | Pad | Bass | Sparkle | Accents |
 |---|---|---|---|---|---|

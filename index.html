@@ -52,7 +52,7 @@ h1{position:absolute;left:0;right:0;top:calc(64px + 5svh);margin:0;text-align:ce
 h1 span{display:block;color:var(--cyan);filter:brightness(calc(1 + .5*var(--amb,0)));text-shadow:0 0 12px rgba(0,229,255,.8),0 0 40px rgba(0,229,255,.45)}
 .chip{position:absolute;left:50%;top:calc(64px + 1.4svh);transform:translateX(-50%);font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--dim);padding:5px 14px;border:1px solid var(--line);white-space:nowrap}
 .chip i{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);margin-right:8px;vertical-align:1px}
-.stage{position:absolute;left:50%;top:59%;width:min(50svh,90vw);aspect-ratio:1;transform:translate(-50%,-50%);z-index:3}
+.stage{position:absolute;left:50%;top:55%;width:min(46svh,90vw);aspect-ratio:1;transform:translate(-50%,-50%);z-index:3}
 .stage canvas{position:absolute;inset:0;width:100%;height:100%}
 .stage::before{content:"";position:absolute;inset:-18%;border-radius:50%;pointer-events:none;background:radial-gradient(circle,rgba(0,229,255,.22) 0%,rgba(0,140,200,.08) 38%,transparent 62%);opacity:calc(.45 + .55*var(--amb,0));transform:scale(calc(1 + .08*var(--amb,0)))}
 .stage::after{content:"";position:absolute;left:8%;right:8%;bottom:-14%;height:16%;border-radius:50%;pointer-events:none;background:radial-gradient(ellipse,rgba(0,0,0,.55),transparent 70%);filter:blur(8px)}
@@ -69,9 +69,9 @@ button.orb.on{color:var(--warn);border-color:rgba(255,204,0,.6);text-shadow:0 0 
 .tag::before{top:-1px;left:-1px;border-width:2px 0 0 2px}.tag::after{bottom:-1px;right:-1px;border-width:0 2px 2px 0}
 .tag b{display:block;margin-top:4px;font:600 clamp(16px,1.6vw,22px)/1.15 'Exo 2',sans-serif;letter-spacing:.06em;color:var(--cyan);text-shadow:0 0 10px rgba(0,229,255,.6);text-transform:none}
 .tag.g b{color:var(--green);text-shadow:0 0 10px rgba(0,255,157,.6)}.tag.w b{color:var(--warn);text-shadow:0 0 10px rgba(255,204,0,.5)}
-.tag.l{right:calc(50% + min(25svh,45vw) + 24px);top:52%;text-align:right}
-.tag.r{left:calc(50% + min(25svh,45vw) + 24px);top:48%}
-.tag.r2{left:calc(50% + min(22svh,41vw) + 24px);top:70%}
+.tag.l{right:calc(50% + min(23svh,45vw) + 24px);top:52%;text-align:right}
+.tag.r{left:calc(50% + min(23svh,45vw) + 24px);top:48%}
+.tag.r2{left:calc(50% + min(20svh,41vw) + 24px);top:70%}
 .controls{position:absolute;left:0;right:0;bottom:3.5svh;display:flex;justify-content:center;align-items:center;gap:14px;flex-wrap:wrap;z-index:4;padding:0 16px}
 .field{display:flex;align-items:center;gap:10px;font-size:10px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase}
 input[type=datetime-local]{padding:9px 12px;border:1px solid var(--line);background:var(--surf);color:var(--cyan);font:500 14px 'JetBrains Mono',monospace;color-scheme:dark}
@@ -83,10 +83,15 @@ input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 12px rgba(0,229
 .hud-btn[aria-disabled=true]{opacity:.4;pointer-events:none}
 :focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
 .ens-row{position:absolute;left:0;right:0;bottom:calc(3.5svh + 60px);display:flex;justify-content:center;align-items:center;gap:12px;z-index:4;flex-wrap:wrap;padding:0 16px}
+.ens-row[hidden]{display:none}
+.hero:has(.ens-row[hidden]) .style-row{bottom:calc(3.5svh + 60px)}
+.style-row{position:absolute;left:0;right:0;bottom:calc(3.5svh + 104px);display:flex;justify-content:center;align-items:center;gap:12px;z-index:4;flex-wrap:wrap;padding:0 16px}
+#styles{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+#styles .hud-btn{padding:9px 18px;font-size:10.5px}
 .ens-label{font-size:10px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase}
 #ensembles{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
 #ensembles .hud-btn{padding:9px 18px;font-size:10.5px}
-.status{position:absolute;left:0;right:0;bottom:calc(3.5svh + 112px);text-align:center;font-size:11px;letter-spacing:.15em;color:var(--warn);z-index:4}
+.status{position:absolute;left:0;right:0;bottom:calc(3.5svh + 152px);text-align:center;font-size:11px;letter-spacing:.15em;color:var(--warn);z-index:4}
 
 /* эпохи: шкала прогресса */
 .more{position:relative;z-index:2;max-width:760px;margin:0 auto;padding:12svh 20px 72px}
@@ -108,15 +113,15 @@ footer{margin-top:48px;font-size:11px;letter-spacing:.1em;color:var(--dim);text-
 footer a{color:var(--cyan)}
 @media (max-width:760px){
   .bar{padding:12px 16px}.brand small{display:none}.sys span{display:none}.bar-r{gap:8px}
-  .hero{height:auto;min-height:0;display:flex;flex-direction:column;align-items:center;gap:18px;padding:80px 12px 32px;overflow:visible}
-  .chip,h1,.stage,.tags,.controls,.status,.ens-row{position:static;transform:none}
+  .hero{height:auto;min-height:0;display:flex;flex-direction:column;align-items:center;gap:18px;padding:80px 12px 32px;overflow:visible;overflow-x:clip}
+  .chip,h1,.stage,.tags,.controls,.status,.ens-row,.style-row{position:static;transform:none}
   .chip{font-size:9px;white-space:normal;text-align:center}
   h1{font-size:clamp(30px,10vw,54px)}
   .stage{width:min(92vw,440px);position:relative;left:auto;top:auto}
   .tags{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
   .tag{position:static;text-align:left!important;padding:8px 10px}.tag b{font-size:15px}
   .controls{padding:0}
-  .ens-row{position:static;padding:0}
+  .ens-row,.style-row{position:static;padding:0}
   .field span{display:none}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.glitchbar{display:none}}
@@ -136,6 +141,7 @@ footer a{color:var(--cyan)}
   </div>
   <div class="tags" id="reading"></div>
   <div id="status" class="status" aria-live="polite"></div>
+  <div class="style-row" role="group" data-i18n-aria="styleAria" aria-label="Стиль"><span class="ens-label" data-i18n="styleLbl">// Стиль</span><div id="styles"></div></div>
   <div class="ens-row" role="group" data-i18n-aria="ensAria" aria-label="Группа инструментов"><span class="ens-label" data-i18n="ens">// Состав</span><div id="ensembles"></div></div>
   <div class="controls">
     <label class="field" for="dateInput"><span data-i18n="date">// Дата</span><input id="dateInput" data-i18n-aria="dateAria" type="datetime-local" step="60"></label>
@@ -167,7 +173,7 @@ function skeletonPitches(){const logs=EPOCHS.map(e=>Math.log10(e.temp)),lo=Math.
 function makeScalePitches(rootPc,intervals,min=24,max=108){const out=[];for(let m=min;m<=max;m++){if(intervals.some(i=>mod(rootPc+i,12)===mod(m,12)))out.push(m)}return out}function nearestScaleIndex(scale,pitch){let best=0,dist=999;scale.forEach((p,i)=>{const d=Math.abs(p-pitch);if(d<dist){dist=d;best=i}});return best}function snapToScale(midi,rootPc,intervals){const scale=makeScalePitches(rootPc,intervals,0,127);return scale[nearestScaleIndex(scale,midi)]}function scaleDegreePitch(rootPc,intervals,degree,octave){const d=Math.floor(degree),oct=octave+Math.floor(d/7),interval=intervals[mod(d,7)];return 12*(oct+1)+rootPc+interval}function buildChord(rootPc,intervals,degree,octave,seventh=false){return(seventh?[degree,degree+2,degree+4,degree+6]:[degree,degree+2,degree+4]).map(d=>scaleDegreePitch(rootPc,intervals,d,octave))}
 function quantizeBeat(beat,q=2){return Math.round(beat/q)*q}function beatToSec(beat,tempo){return beat*60/tempo}function addEvent(events,voice,midi,beat,durBeat,vel,tempo){const start=beatToSec(beat,tempo),dur=beatToSec(durBeat,tempo);if(start>=TRACK_SECONDS||dur<=0)return;events.push({voice,midi:clamp(Math.round(midi),0,127),beat,durBeat,start,dur:Math.min(dur,TRACK_SECONDS-start),vel:clamp(Math.round(vel),1,127)})}
 function buildBeatSections(sky){const totalBeats=TRACK_SECONDS*sky.tempo/60,secMarks=[0,...EPOCHS.map(e=>e.sec)];let beats=secMarks.map((sec,i)=>i===0?0:i===secMarks.length-1?totalBeats:quantizeBeat(sec/TRACK_SECONDS*totalBeats,2));for(let i=1;i<beats.length-1;i++)beats[i]=Math.max(beats[i-1]+2,Math.min(beats[i],totalBeats-2*(beats.length-1-i)));beats[beats.length-1]=totalBeats;const names=['Большой взрыв',...EPOCHS.slice(0,-1).map(e=>e.name)];return names.map((name,i)=>({name,beatStart:beats[i],beatEnd:beats[i+1],start:beatToSec(beats[i],sky.tempo),end:beatToSec(beats[i+1],sky.tempo),epoch:i===0?null:i-1}))}
-function generateMidiBlob(arr){const endTick=Math.round(arr.totalBeats*PPQ),ev=[],tempoMicro=Math.round(60000000/arr.sky.tempo);ev.push({tick:0,order:0,data:[0xff,0x51,0x03,(tempoMicro>>16)&255,(tempoMicro>>8)&255,tempoMicro&255]});Object.entries(VOICES).forEach(([voice,v])=>{if(v.channel!==9)ev.push({tick:0,order:1,data:[0xc0+v.channel,(ENS_CFG[ensemble].gm[voice]??v.program)]})});arr.events.forEach(e=>addMidiNote(ev,VOICES[e.voice].channel,e.midi,e.beat,e.durBeat,e.vel));ev.push({tick:endTick,order:99,data:[0xff,0x2f,0]});ev.sort((a,b)=>a.tick-b.tick||a.order-b.order);const track=[];let prev=0;for(const e of ev){track.push(...varLen(Math.max(0,e.tick-prev)),...e.data);prev=e.tick}const bytes=[...ascii('MThd'),...u32(6),...u16(0),...u16(1),...u16(PPQ),...ascii('MTrk'),...u32(track.length),...track];return new Blob([new Uint8Array(bytes)],{type:'audio/midi'})}function addMidiNote(out,ch,pitch,beat,durBeat,vel){const st=Math.round(beat*PPQ),en=Math.round((beat+durBeat)*PPQ);if(en<=st)return;out.push({tick:st,order:2,data:[0x90+ch,pitch,vel]});out.push({tick:en,order:1,data:[0x80+ch,pitch,0]})}function ascii(s){return[...s].map(ch=>ch.charCodeAt(0))}function u16(n){return[(n>>8)&255,n&255]}function u32(n){return[(n>>24)&255,(n>>16)&255,(n>>8)&255,n&255]}function varLen(v){let b=v&0x7f,bytes=[];while((v>>=7)){b<<=8;b|=((v&0x7f)|0x80)}while(true){bytes.push(b&0xff);if(b&0x80)b>>=8;else break}return bytes}function fileBase(dt){return`cosmic-melody_${dt.year}-${pad2(dt.month)}-${pad2(dt.day)}_${pad2(dt.hour)}-${pad2(dt.minute)}_UTC`}
+function generateMidiBlob(arr){const endTick=Math.round(arr.totalBeats*PPQ),ev=[],tempoMicro=Math.round(60000000/arr.sky.tempo);ev.push({tick:0,order:0,data:[0xff,0x51,0x03,(tempoMicro>>16)&255,(tempoMicro>>8)&255,tempoMicro&255]});Object.entries(VOICES).forEach(([voice,v])=>{if(v.channel!==9)ev.push({tick:0,order:1,data:[0xc0+v.channel,(arr.style&&arr.style!=='classic'?(STYLE_GM[arr.style][voice]??v.program):(ENS_CFG[ensemble].gm[voice]??v.program))]})});arr.events.filter(e=>e.voice!=='fx').forEach(e=>addMidiNote(ev,VOICES[e.voice].channel,e.midi,e.beat,e.durBeat,e.vel));ev.push({tick:endTick,order:99,data:[0xff,0x2f,0]});ev.sort((a,b)=>a.tick-b.tick||a.order-b.order);const track=[];let prev=0;for(const e of ev){track.push(...varLen(Math.max(0,e.tick-prev)),...e.data);prev=e.tick}const bytes=[...ascii('MThd'),...u32(6),...u16(0),...u16(1),...u16(PPQ),...ascii('MTrk'),...u32(track.length),...track];return new Blob([new Uint8Array(bytes)],{type:'audio/midi'})}function addMidiNote(out,ch,pitch,beat,durBeat,vel){const st=Math.round(beat*PPQ),en=Math.round((beat+durBeat)*PPQ);if(en<=st)return;out.push({tick:st,order:2,data:[0x90+ch,pitch,vel]});out.push({tick:en,order:1,data:[0x80+ch,pitch,0]})}function ascii(s){return[...s].map(ch=>ch.charCodeAt(0))}function u16(n){return[(n>>8)&255,n&255]}function u32(n){return[(n>>24)&255,(n>>16)&255,(n>>8)&255,n&255]}function varLen(v){let b=v&0x7f,bytes=[];while((v>>=7)){b<<=8;b|=((v&0x7f)|0x80)}while(true){bytes.push(b&0xff);if(b&0x80)b>>=8;else break}return bytes}function fileBase(dt){return`cosmic-melody_${dt.year}-${pad2(dt.month)}-${pad2(dt.day)}_${pad2(dt.hour)}-${pad2(dt.minute)}_UTC`}
 function randomDate(){const y=1900+Math.floor(Math.random()*180),m=1+Math.floor(Math.random()*12),max=new Date(Date.UTC(y,m,0)).getUTCDate(),d=1+Math.floor(Math.random()*max),h=Math.floor(Math.random()*24),mi=Math.floor(Math.random()*60);els.dateInput.value=`${y}-${pad2(m)}-${pad2(d)}T${pad2(h)}:${pad2(mi)}`;generate()}
 const VOICES={
  lead:{channel:0,program:0,gain:.62,attack:.006,release:1.4,ring:1.6,pan:0,send:.32,human:.014},
@@ -175,7 +181,10 @@ const VOICES={
  bass:{channel:2,program:32,gain:.62,attack:.006,release:.45,ring:.3,pan:-.08,send:.12,human:.006},
  arp:{channel:3,program:46,gain:.40,attack:.004,release:1.6,ring:1.8,pan:.38,send:.45,human:.012},
  impact:{channel:9,program:47,gain:.85,attack:.004,release:2.5,ring:3,pan:0,send:.4,human:0},
- pulse:{channel:9,program:115,gain:.16,attack:.002,release:.08,ring:.1,pan:-.3,send:.2,human:.008}};
+ pulse:{channel:9,program:115,gain:.16,attack:.002,release:.08,ring:.1,pan:-.3,send:.2,human:.008},
+ drums:{channel:9,program:0,gain:.9,attack:.001,release:.1,ring:0,pan:0,send:.09,human:.004},
+ fx:{channel:9,program:0,gain:.8,attack:.01,release:.2,ring:0,pan:0,send:.3,human:0}};
+const STYLE_GM={hiphop:{lead:0,pad:4,bass:38,arp:11},edm:{lead:81,pad:90,bass:38,arp:84},jazz:{lead:0,pad:0,bass:32,arp:11}};
 const els={dateInput:document.getElementById('dateInput'),randomBtn:document.getElementById('randomBtn'),playBtn:document.getElementById('playBtn'),downloadMidi:document.getElementById('downloadMidi'),status:document.getElementById('status'),reading:document.getElementById('reading'),track:document.getElementById('track'),playhead:document.getElementById('playhead'),chart:document.getElementById('chart')};
 let midiUrl=null,currentArrangement=null,audioCtx=null,buffers={},active=[],bus=null,startAt=0,raf=0,playing=false;
 
@@ -331,7 +340,7 @@ async function loadSamples(ens=ensemble){if(!audioCtx)audioCtx=new(window.AudioC
   for(const[voice,list]of Object.entries(ENSEMBLES[ens].voices)){B[voice]=B[voice]||[];list.forEach((rec,i)=>{if(B[voice][i])return;jobs.push(fetch(rec.file).then(r=>{if(!r.ok)throw new Error(t('loadFail')(rec.file));return r.arrayBuffer()}).then(a=>audioCtx.decodeAudioData(a)).then(buffer=>{B[voice][i]={...rec,buffer}}))})}
   if(jobs.length){setStatus(t('loading')(ENS_CFG[ens].label));await Promise.all(jobs);setStatus('')}}
 function nearestSample(ens,voice,midi){const list=(buffers[ens]||{})[voice]||[];let best=list[0],dist=999;for(const s of list){const d=Math.abs(s.rootMidi-midi);if(d<dist){dist=d;best=s}}return best}
-function playSample(e,when,r,ens){const v=voiceCfg(ens,e.voice),s=nearestSample(ens,e.voice,e.midi);if(!s)return;const ctx=audioCtx,src=ctx.createBufferSource();src.buffer=s.buffer;src.playbackRate.value=s.fixed?1:Math.pow(2,(e.midi-s.rootMidi)/12);
+function playSample(e,when,r,ens){const v=voiceCfg(ens,e.voice),s=nearestSample(ens,e.src||e.voice,e.midi);if(!s)return;const ctx=audioCtx,src=ctx.createBufferSource();src.buffer=s.buffer;src.playbackRate.value=s.fixed?1:Math.pow(2,(e.midi-s.rootMidi)/12);
   const rel=e.rel??v.release,atk=e.atk??v.attack,hold=e.tight?e.dur:Math.max(e.dur,v.ring),start=when+e.start+(r()*2-1)*v.human,len=s.buffer.duration/src.playbackRate.value;
   let end=start+hold+rel;if(s.loop&&s.loopEnd>s.loopStart+.2){src.loop=true;src.loopStart=s.loopStart;src.loopEnd=s.loopEnd}else end=Math.min(end,start+len);
   const lvl=Math.max(.003,(e.vel/127)*v.gain*(.88+r()*.18)),g=ctx.createGain();
@@ -339,12 +348,18 @@ function playSample(e,when,r,ens){const v=voiceCfg(ens,e.voice),s=nearestSample(
   const relAt=Math.max(start+atk+.02,end-rel);g.gain.setValueAtTime(lvl,relAt);g.gain.exponentialRampToValueAtTime(.0001,end);
   let out=g;if(v.wide&&!e.mono&&ctx.createStereoPanner){const p=ctx.createStereoPanner();p.pan.value=((e.midi%5)-2)*.22;g.connect(p);out=p}
   src.connect(g);out.connect(bus.voices[e.voice]);src.start(Math.max(ctx.currentTime,start));src.stop(end+.05);active.push(src)}
-let playedEvents=[];
-async function play(){try{if(!currentArrangement)generate();const ens=ensemble;await loadSamples(ens);stop();const arr=currentArrangement,r=rng(Math.floor(arr.sky.jd*1000));
-  bus.master.gain.cancelScheduledValues(0);bus.master.gain.setValueAtTime(.78,audioCtx.currentTime);
-  startAt=audioCtx.currentTime+.2;playedEvents=fitToEnsemble(arr.events,ens);
-  playedEvents.forEach(e=>playSample(e.voice==='pad'&&!e.tight?{...e,dur:e.dur+.6}:e,startAt,r,ens));
-  const endT=startAt+TRACK_SECONDS;bus.master.gain.setValueAtTime(.78,endT+1);bus.master.gain.linearRampToValueAtTime(0,endT+4.5);
+let playedEvents=[],schedTimer=0;const STYLE_LEVEL={classic:1,hiphop:.62,edm:.58,jazz:.85};
+async function play(){try{if(!currentArrangement)generate();const ens=currentArrangement.style==='classic'?ensemble:'orchestra';await loadSamples(ens);stop();const arr=currentArrangement,r=rng(Math.floor(arr.sky.jd*1000));
+  const MG=.78*(STYLE_LEVEL[arr.style]||1);bus.master.gain.cancelScheduledValues(0);bus.master.gain.setValueAtTime(MG,audioCtx.currentTime);
+  startAt=audioCtx.currentTime+.2;playedEvents=arr.style==='classic'?fitToEnsemble(arr.events,ens):arr.events;
+  // планировщик: ноты создаются за ~2.5 с до звучания, а не все сразу
+  playing=true;const q=playedEvents.slice().sort((a,b)=>a.start-b.start);let qi=0;
+  const pump=()=>{if(!playing)return;const horizon=audioCtx.currentTime-startAt+2.5;
+    while(qi<q.length&&q[qi].start<horizon){const e=q[qi++];e.syn?synthPlay(e,startAt):playSample(e.voice==='pad'&&!e.tight?{...e,dur:e.dur+.6}:e,startAt,r,ens)}
+    if(active.length>600)active=active.slice(-300);if(qi<q.length)schedTimer=setTimeout(pump,250)};pump();
+  if(arr.style==='edm')scheduleDuck(playedEvents,startAt);
+  (arr.auto||[]).forEach(a=>{bus.lofi.frequency.setValueAtTime(a.v0,startAt+a.t0);bus.lofi.frequency.exponentialRampToValueAtTime(a.v1,startAt+a.t1)});
+  const endT=startAt+TRACK_SECONDS;bus.master.gain.setValueAtTime(MG,endT+1);bus.master.gain.linearRampToValueAtTime(0,endT+4.5);
   gatherStars(1);playing=true;els.playBtn.textContent=t('stop');els.playBtn.classList.add('on');els.playhead.style.opacity=1;tick()}catch(e){console.error(e);setStatus(e.message||t('playFail'))}}
 
 /* ================= переключатель групп ================= */
@@ -354,18 +369,19 @@ function renderEnsembles(){const box=document.getElementById('ensembles');if(!bo
     renderEnsembles();if(currentArrangement){const dt=parseDatetimeLocal(els.dateInput.value);updateMidi(dt)}if(playing){await play()}}))}
 function updateMidi(dt){const mb=generateMidiBlob(currentArrangement);if(midiUrl)URL.revokeObjectURL(midiUrl);midiUrl=URL.createObjectURL(mb);els.downloadMidi.href=midiUrl;els.downloadMidi.download=fileBase(dt)+'-'+ensemble+'.mid';els.downloadMidi.setAttribute('aria-disabled','false')}
 
-function generate(){try{if(playing)stop();gatherStars(0);lastT=-1;const dt=parseDatetimeLocal(els.dateInput.value);currentArrangement=buildArrangement(dt);render(currentArrangement);updateMidi(dt);setStatus('')}catch(e){console.error(e);setStatus(e.message||t('dateFail'))}}
+function generate(){try{if(playing)stop();gatherStars(0);lastT=-1;const dt=parseDatetimeLocal(els.dateInput.value);currentArrangement=buildPiece(dt);render(currentArrangement);updateMidi(dt);setStatus('')}catch(e){console.error(e);setStatus(e.message||t('dateFail'))}}
 
 /* ---------- звук ---------- */
 function makeImpulse(ctx,sec,decay){const len=ctx.sampleRate*sec,b=ctx.createBuffer(2,len,ctx.sampleRate);for(let ch=0;ch<2;ch++){const d=b.getChannelData(ch);for(let i=0;i<len;i++){const x=i/len;d[i]=(Math.random()*2-1)*Math.pow(1-x,decay)*(i<ctx.sampleRate*.012?i/(ctx.sampleRate*.012):1)}}return b}
 function makeBus(){const ctx=audioCtx,master=ctx.createGain(),comp=ctx.createDynamicsCompressor(),verb=ctx.createConvolver(),verbIn=ctx.createGain(),verbOut=ctx.createGain(),tone=ctx.createBiquadFilter();
   comp.threshold.value=-14;comp.knee.value=10;comp.ratio.value=3;comp.attack.value=.01;comp.release.value=.25;
   verb.buffer=makeImpulse(ctx,3.4,2.6);tone.type='lowpass';tone.frequency.value=6500;verbOut.gain.value=.9;
-  verbIn.connect(tone).connect(verb).connect(verbOut).connect(comp);master.connect(comp);comp.connect(ctx.destination);
+  const lofi=ctx.createBiquadFilter();lofi.type='lowpass';lofi.frequency.value=20000;lofi.Q.value=.5;
+  verbIn.connect(tone).connect(verb).connect(verbOut).connect(lofi);master.connect(lofi).connect(comp);comp.connect(ctx.destination);
   const voices={};for(const[name,v]of Object.entries(VOICES)){const pan=ctx.createStereoPanner?ctx.createStereoPanner():null,dry=ctx.createGain(),send=ctx.createGain();send.gain.value=v.send;
     if(pan){pan.pan.value=v.pan;dry.connect(pan).connect(master)}else dry.connect(master);dry.connect(send).connect(verbIn);voices[name]=dry}
-  const analyser=ctx.createAnalyser();analyser.fftSize=1024;comp.connect(analyser);return{master,voices,analyser}}
-function stop(){active.forEach(n=>{try{n.stop()}catch(e){}});active=[];playing=false;cancelAnimationFrame(raf);els.playBtn.textContent=t('listen');els.playBtn.classList.remove('on');els.playhead.style.opacity=0;els.track.querySelectorAll('.seg').forEach(n=>n.classList.remove('now'))}
+  const analyser=ctx.createAnalyser();analyser.fftSize=1024;comp.connect(analyser);return{master,voices,analyser,lofi,noise:noiseBuf(ctx)}}
+function stop(){clearTimeout(schedTimer);active.forEach(n=>{try{n.stop()}catch(e){}});active=[];resetBus();playing=false;cancelAnimationFrame(raf);els.playBtn.textContent=t('listen');els.playBtn.classList.remove('on');els.playhead.style.opacity=0;els.track.querySelectorAll('.seg').forEach(n=>n.classList.remove('now'))}
 function tick(){const t=audioCtx.currentTime-startAt;if(t>TRACK_SECONDS+4.6){stop();drawChart(currentArrangement,TRACK_SECONDS);return}
   const tt=clamp(t,0,TRACK_SECONDS);drawChart(currentArrangement,tt);
   const segs=els.track.querySelectorAll('.seg');currentArrangement.scenes.forEach((sc,i)=>segs[i]&&(segs[i].classList.toggle('now',tt>=sc.start&&tt<sc.end),segs[i].querySelector('.bar2 i').style.width=(clamp((tt-sc.start)/(sc.end-sc.start),0,1)*100)+'%'));
@@ -376,7 +392,7 @@ function render(arr){
   const s=arr.sky,moon=Math.round(s.illum*100);
   els.reading.innerHTML=`<p class="tag l w">${t('sunTonic')}<b>${escapeHtml(ZODIAC[s.zodiacIdx])} · ${escapeHtml(NOTE_NAMES[s.rootPc])}</b></p>`+
     `<p class="tag r">${t('moon')(moon)}<b>${escapeHtml(arr.mode.name)}</b></p>`+
-    `<p class="tag r2 g">// ${Math.round(s.tempo)} ${t('bpm')} · ${arr.meter}/4 · ${escapeHtml(ELEMENT_LABEL[arr.element])}<b>${escapeHtml(CHARACTERS[arr.character].label)}</b></p>`;
+    `<p class="tag r2 g">// ${Math.round(s.tempo)} ${t('bpm')} · ${arr.meter}/4 · ${escapeHtml(ELEMENT_LABEL[arr.element])}<b>${escapeHtml(arr.subLabel||CHARACTERS[arr.character].label)}</b></p>`;
   els.track.querySelectorAll('.seg').forEach(n=>n.remove());
   arr.scenes.forEach((sc,i)=>{const d=document.createElement('div');d.className='seg';d.dataset.i=i;
     d.innerHTML=`<em>${String(i+1).padStart(2,'0')}</em><b>${escapeHtml(sc.name)}</b><span>${Math.round(sc.start)}–${Math.round(sc.end)}${t('s')} · ${escapeHtml(sc.chord)}</span><div class="bar2" style="grid-column:2/4"><i></i></div>`;els.track.appendChild(d)});
@@ -413,7 +429,7 @@ function drawChart(arr,t){
     g.fillStyle=cur?'#ffcc00':`rgba(${C},.5)`;if(cur){g.shadowColor='rgba(255,204,0,.8)';g.shadowBlur=8}g.fillText(ZODIAC[i].toUpperCase(),0,0);g.restore()}
   g.globalCompositeOperation='lighter';
   // созвездие мелодии
-  if(t>=0){let prev=null;arr.events.filter(e=>e.voice!=='pulse'&&e.start<=t).forEach(e=>{const a=ang(-e.start/TRACK_SECONDS*360),rr=R*(.25+.72*clamp((e.midi-30)/66,0,1)),x=cx+Math.cos(a)*rr,y=cy+Math.sin(a)*rr,flash=Math.max(0,1-(t-e.start)*1.5);
+  if(t>=0){let prev=null;arr.events.filter(e=>e.voice!=='pulse'&&e.voice!=='drums'&&e.voice!=='fx'&&e.start<=t).forEach(e=>{const a=ang(-e.start/TRACK_SECONDS*360),rr=R*(.25+.72*clamp((e.midi-30)/66,0,1)),x=cx+Math.cos(a)*rr,y=cy+Math.sin(a)*rr,flash=Math.max(0,1-(t-e.start)*1.5);
       if(e.voice==='lead'){if(prev){g.strokeStyle=`rgba(${C},.55)`;g.lineWidth=1;g.shadowColor=`rgba(${C},1)`;g.shadowBlur=6;g.beginPath();g.moveTo(prev[0],prev[1]);g.lineTo(x,y);g.stroke();g.shadowBlur=0}prev=[x,y];
         g.fillStyle=`rgba(${C},${.6+.4*flash})`;const q=3+flash*4;g.fillRect(x-q/2,y-q/2,q,q);g.strokeStyle=`rgba(${C},${.3+.5*flash})`;g.strokeRect(x-q*1.5,y-q*1.5,q*3,q*3)}
       else if(e.voice==='arp'){g.fillStyle=`rgba(0,255,157,${.45+.55*flash})`;g.shadowColor='rgba(0,255,157,.9)';g.shadowBlur=6+10*flash;g.beginPath();g.arc(x,y,1.6+2*flash,0,7);g.fill();g.shadowBlur=0}
@@ -543,9 +559,261 @@ requestAnimationFrame(skyFrame);
     let n=0;const flick=()=>{bar.style.top=(Math.random()*90)+'vh';bar.style.height=(2+Math.random()*18)+'px';bar.classList.add('on');setTimeout(()=>{bar.classList.remove('on');if(++n<3)setTimeout(flick,40+Math.random()*80)},50+Math.random()*60)};flick();
     glitchLoop()},2500+Math.random()*4500)})();
 
+/* ================= синтезатор: всё, чего нет в сэмплах ================= */
+// барабаны, бас, Rhodes, суперсо, плак, вибрафон, FX — без единого файла и без лицензий
+const mtof=m=>440*Math.pow(2,(m-69)/12);
+function noiseBuf(ctx){const len=ctx.sampleRate*2,b=ctx.createBuffer(1,len,ctx.sampleRate),d=b.getChannelData(0);for(let i=0;i<len;i++)d[i]=Math.random()*2-1;return b}
+function vinylBuf(ctx,sec){const len=Math.floor(ctx.sampleRate*sec),b=ctx.createBuffer(2,len,ctx.sampleRate);for(let ch=0;ch<2;ch++){const d=b.getChannelData(ch);let hiss=0;
+  for(let i=0;i<len;i++){hiss=hiss*.985+(Math.random()*2-1)*.015;d[i]=hiss*.35;if(Math.random()<.00035){const a=(Math.random()*.7+.3)*(Math.random()<.15?1:.35);for(let k=0;k<40&&i+k<len;k++)d[i+k]+=a*(Math.random()*2-1)*Math.exp(-k/6)}}}return b}
+function env(g,t,peak,atk,dec,sus=0,hold=0,rel=.05){const p=Math.max(.0002,peak);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(p,t+Math.max(.001,atk));
+  if(sus>0){g.gain.exponentialRampToValueAtTime(Math.max(.0002,p*sus),t+atk+dec);g.gain.setValueAtTime(Math.max(.0002,p*sus),t+atk+dec+hold);g.gain.exponentialRampToValueAtTime(.0001,t+atk+dec+hold+rel);return t+atk+dec+hold+rel}
+  g.gain.exponentialRampToValueAtTime(.0001,t+atk+dec);return t+atk+dec}
+function noiseSrc(ctx,t,end){const s=ctx.createBufferSource();s.buffer=bus.noise;s.loop=true;s.loopStart=Math.random();s.loopEnd=s.loopStart+.9;s.start(t,Math.random()*1.5);s.stop(end+.05);active.push(s);return s}
+function osc(ctx,type,f,t,end,det=0){const o=ctx.createOscillator();o.type=type;o.frequency.setValueAtTime(f,t);o.detune.value=det;o.start(t);o.stop(end+.05);active.push(o);return o}
+function filt(ctx,type,f,q=.7){const b=ctx.createBiquadFilter();b.type=type;b.frequency.value=f;b.Q.value=q;return b}
+/* барабаны просчитываются один раз в короткие буферы — дальше каждый удар почти ничего не стоит */
+function biq(type,f,q,sr){const w=2*Math.PI*f/sr,c=Math.cos(w),s=Math.sin(w),a=s/(2*q);let b0,b1,b2,a0=1+a,a1=-2*c,a2=1-a;
+  if(type==='lp'){b0=(1-c)/2;b1=1-c;b2=(1-c)/2}else if(type==='hp'){b0=(1+c)/2;b1=-(1+c);b2=(1+c)/2}else{b0=a;b1=0;b2=-a}
+  b0/=a0;b1/=a0;b2/=a0;a1/=a0;a2/=a0;let x1=0,x2=0,y1=0,y2=0;return x=>{const y=b0*x+b1*x1+b2*x2-a1*y1-a2*y2;x2=x1;x1=x;y2=y1;y1=y;return y}}
+function drumBufs(ctx){const sr=ctx.sampleRate,out={};const mk=(name,sec,fn,ch=1)=>{const n=Math.floor(sr*sec),b=ctx.createBuffer(ch,n,sr);let peak=0;
+    for(let c=0;c<ch;c++){const d=b.getChannelData(c),f=fn(c);for(let i=0;i<n;i++){d[i]=f(i/sr);peak=Math.max(peak,Math.abs(d[i]))}}
+    for(let c=0;c<ch;c++){const d=b.getChannelData(c);for(let i=0;i<n;i++)d[i]/=peak||1}out[name]=b};
+  const rnd=()=>Math.random()*2-1;
+  const kick=(f0,f1,tau,dec,click)=>()=>{let ph=0;const hp=biq('hp',2500,.7,sr);return t=>{const f=f1+(f0-f1)*Math.exp(-t/tau);ph+=2*Math.PI*f/sr;return Math.sin(ph)*Math.exp(-t/dec)+(click?hp(rnd())*Math.exp(-t/.003)*.5:0)}};
+  mk('kick',.6,kick(160,48,.035,.16,true));mk('kick808',1.4,kick(140,44,.05,.45,true));mk('kickSoft',.4,kick(100,55,.03,.09,false));
+  const snare=(bp,hpF,dec,tone)=>()=>{const h=biq('hp',hpF,.7,sr),b=biq('bp',bp,.8,sr);let ph=0;return t=>{ph+=2*Math.PI*(tone*.62+tone*.38*Math.exp(-t/.03))/sr;return b(h(rnd()))*2.2*Math.exp(-t/dec)+Math.sin(ph)*.55*Math.exp(-t/.05)}};
+  mk('snare',.4,snare(2000,900,.06,195));mk('snareLofi',.45,snare(1600,500,.08,170));
+  mk('clap',.35,()=>{const b=biq('bp',1400,1.1,sr);return t=>{const e=t<.033?Math.exp(-((t%.011)/.004)):Math.exp(-(t-.033)/.07);return b(rnd())*3*e}});
+  const hat=(hpF,dec)=>()=>{const h=biq('hp',hpF,.7,sr),b=biq('bp',10000,.6,sr);return t=>b(h(rnd()))*Math.exp(-t/dec)};
+  mk('hat',.12,hat(7800,.016));mk('ohat',.5,hat(6500,.11));mk('shaker',.15,()=>{const h=biq('hp',5500,.7,sr);return t=>h(rnd())*(t<.01?t/.01:Math.exp(-(t-.01)/.025))});
+  const cym=(mul,dec,noise)=>c=>{const fr=[2,3,4.16,5.43,6.79,8.21].map(r=>40*r*mul),h=biq('hp',mul>1.6?6800:5000,.7,sr),b=biq('bp',mul>1.6?9200:7500,.5,sr),ph=fr.map(()=>Math.random()*6);
+    return t=>{let s=0;fr.forEach((f,i)=>{ph[i]+=2*Math.PI*f/sr;s+=Math.sin(ph[i])>0?.18:-.18});return b(h(s+rnd()*noise))*Math.exp(-t/dec)}};
+  mk('ride',1.4,cym(1.9,.32,.35),2);mk('crash',2.6,cym(1.4,.7,.9),2);
+  mk('brush',.3,()=>{const b=biq('bp',3200,.6,sr);return t=>b(rnd())*Math.exp(-t/.05)});
+  mk('brushSweep',.6,()=>{const b=biq('bp',3000,.5,sr);return t=>b(rnd())*Math.sin(Math.PI*Math.min(1,t/.55))});
+  return out}
+const DRUM_GAIN={kick:1,kick808:1,kickSoft:.55,snare:.7,snareLofi:.7,clap:.75,hat:.38,ohat:.36,ride:.24,crash:.34,brush:.3,brushSweep:.26,shaker:.2};
+
+const SYN_TRIM=.62;
+function synthPlay(e,when){const ctx=audioCtx,t=Math.max(ctx.currentTime,when+e.start),out=bus.voices[e.voice]||bus.master,v=(e.vel/127)*SYN_TRIM,f=mtof(e.midi),d=e.dur;
+  const dk=e.syn==='brush'&&e.sweep?'brushSweep':e.syn;
+  if(DRUM_GAIN[dk]!==undefined){bus.drums=bus.drums||drumBufs(ctx);const src=ctx.createBufferSource(),dg=ctx.createGain();src.buffer=bus.drums[dk];dg.gain.value=v*DRUM_GAIN[dk]*1.4;src.connect(dg).connect(out);src.start(t);active.push(src);return}
+  const g=ctx.createGain();g.connect(out);let end;
+  switch(e.syn){
+  case'kick':case'kick808':case'kickSoft':{const deep=e.syn==='kick808',soft=e.syn==='kickSoft',o=osc(ctx,'sine',deep?140:soft?95:150,t,t+(deep?1.4:.6));
+    o.frequency.exponentialRampToValueAtTime(deep?44:soft?55:48,t+(deep?.12:.07));const dec=deep?Math.min(1.3,Math.max(.45,d)):soft?.28:.42;end=env(g,t,v*(soft?.55:1),.002,dec);o.connect(g);
+    if(!soft){const c=ctx.createGain(),n=noiseSrc(ctx,t,t+.03),hp=filt(ctx,'highpass',2500);n.connect(hp).connect(c).connect(out);env(c,t,v*.25,.001,.015)}break}
+  case'snare':case'snareLofi':{const lofi=e.syn==='snareLofi',n=noiseSrc(ctx,t,t+.4),bp=filt(ctx,'bandpass',lofi?1600:2000,.8),hp=filt(ctx,'highpass',lofi?500:900);n.connect(hp).connect(bp).connect(g);end=env(g,t,v*.75,.002,lofi?.22:.17);
+    const tg=ctx.createGain(),o=osc(ctx,'triangle',lofi?170:195,t,t+.2);o.frequency.exponentialRampToValueAtTime(120,t+.1);o.connect(tg).connect(out);env(tg,t,v*.45,.002,.1);break}
+  case'clap':{const n=noiseSrc(ctx,t,t+.5),bp=filt(ctx,'bandpass',1400,1.1);n.connect(bp).connect(g);g.gain.setValueAtTime(.0001,t);[0,.011,.022].forEach(o=>{g.gain.setValueAtTime(v*.8,t+o);g.gain.exponentialRampToValueAtTime(v*.12,t+o+.009)});
+    g.gain.setValueAtTime(v*.7,t+.032);g.gain.exponentialRampToValueAtTime(.0001,t+.25);end=t+.25;break}
+  case'hat':case'ohat':{const open=e.syn==='ohat',n=noiseSrc(ctx,t,t+.6),hp=filt(ctx,'highpass',open?6500:7800),bp=filt(ctx,'bandpass',10000,.6);n.connect(hp).connect(bp).connect(g);end=env(g,t,v*.42,.001,open?Math.min(.35,d+.08):.045);break}
+  case'ride':case'crash':{const crash=e.syn==='crash',mix=ctx.createGain(),hp=filt(ctx,'highpass',crash?5000:6800),bp=filt(ctx,'bandpass',crash?7500:9200,.5);mix.connect(hp).connect(bp).connect(g);
+    [2,3,4.16,5.43,6.79,8.21].forEach(r=>{const o=osc(ctx,'square',40*r*(crash?1.4:1.9),t,t+(crash?2:1.2));const og=ctx.createGain();og.gain.value=.18;o.connect(og).connect(mix)});
+    const n=noiseSrc(ctx,t,t+2),ng=ctx.createGain();ng.gain.value=crash?.9:.35;n.connect(ng).connect(mix);end=env(g,t,v*(crash?.35:.26),.001,crash?1.8:.9);break}
+  case'brush':{const n=noiseSrc(ctx,t,t+.5),bp=filt(ctx,'bandpass',3200,.6);n.connect(bp).connect(g);end=env(g,t,v*.32,e.sweep?.08:.004,e.sweep?Math.min(.5,d):.14);break}
+  case'shaker':{const n=noiseSrc(ctx,t,t+.2),hp=filt(ctx,'highpass',5500);n.connect(hp).connect(g);end=env(g,t,v*.22,.01,.06);break}
+  case'sub':{const o=osc(ctx,'sine',f,t,t+d+.3),o2=osc(ctx,'triangle',f*2,t,t+d+.3),g2=ctx.createGain();g2.gain.value=.12;o.connect(g);o2.connect(g2).connect(g);
+    if(e.glide){o.frequency.setValueAtTime(f*1.06,t);o.frequency.exponentialRampToValueAtTime(f,t+.06)}end=env(g,t,v*.85,.006,.08,.85,Math.max(0,d-.12),.08);break}
+  case'houseBass':case'reese':{const ree=e.syn==='reese',lp=filt(ctx,'lowpass',ree?380:700,ree?1.2:4);lp.connect(g);
+    osc(ctx,'sawtooth',f,t,t+d+.2,ree?-14:0).connect(lp);if(ree)osc(ctx,'sawtooth',f,t,t+d+.2,14).connect(lp);const so=osc(ctx,'sine',f/2,t,t+d+.2),sg=ctx.createGain();sg.gain.value=.6;so.connect(sg).connect(g);
+    if(!ree){lp.frequency.setValueAtTime(1800,t);lp.frequency.exponentialRampToValueAtTime(320,t+Math.min(.18,d))}end=env(g,t,v*.55,.004,.06,.7,Math.max(0,d-.1),.06);break}
+  case'rhodes':case'vibes':case'bell':{const vib=e.syn==='vibes',bell=e.syn==='bell',ratio=bell?3.5:vib?4:1,car=osc(ctx,'sine',f,t,t+d+2.5),mod=osc(ctx,'sine',f*ratio,t,t+d+2.5),mg=ctx.createGain();
+    mg.gain.setValueAtTime(f*(bell?3:vib?1.2:2.2)*(.5+v),t);mg.gain.exponentialRampToValueAtTime(f*(vib?.05:.25),t+(vib?.25:.6));mod.connect(mg).connect(car.frequency);
+    const tine=osc(ctx,'sine',f*(vib?4:7.1),t,t+.5),tg=ctx.createGain();tine.connect(tg).connect(g);env(tg,t,v*(vib?.04:.07),.001,.12);car.connect(g);
+    if(vib){const lfo=osc(ctx,'sine',5.2,t,t+d+2.5),lg=ctx.createGain();lg.gain.value=.25;const am=ctx.createGain();car.disconnect();car.connect(am).connect(g);am.gain.value=.8;lfo.connect(lg).connect(am.gain)}
+    end=env(g,t,v*(bell?.22:vib?.32:.34),.004,vib?.2:.35,vib?.5:.45,Math.max(0,d-.3),vib?1.4:.6);break}
+  case'supersaw':case'pad':{const lp=filt(ctx,'lowpass',e.cut||(e.syn==='pad'?1400:2600),.8);lp.connect(g);if(e.cutTo){lp.frequency.setValueAtTime(e.cut||800,t);lp.frequency.exponentialRampToValueAtTime(e.cutTo,t+d)}
+    (e.syn==='pad'?[-8,8]:[-16,0,16]).forEach(det=>{const o=osc(ctx,'sawtooth',f,t,t+d+1.2,det);o.connect(lp)});
+    end=env(g,t,v*(e.syn==='pad'?.15:.12),e.atk??(e.syn==='pad'?.5:.03),.2,.85,Math.max(0,d-.2),e.rel??.6);break}
+  case'pluck':case'stab':{const lp=filt(ctx,'lowpass',e.syn==='stab'?2400:3800,e.syn==='stab'?3:6);lp.connect(g);
+    osc(ctx,e.syn==='stab'?'sawtooth':'square',f,t,t+Math.min(.8,d+.3)).connect(lp);lp.frequency.setValueAtTime(e.syn==='stab'?3200:5200,t);lp.frequency.exponentialRampToValueAtTime(e.syn==='stab'?380:500,t+.22);
+    end=env(g,t,v*(e.syn==='stab'?.22:.18),.002,Math.min(.5,Math.max(.18,d*.9)));break}
+  case'lead':{const lp=filt(ctx,'lowpass',3200,2);lp.connect(g);[-7,7].forEach(det=>osc(ctx,'sawtooth',f,t,t+d+.4,det).connect(lp));const sq=osc(ctx,'square',f/2,t,t+d+.4),sg=ctx.createGain();sg.gain.value=.3;sq.connect(sg).connect(lp);
+    end=env(g,t,v*.16,.01,.1,.75,Math.max(0,d-.1),.25);break}
+  case'riser':{const n=noiseSrc(ctx,t,t+d),bp=filt(ctx,'bandpass',300,2);n.connect(bp).connect(g);bp.frequency.setValueAtTime(300,t);bp.frequency.exponentialRampToValueAtTime(9000,t+d);
+    g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v*.35,t+d);g.gain.linearRampToValueAtTime(0,t+d+.02);end=t+d;break}
+  case'boom':{const o=osc(ctx,'sine',80,t,t+2.5);o.frequency.exponentialRampToValueAtTime(32,t+1.8);o.connect(g);const n=noiseSrc(ctx,t,t+2),lp=filt(ctx,'lowpass',1800);n.connect(lp).connect(g);
+    lp.frequency.exponentialRampToValueAtTime(120,t+1.5);end=env(g,t,v*.8,.003,2);break}
+  case'vinyl':{const s=ctx.createBufferSource();s.buffer=vinylBuf(ctx,Math.min(70,d+1));s.connect(g);s.start(t);s.stop(t+d+.1);active.push(s);g.gain.setValueAtTime(v*.5,t);g.gain.setValueAtTime(v*.5,t+d-1);g.gain.linearRampToValueAtTime(0,t+d);end=t+d;break}
+  default:return}
+}
+// sidechain: всё, кроме барабанов, «приседает» на каждую бочку
+function scheduleDuck(events,when,targets=['pad','bass','arp','lead']){events.filter(e=>e.duck).forEach(e=>{const t=when+e.start;targets.forEach(k=>{const gn=bus.voices[k];if(!gn)return;
+  gn.gain.setValueAtTime(1,t);gn.gain.linearRampToValueAtTime(.32,t+.012);gn.gain.linearRampToValueAtTime(1,t+.26)})})}
+function resetBus(){if(!bus)return;const now=audioCtx.currentTime;Object.values(bus.voices).forEach(gn=>{gn.gain.cancelScheduledValues(0);gn.gain.setValueAtTime(1,now)});if(bus.lofi){bus.lofi.frequency.cancelScheduledValues(0);bus.lofi.frequency.setValueAtTime(20000,now)}}
+
+/* ================= стили: хип-хоп, электро 128, джаз =================
+   Небо то же: Солнце — тоника, Луна — поджанр, стихия — тембр, мотив даты — хук или тема.
+   Каждый стиль ровно 60 секунд: число тактов задаёт темп. */
+let style=(()=>{try{const s=localStorage.getItem('cm-style');return['classic','hiphop','edm','jazz'].includes(s)?s:'classic'}catch(e){return'classic'}})();
+const ROMAN=['I','ii','iii','IV','V','vi','vii'];
+const GM_DRUM={kick:36,kick808:35,kickSoft:36,snare:38,snareLofi:38,clap:39,hat:42,ohat:46,ride:51,crash:49,brush:38,shaker:70};
+function styleBase(dt){const sky=skyParams(dt),mode=MODES[sky.modeIdx],home=tonality(sky.rootPc,mode.intervals),charKey=characterOf(sky.phase),el=ELEMENTS[sky.zodiacIdx%4];
+  const pc=x=>mod(home.r+x,12),dg=d=>mode.intervals[mod(d,7)],r=rng(Math.floor(sky.jd*977)+7);
+  const sev=d=>[pc(dg(d)),pc(dg(d+2)),pc(dg(d+4)),pc(dg(d+6))],tri=d=>[pc(dg(d)),pc(dg(d+2)),pc(dg(d+4))];
+  const tonicNear=c=>{let m=c-mod(c-home.r,12);if(c-m>6)m+=12;return m},bassPc=p=>36+mod(p-36,12);
+  const ev=[];return{sky,mode,home,charKey,el,pc,dg,r,sev,tri,tonicNear,bassPc,ev}}
+function makeAdder(ev,swing8=0,swing16=0){return(voice,midi,beat,durBeat,vel,extra)=>{const f=beat-Math.floor(beat);let b=beat;
+  if(Math.abs(f-.5)<1e-6)b+=swing8;else if(Math.abs(f-.25)<1e-6||Math.abs(f-.75)<1e-6)b+=swing16;
+  if(durBeat<=0)return;ev.push({voice,midi:clamp(Math.round(midi),0,127),beat:b,durBeat,vel:clamp(Math.round(vel),1,127),...(extra||{})})}}
+const drum=(add,syn,b,vel,extra)=>add('drums',GM_DRUM[syn]||36,b,syn==='ohat'?.45:.25,vel,{syn,...(extra||{})});
+function finishStyle(C,ev,TOTAL,secs,meta){const bpm=TOTAL,k=60/bpm,events=[];
+  ev.forEach(e=>{const st=e.beat*k;if(st>=TRACK_SECONDS-.02||st<0)return;const en=Math.min(TRACK_SECONDS,(e.beat+e.durBeat)*k);if(en<=st)return;events.push({...e,start:st,dur:en-st})});
+  events.sort((a,b)=>a.start-b.start||a.midi-b.midi);C.sky.tempo=bpm;
+  const scenes=secs.map(s=>({name:s.name,start:s.b0*k,end:s.b1*k,time:'',beats:'',chord:s.ch.filter((x,i,a)=>x!==a[i-1]).join(' → '),leadCenter:''}));
+  return{sky:C.sky,mode:C.mode,events,scenes,motif:meta.mot,totalBeats:TOTAL,character:C.charKey,element:C.el,meter:meta.M||4,style:meta.style,subLabel:meta.subLabel,auto:meta.auto||[],away:''}}
+// мелодия по ступеням лада вокруг центра
+function melodyAt(C,center){const sc=C.home.sc,base=nearestScaleIndex(sc,center);return st=>sc[clamp(base+st,0,sc.length-1)]}
+
+/* ---------- Хип-хоп ---------- */
+function buildHipHop(dt){const C=styleBase(dt),{home,charKey,el,r,sev,tonicNear,bassPc,dg,ev}=C;
+  const sub={nocturne:'lofi',elegy:'soul',scherzo:'jazzhop',march:'boombap'}[charKey],BARS={lofi:20,soul:21,jazzhop:23,boombap:24}[sub],TOTAL=BARS*4,mot=dateMotif(dt,4);
+  const add=makeAdder(ev,sub==='boombap'?.04:.06,sub==='boombap'?.05:.09);
+  const L=I18N[LANG].secHip,secs=[],sec=(name,b0,bars)=>{const s={name,b0,b1:b0+bars*4,ch:[]};secs.push(s);return s};
+  const A2=BARS-16,S0=sec(L[0],0,2),S1=sec(L[1],8,8),S2=sec(L[2],40,4),S3=sec(L[3],56,A2),S4=sec(L[4],(BARS-2)*4,2);S1.b0=8;
+  const q=Math.floor(C.sky.lambda/90)%4,LOOP=[[1,4,0,5],[3,2,1,0],[5,3,1,4],[0,5,1,4]][q],BLOOP=[3,4,2,5];
+  const nine=sub!=='boombap',mel=melodyAt(C,tonicNear(72));let prev=null;
+  const keys=(b,d,dur,vel,s)=>{const pcs=sev(d).concat(nine?[C.pc(dg(d+1))]:[]);const v=voiceChord(pcs,prev,55,76);prev=v;v.forEach((p,j)=>add('pad',p,b+j*.03,dur,vel-j*3,{syn:'rhodes'}));s.ch.push(ROMAN[d]+'7');return v};
+  for(let bar=0;bar<BARS;bar++){const b=bar*4,inB=bar>=10&&bar<14,intro=bar<2,outro=bar>=BARS-2,s=intro?S0:outro?S4:inB?S2:bar<10?S1:S3;
+    const d=outro?0:inB?BLOOP[(bar-10)%4]:LOOP[bar%4],v=keys(b,d,outro?(bar===BARS-1?4:3.6):sub==='lofi'?2.4:3.5,sub==='boombap'?58:64,s);
+    if(!outro&&!intro&&sub!=='boombap'&&bar%2===1)v.slice(1).forEach((p,j)=>add('pad',p,b+2.5+j*.03,1.2,46,{syn:'rhodes'}));
+    // барабаны
+    if(!intro&&!outro){const bb=sub==='boombap',K=bb?[0,1.5,2.5]:[0,2.25],ks=bb?'kick':'kick';
+      if(!inB||bar===13)K.concat(bar%4===3?[3.25]:[]).forEach(x=>drum(add,ks,b+x,x===0?112:96,{duck:false}));
+      if(!inB||bar>=12)[1,3].forEach(x=>drum(add,bb?'snare':'snareLofi',b+x,bb?110:96));
+      if(!bb&&!inB)drum(add,'snareLofi',b+3.75,30);
+      for(let h=0;h<8;h++)drum(add,'hat',b+h*.5,(h%2?52:74)*(inB?.8:1));
+      if(sub==='jazzhop'&&!inB)for(let h=0;h<16;h+=2)drum(add,'shaker',b+h*.25+.25,34)}
+    if(outro&&bar===BARS-2){drum(add,'kick',b,100);drum(add,'snareLofi',b+1,80)}
+    // бас
+    if(!intro){const root=bassPc(sev(d)[0]),fifth=bassPc(sev(d)[2]),nx=bassPc(sev(outro?0:inB?BLOOP[(bar-9)%4]:LOOP[(bar+1)%4])[0]);
+      if(outro){add('bass',root,b,bar===BARS-1?4:3.5,96,{syn:'sub'})}
+      else if(sub==='boombap'){[[0,1.2],[1.5,.8],[2.5,1.2]].forEach(([x,l],i)=>add('bass',i===1?root+12:root,b+x,l,100,{syn:'sub'}))}
+      else{add('bass',root,b,1.6,98,{syn:'sub',glide:sub==='soul'});add('bass',r()<.5?fifth:root,b+2.5,.9,86,{syn:'sub'});if(sub!=='lofi'&&r()<.6)add('bass',nx+(nx>root?-1:1),b+3.5,.4,78,{syn:'sub'})}}}
+  // хук из мотива даты: чоп на фортепиано
+  const cell=(b,shift,vel,{oct=0,voice='lead',extra=null}={})=>{let t=b;mot.deg.forEach((st,i)=>{add(voice,mel(st+shift)+oct,t,mot.dur[i]*.9,vel+(i===0?6:0),extra);t+=mot.dur[i]})};
+  const phrase=(b,k,vel,dbl)=>{const sh=[[0,1],[0,-1],[0,2],[0,0]][k%4];cell(b,sh[0],vel);cell(b+2,sh[1],vel-4);
+    const end=k%4===3?mel(0):mel(sh[1]+mot.deg[3]);add('lead',end,b+4.5,2.5,vel-2);
+    if(dbl){const ex=el==='fire'||el==='earth'?null:{syn:'bell'};cell(b,sh[0],vel-22,{oct:12,voice:'arp',extra:ex});cell(b+2,sh[1],vel-26,{oct:12,voice:'arp',extra:ex})}};
+  cell(0,0,58);for(let k=0;k<4;k++)phrase(8+k*8,k,74,false);
+  add('lead',mel(mot.deg[0]),40,3,56);add('lead',mel(mot.deg[1]-1),48,3,52);// брейк: эхо мотива
+  for(let k=0;(k+1)*8<=A2*4;k++)phrase(56+k*8,k,78,true);add('lead',mel(0),(BARS-2)*4,8,70);
+  add('fx',60,0,TOTAL,sub==='boombap'?44:70,{syn:'vinyl'});
+  const LP={lofi:3000,soul:4000,jazzhop:5200,boombap:9000}[sub],k=60/TOTAL;
+  const auto=[{t0:0,v0:700,t1:8*k,v1:LP},{t0:(BARS-2)*4*k,v0:LP,t1:60,v1:500}];
+  return finishStyle(C,ev,TOTAL,secs,{mot,M:4,style:'hiphop',subLabel:I18N[LANG].subs.hiphop[sub],auto})}
+
+/* ---------- Электро 128 ---------- */
+function buildEdm(dt){const C=styleBase(dt),{charKey,el,r,tri,sev,tonicNear,bassPc,ev}=C;
+  const sub={nocturne:'deep',scherzo:'trance',march:'techno',elegy:'melodic'}[charKey],TOTAL=128,mot=dateMotif(dt,4),add=makeAdder(ev,sub==='deep'?.03:0,sub==='deep'?.04:0);
+  const L=I18N[LANG].secEdm,PLAN=[[L[0],0,6],[L[1],6,2],[L[2],8,8],[L[3],16,6],[L[1],22,2],[L[4],24,8]],secs=PLAN.map(([name,a,n])=>({name,b0:a*4,b1:(a+n)*4,ch:[]}));
+  const q=Math.floor(C.sky.lambda/90)%4,LOOP=[[5,3,0,4],[0,5,3,4],[0,4,5,3],[5,4,3,4]][q],mel=melodyAt(C,tonicNear(sub==='trance'?79:72));
+  const hookSyn={fire:'lead',air:'pluck',water:'supersaw',earth:'stab'}[el];let prev=null;
+  for(let bar=0;bar<32;bar++){const b=bar*4,si=bar<6?0:bar<8?1:bar<16?2:bar<22?3:bar<24?4:5,s=secs[si],drop=si===2||si===5,build=si===1||si===4,brk=si===3,d=LOOP[bar%4];
+    const pcs=sub==='deep'||sub==='melodic'?sev(d):tri(d),v=voiceChord(pcs,prev,52,74);prev=v;s.ch.push(ROMAN[d]);const root=bassPc(pcs[0]);
+    // барабаны
+    const kickOn=!brk&&!(build&&bar%2===1&&false)&&!(si===4&&bar===23);
+    if(kickOn&&!(si===0&&bar<1&&sub==='melodic'))for(let x=0;x<4;x++){if(build&&bar%2===1&&x>=2)continue;drum(add,'kick',b+x,x===0?120:112,{duck:true})}
+    if(drop||(si===0&&bar>=4)||build)[1,3].forEach(x=>drum(add,'clap',b+x,drop?100:80));
+    if(!brk||bar>=20){for(let x=0;x<4;x++)drum(add,sub==='techno'?'hat':'ohat',b+x+.5,drop?78:60);
+      if(sub==='techno'||sub==='trance'||drop)for(let x=0;x<16;x++)if(x%4)drum(add,'hat',b+x*.25,(x%2?36:50)*(drop?1:.8))}
+    if(brk&&bar>=19)for(let x=0;x<16;x++)drum(add,'shaker',b+x*.25,26+x);
+    if(build){const n=bar%2?16:8;for(let x=0;x<n;x++)drum(add,'snare',b+x*(4/n),40+Math.round(70*((bar%2)*8+x*(8/n))/16))}
+    if((si===2||si===5)&&bar%8===0){drum(add,'crash',b,110);add('fx',36,b,4,110,{syn:'boom'})}
+    if(build&&bar%2===0)add('fx',60,b,8,100,{syn:'riser'});
+    // бас
+    if(drop||(si===0&&bar>=4&&sub!=='melodic')||(build&&bar%2===0)){
+      if(sub==='deep')[.5,1.5,2.5,3.5].forEach((x,i)=>add('bass',root+(i===3&&bar%2?12:0)+12,b+x,.35,96,{syn:'houseBass'}));
+      else if(sub==='techno')for(let x=0;x<16;x++){if(x%4===0)continue;add('bass',root+12,b+x*.25,.2,90,{syn:'reese'})}
+      else if(sub==='trance')for(let x=0;x<4;x++)[.25,.5,.75].forEach(y=>add('bass',root+12,b+x+y,.2,92,{syn:'sub'}));
+      else add('bass',root,b,3.8,100,{syn:'sub'})}
+    if(brk&&sub==='melodic')add('bass',root,b,3.9,70,{syn:'sub'});
+    // аккорды
+    if(drop){if(sub==='deep'){[.5,2.5].forEach(x=>v.forEach(p=>add('pad',p,b+x,.3,90,{syn:'stab'})));v.forEach(p=>add('pad',p-12,b,4,50,{syn:'pad',cut:900}))}
+      else if(sub==='techno'){if(bar%2)[1.75,3.75].forEach(x=>v.forEach(p=>add('pad',p,b+x,.2,84,{syn:'stab'})))}
+      else v.forEach(p=>add('pad',p,b,4,86,{syn:'supersaw',cut:sub==='trance'?3200:2400}))}
+    else if(brk)v.forEach(p=>add('pad',p,b,4,78,{syn:'pad',cut:900+(bar-16)*500,atk:.8}));
+    else if(build)v.forEach(p=>add('pad',p,b,4,74,{syn:'supersaw',cut:500+(bar%2)*1500,cutTo:bar%2?7000:2000}));
+    else if(si===0&&bar>=2)v.forEach(p=>add('pad',p,b,4,56,{syn:'pad',cut:500+bar*150}));
+    // арпеджио
+    if((sub==='trance'||sub==='melodic')&&(drop||brk||build)){const ar=v.concat(v.map(p=>p+12)),st=sub==='trance'?.25:.5;for(let x=0;x<4/st;x++)add('arp',ar[[0,1,2,3,4,3,2,1][x%8]%ar.length]+12,b+x*st,st*.9,(drop?64:50)+(x%4===0?10:0),{syn:'pluck'})}
+    if(sub==='deep'&&brk)[0,1.5,3].forEach((x,i)=>add('arp',v[i%v.length]+24,b+x,1.4,48,{syn:'bell'}))}
+  // хук из мотива: 4 такта, вариации; в техно — редкий и тёмный
+  const cell=(b,shift,vel,syn,oct=0)=>{let t=b;mot.deg.forEach((st,i)=>{add('lead',mel(st+shift)+oct,t,mot.dur[i]*.85,vel+(i===0?8:0),{syn});t+=mot.dur[i]})};
+  const hook=(b0,bars,vel,syn,oct=0)=>{for(let k=0;k<bars;k++){const b=b0+k*4,sh=[[0,1],[0,-1],[0,2],[0,null]][k%4];cell(b,sh[0],vel,syn,oct);
+      if(sh[1]===null)add('lead',mel(0)+oct,b+2,1.8,vel,{syn});else cell(b+2,sh[1],vel-4,syn,oct)}};
+  if(sub==='techno'){hook(16*4,6,70,'bell',12);hook(24*4+16,4,84,'stab')}
+  else{hook(8*4,8,sub==='deep'?78:88,hookSyn);hook(16*4+8,4,62,'bell',12);hook(24*4,8,92,hookSyn);if(sub!=='deep')hook(28*4,4,60,'pluck',12)}
+  add('lead',mel(0),31*4+2,2,90,{syn:hookSyn==='stab'?'lead':hookSyn});drum(add,'crash',31*4+2,96);
+  return finishStyle(C,ev,TOTAL,secs,{mot,M:4,style:'edm',subLabel:I18N[LANG].subs.edm[sub]})}
+
+/* ---------- Джаз ---------- */
+function buildJazz(dt){const C=styleBase(dt),{home,charKey,el,r,pc,dg,sev,tonicNear,bassPc,ev}=C;
+  const sub={nocturne:'ballad',scherzo:'waltz',march:'swing',elegy:'modal'}[charKey],M=sub==='waltz'?3:4;
+  const FORM={ballad:[2,6,4,2,2],waltz:[4,8,12,8,4],swing:[4,8,8,6,2],modal:[4,8,8,2,2]}[sub],BARS=FORM.reduce((a,b)=>a+b,0),TOTAL=BARS*M,mot=dateMotif(dt,M);
+  const S={ballad:.11,waltz:.15,swing:.16,modal:.14}[sub],add=makeAdder(ev,S,0),L=I18N[LANG].secJazz;
+  let acc=0;const secs=FORM.map((n,i)=>{const s={name:L[i],b0:acc*M,b1:(acc+n)*M,ch:[],bars:[acc,acc+n]};acc+=n;return s});
+  const secOf=bar=>secs.findIndex(s=>bar>=s.bars[0]&&bar<s.bars[1]);
+  const CYC=sub==='modal'?[[0],[0],[0],[0],[1],[1],[0],[0]]:[[0],[5],[1],['V'],[2],[5],[1],['V']];
+  const chordOfBar=bar=>{const si=secOf(bar);if(si===4||bar===BARS-1)return{d:0,key:'I'};if(si===0&&sub!=='modal')return bar%2?{d:'V',key:'V'}:{d:1,key:'ii'};const c=CYC[(bar-secs[si].bars[0])%8][0];return c==='V'?{d:'V',key:'V'}:{d:c,key:ROMAN[c]}};
+  const pcsOf=c=>c.d==='V'?home.ch.V7:sev(c.d),rootless=c=>c.d==='V'?[pc(11),pc(5),pc(9),pc(4)]:[pc(dg(c.d+2)),pc(dg(c.d+4)),pc(dg(c.d+6)),pc(dg(c.d+1))];
+  const quartal=c=>{const sc=home.sc,i0=nearestScaleIndex(sc,52+mod(pcsOf(c)[0]-52,12));return[1,2,3,4].map(k=>sc[clamp(i0+k*3,0,sc.length-1)])};
+  let prevV=null,prevB=40;
+  const nearOct=(p,target,lo,hi)=>{let m=p+12*Math.round((target-p)/12);while(m<lo)m+=12;while(m>hi)m-=12;return m};
+  const solo={fire:'lead',water:'vibes',air:'vibes',earth:'bass'}[el],mel=melodyAt(C,tonicNear(72));
+  for(let bar=0;bar<BARS;bar++){const b=bar*M,si=secOf(bar),c=chordOfBar(bar),pcs=pcsOf(c),nc=chordOfBar(Math.min(BARS-1,bar+1)),s=secs[si],end=bar===BARS-1;
+    s.ch.push((c.d==='V'?'V':ROMAN[c.d])+'7');
+    // фортепиано: аккомпанемент
+    const vv=sub==='modal'?quartal(c):voiceChord(rootless(c),prevV,52,72);prevV=vv;
+    const PAT=M===3?[[[0,.9],[1.5,.5]],[[1,.9],[2,.9]],[[0,2.6]]]:sub==='ballad'?[[[0,2],[2,2]],[[0,3.8]]]:[[[0,.9],[1.5,.5]],[[1.5,.5],[3.5,.6]],[[0,.6],[2.5,.5]],[[.5,.5],[2,.9]]];
+    const pat=end?[[0,M*1.6]]:si===0&&sub==='modal'?[[1.5,.4],[2,1.5]]:PAT[Math.floor(r()*PAT.length)];
+    if(!(solo==='lead'&&si===2&&r()<.3))pat.forEach(([x,l])=>vv.forEach((p,j)=>add('pad',p,b+x+j*(sub==='ballad'?.04:.008),l,(end?70:si===2?52:58)-j*2,{src:'lead',atk:.006,rel:.5,tight:true})));
+    // контрабас
+    const root=pcs[0],tgt=nc.d==='V'?home.ch.V7[0]:pcsOf(nc)[0];
+    const bassLine=si===0&&sub==='modal'?[]:end?[[root,0,M]]:sub==='ballad'?[[root,0,2],[pcs[2],2,1.5],[tgt+(r()<.5?1:-1),3.5,.5]]:
+      M===3?[[root,0,1],[pcs[2],1,1],[tgt+(r()<.5?1:-1),2,1]]:[[root,0,1],[pcs[1+Math.floor(r()*2)],1,1],[pcs[2],2,1],[tgt+(r()<.5?1:-1),3,1]];
+    if(!(solo==='bass'&&si===2))bassLine.forEach(([p,x,l],i)=>{const m=nearOct(p,i===0?40:prevB,31,52);prevB=m;add('bass',m,b+x,l*.95,(i===0?88:76),{tight:true,rel:.15})});
+    // барабаны
+    if(!(si===0&&bar<(sub==='ballad'?1:2))&&!end){
+      if(sub==='ballad'){for(let x=0;x<4;x++)drum(add,'brush',b+x,36,{sweep:true});[1,3].forEach(x=>drum(add,'brush',b+x,58))}
+      else{const R=M===3?[0,1,1.5,2]:[0,1,1.5,2,3,3.5];R.forEach(x=>drum(add,'ride',b+x,(Math.floor(x)%2?78:62)+(x%1?-14:0)));
+        (M===3?[1,2]:[1,3]).forEach(x=>drum(add,'hat',b+x,58));for(let x=0;x<M;x++)drum(add,'kickSoft',b+x,22);
+        if(r()<(si===2?.9:.5))drum(add,'snare',b+[.5,1.5,2.5,3.5][Math.floor(r()*M)],28+Math.round(r()*30))}}
+    if(end){drum(add,sub==='ballad'?'ride':'crash',b,sub==='ballad'?60:90);drum(add,'kickSoft',b,40)}}
+  // тема из мотива даты (голова) — дважды: в начале и в конце
+  const cell=(b,sh,vel,{voice='lead',extra=null,oct=0}={})=>{let t=b;mot.deg.forEach((st,i)=>{add(voice,mel(st+sh)+oct,t,mot.dur[i]*.92,vel+(i===0?6:0),extra);t+=mot.dur[i]});return t};
+  const head=(bar0,bars,vel)=>{for(let k=0;k*2<bars;k++){const b=(bar0+k*2)*M,sh=[0,1,-1,2][k%4],last=(k+1)*2>=bars;let t=cell(b,sh,vel);
+      if(M===4){t=cell(t,sh+(last?0:1),vel-4);add('lead',last?mel(0):mel(sh+mot.deg[3]+(k%2?-1:1)),t,last?3.8:3.2,vel)}else{t=cell(t,sh+1,vel-4)}}};
+  head(secs[1].bars[0],FORM[1],sub==='ballad'?66:76);head(secs[3].bars[0],FORM[3],sub==='ballad'?68:80);
+  if(sub==='modal'){for(let k=0;k<FORM[0];k+=2)cell(k*M,0,80,{voice:'bass',oct:-24})}
+  // импровизация: фразы на аккорды, цитаты мотива, паузы для дыхания
+  {const s=secs[2],[a,bEnd]=s.bars,voice=solo==='bass'?'bass':solo==='vibes'?'arp':'lead',extra=solo==='vibes'?{syn:'vibes'}:null,lo=solo==='bass'?40:62,hi=solo==='bass'?62:86;
+   let last=solo==='bass'?50:74;
+   for(let bar=a;bar<bEnd;bar++){const b=bar*M,c=chordOfBar(bar),ct=pcsOf(c),sc=home.sc,rel=bar-a;
+     if(rel%4===0&&rel<(bEnd-a)-1){cell(b,rel/2,80,{voice,extra,oct:solo==='bass'?-24:0});continue}
+     if(rel%4===3&&r()<.6)continue;// дыхание
+     const steps=M*2;for(let i=0;i<steps;i++){if(r()<.18)continue;const x=i*.5;let m;
+       if(i%2===0){const cands=[];for(let p=lo;p<=hi;p++)if(ct.includes(mod(p,12)))cands.push(p);m=cands.reduce((A,B)=>Math.abs(B-last)<Math.abs(A-last)?B:A,cands[0])}
+       else{const idx=nearestScaleIndex(sc,last);m=sc[clamp(idx+(r()<.5?1:-1)*(r()<.7?1:2),0,sc.length-1)]}
+       if(Math.abs(m-last)<1&&i%2===0)m=sc[clamp(nearestScaleIndex(sc,last)+(r()<.5?2:-2),0,sc.length-1)];
+       m=clamp(m,lo,hi);last=m;add(voice,m,b+x,.48,(i%2?62:76)+Math.round(r()*10),extra)}}}
+  add('lead',tonicNear(84),(BARS-1)*M+.5,M,72);
+  return finishStyle(C,ev,TOTAL,secs,{mot,M,style:'jazz',subLabel:I18N[LANG].subs.jazz[sub]})}
+
+function buildPiece(dt){const a=style==='hiphop'?buildHipHop(dt):style==='edm'?buildEdm(dt):style==='jazz'?buildJazz(dt):buildArrangement(dt);a.style=a.style||'classic';return a}
+function renderStyles(){const box=document.getElementById('styles');if(!box)return;const L=I18N[LANG].styles;
+  box.innerHTML=['classic','hiphop','edm','jazz'].map(k=>`<button class="hud-btn${k===style?' solid':''}" data-style="${k}" aria-pressed="${k===style}">${escapeHtml(L[k])}</button>`).join('');
+  box.querySelectorAll('button').forEach(b=>b.addEventListener('click',async()=>{const k=b.dataset.style;if(k===style)return;const was=playing;style=k;try{localStorage.setItem('cm-style',k)}catch(e){}
+    renderStyles();document.querySelector('.ens-row').hidden=style!=='classic';generate();if(was)await play()}));
+  const er=document.querySelector('.ens-row');if(er)er.hidden=style!=='classic'}
+
 /* ================= языки: определяется по браузеру, можно переключить ================= */
 const I18N={
- ru:{title:'Космическая мелодия',desc:'Любая дата превращается в минуту оркестровой музыки по положению Солнца и фазе Луны.',
+ ru:{styles:{classic:'Классика',hiphop:'Хип-хоп',edm:'Электро 128',jazz:'Джаз'},styleLbl:'// Стиль',styleAria:'Музыкальный стиль',
+  subs:{hiphop:{lofi:'Lo-fi',soul:'Соул',jazzhop:'Джаз-хоп',boombap:'Бум-бэп'},edm:{deep:'Дип-хаус',trance:'Транс',techno:'Техно',melodic:'Мелодик-хаус'},jazz:{ballad:'Баллада',waltz:'Джаз-вальс',swing:'Свинг',modal:'Модальный джаз'}},
+  secHip:['Вступление','Куплет','Брейк','Второй куплет','Аутро'],secEdm:['Вступление','Нарастание','Дроп','Брейк','Финальный дроп'],secJazz:['Вступление','Тема','Импровизация','Тема','Кода'],
+  title:'Космическая мелодия',desc:'Любая дата превращается в минуту оркестровой музыки по положению Солнца и фазе Луны.',
   h1a:'Космическая',h1b:'мелодия',sys:'Звёзды на связи',chip:'Дата → небо → музыка · 60 секунд',listen:'Слушать',stop:'Остановить',random:'Случайная дата',date:'// Дата',ens:'// Состав',
   h2:'Пять эпох за минуту',about:'Солнце задаёт тонику, Луна — лад, стихия знака — фактуру. Мелодия проходит путь от Большого взрыва до сегодняшнего дня.',
   instruments:'Инструменты:',codeOn:'Код на',chartAria:'Орбита: положение Солнца в зодиаке и созвездие мелодии',ensAria:'Группа инструментов',dateAria:'Дата и время',
@@ -556,7 +824,10 @@ const I18N={
   chars:{nocturne:'Ноктюрн',scherzo:'Скерцо',march:'Марш',elegy:'Элегия'},elements:{fire:'Огонь',earth:'Земля',air:'Воздух',water:'Вода'},
   ensembles:{orchestra:'Оркестр',stardust:'Звёздная пыль',brass:'Медь',chamber:'Камерный'},
   sections:['Большой взрыв','Рекомбинация и первые звёзды','Первые галактики','Пик звездообразования','Рождение Солнца']},
- en:{title:'Cosmic Melody',desc:'Any date becomes a minute of orchestral music, shaped by the position of the Sun and the phase of the Moon.',
+ en:{styles:{classic:'Classical',hiphop:'Hip-hop',edm:'Electro 128',jazz:'Jazz'},styleLbl:'// Style',styleAria:'Music style',
+  subs:{hiphop:{lofi:'Lo-fi',soul:'Soul',jazzhop:'Jazz-hop',boombap:'Boom bap'},edm:{deep:'Deep house',trance:'Trance',techno:'Techno',melodic:'Melodic house'},jazz:{ballad:'Ballad',waltz:'Jazz waltz',swing:'Swing',modal:'Modal jazz'}},
+  secHip:['Intro','Verse','Break','Second verse','Outro'],secEdm:['Intro','Build-up','Drop','Break','Final drop'],secJazz:['Intro','Head','Solo','Head out','Coda'],
+  title:'Cosmic Melody',desc:'Any date becomes a minute of orchestral music, shaped by the position of the Sun and the phase of the Moon.',
   h1a:'Cosmic',h1b:'Melody',sys:'Stars online',chip:'Date → sky → music · 60 seconds',listen:'Listen',stop:'Stop',random:'Random date',date:'// Date',ens:'// Ensemble',
   h2:'Five epochs in a minute',about:'The Sun sets the tonic, the Moon the mode, the element of the sign the texture. The melody travels from the Big Bang to the present day.',
   instruments:'Instruments:',codeOn:'Code on',chartAria:'Orbit: the Sun in the zodiac and the melody as a constellation',ensAria:'Instrument ensemble',dateAria:'Date and time',
@@ -567,7 +838,10 @@ const I18N={
   chars:{nocturne:'Nocturne',scherzo:'Scherzo',march:'March',elegy:'Elegy'},elements:{fire:'Fire',earth:'Earth',air:'Air',water:'Water'},
   ensembles:{orchestra:'Orchestra',stardust:'Stardust',brass:'Brass',chamber:'Chamber'},
   sections:['Big Bang','Recombination & first stars','First galaxies','Peak of star formation','Birth of the Sun']},
- cs:{title:'Kosmická melodie',desc:'Každé datum se promění v minutu orchestrální hudby podle polohy Slunce a fáze Měsíce.',
+ cs:{styles:{classic:'Klasika',hiphop:'Hip-hop',edm:'Elektro 128',jazz:'Jazz'},styleLbl:'// Styl',styleAria:'Hudební styl',
+  subs:{hiphop:{lofi:'Lo-fi',soul:'Soul',jazzhop:'Jazz-hop',boombap:'Boom bap'},edm:{deep:'Deep house',trance:'Trance',techno:'Techno',melodic:'Melodic house'},jazz:{ballad:'Balada',waltz:'Jazzový valčík',swing:'Swing',modal:'Modální jazz'}},
+  secHip:['Intro','Sloka','Break','Druhá sloka','Outro'],secEdm:['Intro','Gradace','Drop','Break','Finální drop'],secJazz:['Intro','Téma','Improvizace','Téma','Coda'],
+  title:'Kosmická melodie',desc:'Každé datum se promění v minutu orchestrální hudby podle polohy Slunce a fáze Měsíce.',
   h1a:'Kosmická',h1b:'melodie',sys:'Hvězdy online',chip:'Datum → nebe → hudba · 60 sekund',listen:'Poslech',stop:'Zastavit',random:'Náhodné datum',date:'// Datum',ens:'// Obsazení',
   h2:'Pět epoch za minutu',about:'Slunce určuje tóniku, Měsíc modus, živel znamení fakturu. Melodie putuje od Velkého třesku až do dneška.',
   instruments:'Nástroje:',codeOn:'Kód na',chartAria:'Orbita: Slunce ve zvěrokruhu a melodie jako souhvězdí',ensAria:'Obsazení nástrojů',dateAria:'Datum a čas',
@@ -592,7 +866,7 @@ function applyLang(lang,{save=false}={}){LANG=lang;if(save){try{localStorage.set
   const h1=document.querySelector('h1');if(h1)h1.innerHTML=`${escapeHtml(L.h1a)}<span>${escapeHtml(L.h1b)}</span>`;
   els.playBtn.textContent=playing?L.stop:L.listen;
   document.querySelectorAll('.lang button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.lang===lang));
-  renderEnsembles();if(currentArrangement){if(playing){render(currentArrangement)}else generate()}}
+  renderEnsembles();renderStyles();if(currentArrangement){if(playing){render(currentArrangement)}else generate()}}
 
 els.randomBtn.addEventListener('click',randomDate);els.playBtn.addEventListener('click',()=>playing?stop():play());els.dateInput.addEventListener('change',generate);
 window.addEventListener('resize',()=>currentArrangement&&drawChart(currentArrangement,playing?clamp(audioCtx.currentTime-startAt,0,TRACK_SECONDS):-1));
