@@ -340,7 +340,7 @@ async function loadSamples(ens=ensemble){if(!audioCtx)audioCtx=new(window.AudioC
   for(const[voice,list]of Object.entries(ENSEMBLES[ens].voices)){B[voice]=B[voice]||[];list.forEach((rec,i)=>{if(B[voice][i])return;jobs.push(fetch(rec.file).then(r=>{if(!r.ok)throw new Error(t('loadFail')(rec.file));return r.arrayBuffer()}).then(a=>audioCtx.decodeAudioData(a)).then(buffer=>{B[voice][i]={...rec,buffer}}))})}
   if(jobs.length){setStatus(t('loading')(ENS_CFG[ens].label));await Promise.all(jobs);setStatus('')}}
 function nearestSample(ens,voice,midi){const list=(buffers[ens]||{})[voice]||[];let best=list[0],dist=999;for(const s of list){const d=Math.abs(s.rootMidi-midi);if(d<dist){dist=d;best=s}}return best}
-function playSample(e,when,r,ens){const v=voiceCfg(ens,e.voice),s=nearestSample(ens,e.src||e.voice,e.midi);if(!s)return;const ctx=audioCtx,src=ctx.createBufferSource();src.buffer=s.buffer;src.playbackRate.value=s.fixed?1:Math.pow(2,(e.midi-s.rootMidi)/12);
+function playSample(e,when,r,ens){ens=e.ens||ens;const v=voiceCfg(ens,e.voice),s=nearestSample(ens,e.src||e.voice,e.midi);if(!s)return;const ctx=audioCtx,src=ctx.createBufferSource();src.buffer=s.buffer;src.playbackRate.value=s.fixed?1:Math.pow(2,(e.midi-s.rootMidi)/12);
   const rel=e.rel??v.release,atk=e.atk??v.attack,hold=e.tight?e.dur:Math.max(e.dur,v.ring),start=when+e.start+(r()*2-1)*v.human,len=s.buffer.duration/src.playbackRate.value;
   let end=start+hold+rel;if(s.loop&&s.loopEnd>s.loopStart+.2){src.loop=true;src.loopStart=s.loopStart;src.loopEnd=s.loopEnd}else end=Math.min(end,start+len);
   const lvl=Math.max(.003,(e.vel/127)*v.gain*(.88+r()*.18)),g=ctx.createGain();
@@ -349,7 +349,7 @@ function playSample(e,when,r,ens){const v=voiceCfg(ens,e.voice),s=nearestSample(
   let out=g;if(v.wide&&!e.mono&&ctx.createStereoPanner){const p=ctx.createStereoPanner();p.pan.value=((e.midi%5)-2)*.22;g.connect(p);out=p}
   src.connect(g);out.connect(bus.voices[e.voice]);src.start(Math.max(ctx.currentTime,start));src.stop(end+.05);active.push(src)}
 let playedEvents=[],schedTimer=0;const STYLE_LEVEL={classic:1,hiphop:.62,edm:.58,jazz:.85};
-async function play(){try{if(!currentArrangement)generate();const ens=currentArrangement.style==='classic'?ensemble:'orchestra';await loadSamples(ens);stop();const arr=currentArrangement,r=rng(Math.floor(arr.sky.jd*1000));
+async function play(){try{if(!currentArrangement)generate();const ens=currentArrangement.style==='classic'?ensemble:'orchestra';for(const x of new Set([ens,...currentArrangement.events.filter(e=>!e.syn&&e.ens).map(e=>e.ens)]))await loadSamples(x);stop();const arr=currentArrangement,r=rng(Math.floor(arr.sky.jd*1000));
   const MG=.78*(STYLE_LEVEL[arr.style]||1);bus.master.gain.cancelScheduledValues(0);bus.master.gain.setValueAtTime(MG,audioCtx.currentTime);
   startAt=audioCtx.currentTime+.2;playedEvents=arr.style==='classic'?fitToEnsemble(arr.events,ens):arr.events;
   // планировщик: ноты создаются за ~2.5 с до звучания, а не все сразу
@@ -363,11 +363,13 @@ async function play(){try{if(!currentArrangement)generate();const ens=currentArr
   gatherStars(1);playing=true;els.playBtn.textContent=t('stop');els.playBtn.classList.add('on');els.playhead.style.opacity=1;tick()}catch(e){console.error(e);setStatus(e.message||t('playFail'))}}
 
 /* ================= переключатель групп ================= */
-function renderEnsembles(){const box=document.getElementById('ensembles');if(!box)return;
-  box.innerHTML=Object.entries(ENS_CFG).map(([k,c])=>`<button class="hud-btn ens${k===ensemble?' solid':''}" data-ens="${k}" aria-pressed="${k===ensemble}">${escapeHtml(c.label)}</button>`).join('');
-  box.querySelectorAll('button').forEach(b=>b.addEventListener('click',async()=>{const k=b.dataset.ens;if(k===ensemble)return;ensemble=k;try{localStorage.setItem('cm-ens',k)}catch(e){}
-    renderEnsembles();if(currentArrangement){const dt=parseDatetimeLocal(els.dateInput.value);updateMidi(dt)}if(playing){await play()}}))}
-function updateMidi(dt){const mb=generateMidiBlob(currentArrangement);if(midiUrl)URL.revokeObjectURL(midiUrl);midiUrl=URL.createObjectURL(mb);els.downloadMidi.href=midiUrl;els.downloadMidi.download=fileBase(dt)+'-'+ensemble+'.mid';els.downloadMidi.setAttribute('aria-disabled','false')}
+function renderEnsembles(){const box=document.getElementById('ensembles');if(!box)return;const cls=style==='classic',cur=cls?ensemble:curSE(style);
+  const items=cls?Object.entries(ENS_CFG).map(([k,c])=>[k,c.label]):STYLE_ENS[style].map(k=>[k,I18N[LANG].sens[style][k]]);
+  box.innerHTML=items.map(([k,l])=>`<button class="hud-btn ens${k===cur?' solid':''}" data-ens="${k}" aria-pressed="${k===cur}">${escapeHtml(l)}</button>`).join('');
+  box.querySelectorAll('button').forEach(b=>b.addEventListener('click',async()=>{const k=b.dataset.ens;if(k===cur)return;const was=playing;
+    if(cls){ensemble=k;try{localStorage.setItem('cm-ens',k)}catch(e){}renderEnsembles();if(currentArrangement){const dt=parseDatetimeLocal(els.dateInput.value);updateMidi(dt)}if(was)await play();return}
+    styleEns[style]=k;try{localStorage.setItem('cm-sens',JSON.stringify(styleEns))}catch(e){}renderEnsembles();generate();if(was)await play()}))}
+function updateMidi(dt){const mb=generateMidiBlob(currentArrangement);if(midiUrl)URL.revokeObjectURL(midiUrl);midiUrl=URL.createObjectURL(mb);els.downloadMidi.href=midiUrl;els.downloadMidi.download=fileBase(dt)+'-'+(style==='classic'?ensemble:style+'-'+curSE(style))+'.mid';els.downloadMidi.setAttribute('aria-disabled','false')}
 
 function generate(){try{if(playing)stop();gatherStars(0);lastT=-1;const dt=parseDatetimeLocal(els.dateInput.value);currentArrangement=buildPiece(dt);render(currentArrangement);updateMidi(dt);setStatus('')}catch(e){console.error(e);setStatus(e.message||t('dateFail'))}}
 
@@ -801,16 +803,37 @@ function buildJazz(dt){const C=styleBase(dt),{home,charKey,el,r,pc,dg,sev,tonicN
   add('lead',tonicNear(84),(BARS-1)*M+.5,M,72);
   return finishStyle(C,ev,TOTAL,secs,{mot,M,style:'jazz',subLabel:I18N[LANG].subs.jazz[sub]})}
 
-function buildPiece(dt){const a=style==='hiphop'?buildHipHop(dt):style==='edm'?buildEdm(dt):style==='jazz'?buildJazz(dt):buildArrangement(dt);a.style=a.style||'classic';return a}
+/* ================= составы для стилей ================= */
+// ритм-секция остаётся в жанре, меняются тембры и краски
+const STYLE_ENS={hiphop:['rhodes','strings','organ','vibes'],edm:['synth','synthwave','ambient','orchestral'],jazz:['trio','vibes','organ','bigband']};
+let styleEns=(()=>{try{return JSON.parse(localStorage.getItem('cm-sens'))||{}}catch(e){return{}}})();
+const curSE=st=>STYLE_ENS[st].includes(styleEns[st])?styleEns[st]:STYLE_ENS[st][0];
+const toSample=(e,ens,src,extra)=>{const n={...e,ens,src};delete n.syn;return Object.assign(n,extra||{})};
+function revoice(a,st,se){const D=e=>e.voice==='drums';a.events=a.events.flatMap(e=>{
+  if(st==='hiphop'){
+    if(se==='strings'){if(e.syn==='rhodes')return[toSample(e,'orchestra','pad',{atk:.25,tight:false})];if(e.syn==='bell')return[toSample(e,'orchestra','arp')]}
+    if(se==='organ'){if(e.syn==='rhodes')return[toSample(e,'stardust','pad',{atk:.03,tight:true,rel:.25})];if(e.syn==='bell')return[{...e,syn:'vibes'}]}
+    if(se==='vibes'){if(e.voice==='lead')return[{...e,voice:'arp',syn:'vibes'}];if(e.syn==='sub')return[{...e,syn:'sub',glide:true,dur:e.dur*1.3}];if(e.syn==='rhodes')return[{...e,vel:e.vel*.75}];if(e.syn==='kick')return[{...e,syn:'kick808'}]}}
+  if(st==='edm'){
+    if(se==='synthwave'){if(e.syn==='supersaw')return[{...e,syn:'pad',cut:3000}];if(e.syn==='pluck')return[{...e,syn:'stab'}];if(e.voice==='lead'&&e.syn!=='bell')return[{...e,syn:'lead'}];if(e.syn==='reese'||e.syn==='sub')return[{...e,syn:'houseBass'}];if(e.syn==='clap')return[{...e,syn:'snare'},{...e}]}
+    if(se==='ambient'){if(D(e)&&['clap','hat','ohat','snare','shaker'].includes(e.syn))return e.syn==='ohat'?[{...e,syn:'shaker',vel:e.vel*.6}]:[];if(e.syn==='kick')return[{...e,syn:'kickSoft',vel:e.vel*.7,duck:false}];
+      if(e.syn==='supersaw'||e.syn==='stab')return[{...e,syn:'pad',cut:1800,atk:.6}];if(e.voice==='lead'||e.voice==='arp')return[{...e,syn:'bell',vel:e.vel*.8}];if(e.syn==='houseBass'||e.syn==='reese')return[{...e,syn:'sub'}];if(e.syn==='crash')return[]}
+    if(se==='orchestral'){if(e.syn==='supersaw'||e.syn==='pad')return[toSample(e,'orchestra','pad',{atk:.15})];if(e.voice==='arp')return[toSample(e,'orchestra','arp')];if(e.voice==='lead'&&e.syn!=='bell')return[toSample(e,'brass','lead',{tight:true,rel:.3})];if(e.syn==='stab')return[toSample(e,'chamber','pad',{atk:.02,tight:true,rel:.2})]}}
+  if(st==='jazz'){
+    if(se==='vibes'){if(e.voice==='lead')return[{...e,voice:'arp',syn:'vibes'}]}
+    if(se==='organ'){if(e.voice==='pad'&&e.src==='lead')return[toSample(e,'stardust','pad',{atk:.02,tight:true,rel:.2})];if(e.voice==='lead')return[toSample(e,'stardust','pad',{voice:'lead',atk:.02,tight:true,rel:.15})]}
+    if(se==='bigband'){if(e.voice==='pad'&&e.src==='lead')return[toSample(e,'brass','pad',{atk:.04,tight:true,rel:.25,vel:e.vel+6})];if(e.voice==='lead')return[toSample(e,'brass','lead',{tight:true,rel:.25})]}}
+  return[e]});a.ensKey=se;return a}
+
+function buildPiece(dt){const a=style==='hiphop'?buildHipHop(dt):style==='edm'?buildEdm(dt):style==='jazz'?buildJazz(dt):buildArrangement(dt);a.style=a.style||'classic';return a.style==='classic'?a:revoice(a,a.style,curSE(a.style))}
 function renderStyles(){const box=document.getElementById('styles');if(!box)return;const L=I18N[LANG].styles;
   box.innerHTML=['classic','hiphop','edm','jazz'].map(k=>`<button class="hud-btn${k===style?' solid':''}" data-style="${k}" aria-pressed="${k===style}">${escapeHtml(L[k])}</button>`).join('');
   box.querySelectorAll('button').forEach(b=>b.addEventListener('click',async()=>{const k=b.dataset.style;if(k===style)return;const was=playing;style=k;try{localStorage.setItem('cm-style',k)}catch(e){}
-    renderStyles();document.querySelector('.ens-row').hidden=style!=='classic';generate();if(was)await play()}));
-  const er=document.querySelector('.ens-row');if(er)er.hidden=style!=='classic'}
+    renderStyles();renderEnsembles();generate();if(was)await play()}))}
 
 /* ================= языки: определяется по браузеру, можно переключить ================= */
 const I18N={
- ru:{styles:{classic:'Классика',hiphop:'Хип-хоп',edm:'Электро 128',jazz:'Джаз'},styleLbl:'// Стиль',styleAria:'Музыкальный стиль',
+ ru:{sens:{hiphop:{rhodes:'Rhodes',strings:'Оркестровый',organ:'Орган и соул',vibes:'Вибрафон и 808'},edm:{synth:'Синтезатор',synthwave:'Синтвейв',ambient:'Эмбиент',orchestral:'Оркестровый транс'},jazz:{trio:'Трио',vibes:'Квартет с вибрафоном',organ:'Органное трио',bigband:'Биг-бэнд'}},styles:{classic:'Классика',hiphop:'Хип-хоп',edm:'Электро 128',jazz:'Джаз'},styleLbl:'// Стиль',styleAria:'Музыкальный стиль',
   subs:{hiphop:{lofi:'Lo-fi',soul:'Соул',jazzhop:'Джаз-хоп',boombap:'Бум-бэп'},edm:{deep:'Дип-хаус',trance:'Транс',techno:'Техно',melodic:'Мелодик-хаус'},jazz:{ballad:'Баллада',waltz:'Джаз-вальс',swing:'Свинг',modal:'Модальный джаз'}},
   secHip:['Вступление','Куплет','Брейк','Второй куплет','Аутро'],secEdm:['Вступление','Нарастание','Дроп','Брейк','Финальный дроп'],secJazz:['Вступление','Тема','Импровизация','Тема','Кода'],
   title:'Космическая мелодия',desc:'Любая дата превращается в минуту оркестровой музыки по положению Солнца и фазе Луны.',
@@ -824,7 +847,7 @@ const I18N={
   chars:{nocturne:'Ноктюрн',scherzo:'Скерцо',march:'Марш',elegy:'Элегия'},elements:{fire:'Огонь',earth:'Земля',air:'Воздух',water:'Вода'},
   ensembles:{orchestra:'Оркестр',stardust:'Звёздная пыль',brass:'Медь',chamber:'Камерный'},
   sections:['Большой взрыв','Рекомбинация и первые звёзды','Первые галактики','Пик звездообразования','Рождение Солнца']},
- en:{styles:{classic:'Classical',hiphop:'Hip-hop',edm:'Electro 128',jazz:'Jazz'},styleLbl:'// Style',styleAria:'Music style',
+ en:{sens:{hiphop:{rhodes:'Rhodes',strings:'Orchestral',organ:'Organ & soul',vibes:'Vibes & 808'},edm:{synth:'Synth',synthwave:'Synthwave',ambient:'Ambient',orchestral:'Orchestral trance'},jazz:{trio:'Trio',vibes:'Vibes quartet',organ:'Organ trio',bigband:'Big band'}},styles:{classic:'Classical',hiphop:'Hip-hop',edm:'Electro 128',jazz:'Jazz'},styleLbl:'// Style',styleAria:'Music style',
   subs:{hiphop:{lofi:'Lo-fi',soul:'Soul',jazzhop:'Jazz-hop',boombap:'Boom bap'},edm:{deep:'Deep house',trance:'Trance',techno:'Techno',melodic:'Melodic house'},jazz:{ballad:'Ballad',waltz:'Jazz waltz',swing:'Swing',modal:'Modal jazz'}},
   secHip:['Intro','Verse','Break','Second verse','Outro'],secEdm:['Intro','Build-up','Drop','Break','Final drop'],secJazz:['Intro','Head','Solo','Head out','Coda'],
   title:'Cosmic Melody',desc:'Any date becomes a minute of orchestral music, shaped by the position of the Sun and the phase of the Moon.',
@@ -838,7 +861,7 @@ const I18N={
   chars:{nocturne:'Nocturne',scherzo:'Scherzo',march:'March',elegy:'Elegy'},elements:{fire:'Fire',earth:'Earth',air:'Air',water:'Water'},
   ensembles:{orchestra:'Orchestra',stardust:'Stardust',brass:'Brass',chamber:'Chamber'},
   sections:['Big Bang','Recombination & first stars','First galaxies','Peak of star formation','Birth of the Sun']},
- cs:{styles:{classic:'Klasika',hiphop:'Hip-hop',edm:'Elektro 128',jazz:'Jazz'},styleLbl:'// Styl',styleAria:'Hudební styl',
+ cs:{sens:{hiphop:{rhodes:'Rhodes',strings:'Orchestrální',organ:'Varhany a soul',vibes:'Vibrafon a 808'},edm:{synth:'Syntezátor',synthwave:'Synthwave',ambient:'Ambient',orchestral:'Orchestrální trance'},jazz:{trio:'Trio',vibes:'Kvartet s vibrafonem',organ:'Varhanní trio',bigband:'Big band'}},styles:{classic:'Klasika',hiphop:'Hip-hop',edm:'Elektro 128',jazz:'Jazz'},styleLbl:'// Styl',styleAria:'Hudební styl',
   subs:{hiphop:{lofi:'Lo-fi',soul:'Soul',jazzhop:'Jazz-hop',boombap:'Boom bap'},edm:{deep:'Deep house',trance:'Trance',techno:'Techno',melodic:'Melodic house'},jazz:{ballad:'Balada',waltz:'Jazzový valčík',swing:'Swing',modal:'Modální jazz'}},
   secHip:['Intro','Sloka','Break','Druhá sloka','Outro'],secEdm:['Intro','Gradace','Drop','Break','Finální drop'],secJazz:['Intro','Téma','Improvizace','Téma','Coda'],
   title:'Kosmická melodie',desc:'Každé datum se promění v minutu orchestrální hudby podle polohy Slunce a fáze Měsíce.',

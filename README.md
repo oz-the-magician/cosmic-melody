@@ -39,6 +39,14 @@ Hip-hop: Rhodes seventh and ninth chords, swung drums, sub bass, the motif chopp
 
 Drums, synths, Rhodes and vibraphone are synthesized with the Web Audio API — no extra files, no licences. Piano and double bass come from the same CC0 VSCO samples. Notes are scheduled just in time, so playback stays light.
 
+Each style has its own four ensembles; the rhythm section stays in the genre, the colours change:
+
+| Style | Ensembles |
+|---|---|
+| Hip-hop | Rhodes · Orchestral (strings, harp) · Organ & soul · Vibes & 808 |
+| Electro 128 | Synth · Synthwave · Ambient (no hard drums) · Orchestral trance (strings, horn) |
+| Jazz | Trio · Vibes quartet · Organ trio · Big band (horn, trombone) |
+
 ### Four ensembles (Classical)
 
 | Ensemble | Lead | Pad | Bass | Sparkle | Accents |
