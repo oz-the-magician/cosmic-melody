@@ -79,7 +79,14 @@ button.orb.on{color:var(--warn);border-color:rgba(255,204,0,.6);text-shadow:0 0 
 .tag.l{right:calc(50% + min(23svh,45vw) + 24px);top:52%;text-align:right}
 .tag.r{left:calc(50% + min(23svh,45vw) + 24px);top:48%}
 .tag.r2{left:calc(50% + min(20svh,41vw) + 24px);top:70%}
-.controls{position:absolute;left:0;right:0;bottom:3.5svh;display:flex;justify-content:center;align-items:center;gap:14px;flex-wrap:wrap;z-index:4;padding:0 16px}
+.controls{position:absolute;left:0;right:0;bottom:4.5svh;display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;z-index:4;padding:0 16px}
+.controls .arr{font-style:normal;color:rgba(0,229,255,.35);font-size:13px}
+.controls select{appearance:none;-webkit-appearance:none;padding:9px 30px 9px 12px;border:1px solid var(--line);background:var(--surf) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%2300e5ff' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat right 11px center;color:var(--cyan);font:600 11px 'Exo 2',sans-serif;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;color-scheme:dark}
+.controls select:hover,.controls select:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 12px rgba(0,229,255,.3)}
+.controls select option{background:#001018;color:var(--cyan)}
+.icon-btn{display:grid;place-items:center;width:36px;height:36px;margin-left:-6px;border:1px solid var(--line);border-left:0;background:var(--surf);color:var(--cyan);cursor:pointer}.icon-btn:hover{background:rgba(0,229,255,.12)}
+.controls .hud-btn{padding:10px 18px;font-size:10.5px}.hud-btn.dl{display:inline-flex;align-items:center;gap:8px}
+.stage,.tags,h1,.chip{transition:opacity 1s}body.void .stage,body.void .tags{opacity:.08}
 .field{display:flex;align-items:center;gap:10px;font-size:10px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase}
 input[type=datetime-local]{padding:9px 12px;border:1px solid var(--line);background:var(--surf);color:var(--cyan);font:500 14px 'JetBrains Mono',monospace;color-scheme:dark}
 input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 12px rgba(0,229,255,.3)}
@@ -89,21 +96,17 @@ input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 12px rgba(0,229
 .hud-btn.solid{background:var(--cyan);color:#001018}.hud-btn.solid:hover{background:#5ff0ff}
 .hud-btn[aria-disabled=true]{opacity:.4;pointer-events:none}
 :focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
-.ens-row{position:absolute;left:0;right:0;bottom:calc(3.5svh + 60px);display:flex;justify-content:center;align-items:center;gap:12px;z-index:4;flex-wrap:wrap;padding:0 16px}
-.ens-row[hidden]{display:none}
 .pmodal{position:fixed;inset:0;z-index:20;background:rgba(0,4,10,.84);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:20px}
 .pmodal[hidden]{display:none}.pbox{display:flex;gap:28px;align-items:center;justify-content:center;flex-wrap:wrap;max-height:100%}
 #posterCanvas{height:min(86vh,1100px);width:auto;max-width:88vw;box-shadow:0 30px 90px rgba(0,0,0,.7);border:1px solid rgba(0,229,255,.25)}
 .pside{display:flex;flex-direction:column;gap:12px;min-width:180px}.p-status{margin:0;font-size:12px;color:var(--dim);min-height:1.4em}
 @media (max-width:760px){#posterCanvas{height:auto;width:86vw}.pside{flex-direction:row;flex-wrap:wrap;justify-content:center}}
-.hero:has(.ens-row[hidden]) .style-row{bottom:calc(3.5svh + 60px)}
-.style-row{position:absolute;left:0;right:0;bottom:calc(3.5svh + 104px);display:flex;justify-content:center;align-items:center;gap:12px;z-index:4;flex-wrap:wrap;padding:0 16px}
 #styles{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
 #styles .hud-btn{padding:9px 18px;font-size:10.5px}
 .ens-label{font-size:10px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase}
 #ensembles{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
 #ensembles .hud-btn{padding:9px 18px;font-size:10.5px}
-.status{position:absolute;left:0;right:0;bottom:calc(3.5svh + 152px);text-align:center;font-size:11px;letter-spacing:.15em;color:var(--warn);z-index:4}
+.status{position:absolute;left:0;right:0;bottom:calc(4.5svh + 56px);text-align:center;font-size:11px;letter-spacing:.15em;color:var(--warn);z-index:4}
 
 /* эпохи: шкала прогресса */
 .more{position:relative;z-index:2;max-width:760px;margin:0 auto;padding:12svh 20px 72px}
@@ -134,7 +137,7 @@ footer a{color:var(--cyan)}
   .tag{position:static;text-align:left!important;padding:8px 10px}.tag b{font-size:15px}
   .controls{padding:0}
   .ens-row,.style-row{position:static;padding:0}
-  .field span{display:none}
+  .controls .arr{display:none}.field label{display:none}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.glitchbar{display:none}}
 </style>
@@ -154,14 +157,16 @@ footer a{color:var(--cyan)}
   </div>
   <div class="tags" id="reading"></div>
   <div id="status" class="status" aria-live="polite"></div>
-  <div class="style-row" role="group" data-i18n-aria="styleAria" aria-label="Стиль"><span class="ens-label" data-i18n="styleLbl">// Стиль</span><div id="styles"></div></div>
-  <div class="ens-row" role="group" data-i18n-aria="ensAria" aria-label="Группа инструментов"><span class="ens-label" data-i18n="ens">// Состав</span><div id="ensembles"></div></div>
   <div class="controls">
-    <label class="field" for="dateInput"><span data-i18n="date">// Дата</span><input id="dateInput" data-i18n-aria="dateAria" type="datetime-local" step="60"></label>
-    <button id="loopBtn" class="hud-btn" data-i18n="loop" aria-pressed="false">↻ Loop</button>
-    <button id="randomBtn" class="hud-btn" data-i18n="random">Случайная дата</button>
-    <a id="downloadMidi" class="hud-btn" aria-disabled="true" href="#" download>MIDI</a>
+    <div class="field"><label for="dateInput" data-i18n="date">// Дата</label><input id="dateInput" data-i18n-aria="dateAria" type="datetime-local" step="60"><button id="randomBtn" class="icon-btn" data-i18n-aria="random" aria-label="Случайная дата"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg></button></div>
+    <i class="arr" aria-hidden="true">→</i>
+    <div class="field"><label for="styleSel" data-i18n="styleLbl">// Стиль</label><select id="styleSel"></select></div>
+    <i class="arr" aria-hidden="true">→</i>
+    <div class="field"><label for="ensSel" data-i18n="ens">// Состав</label><select id="ensSel"></select></div>
+    <i class="arr" aria-hidden="true">→</i>
+    <button id="loopBtn" class="hud-btn" aria-pressed="false"><span data-i18n="loop">↻ Loop</span></button>
     <button id="posterBtn" class="hud-btn" data-i18n="posterBtn">Постер</button>
+    <a id="downloadMidi" class="hud-btn dl" aria-disabled="true" href="#" download><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M6 10l6 6 6-6M4 21h16"/></svg><span>MIDI</span></a>
   </div>
 </section>
 <section class="more">
@@ -376,18 +381,18 @@ function setLoop(on){LOOP=on;try{localStorage.setItem('cm-loop',on?'1':'0')}catc
   if(!playing||!PUMP)return;if(on){const g=bus.master.gain,now=audioCtx.currentTime;g.cancelScheduledValues(now);g.setValueAtTime(PUMP.MG,now);pump()}else scheduleFade()}
 async function play(){try{if(!currentArrangement)generate();const ens=currentArrangement.style==='classic'?ensemble:'orchestra';for(const x of new Set([ens,...currentArrangement.events.filter(e=>!e.syn&&e.ens).map(e=>e.ens)]))await loadSamples(x);stop();const arr=currentArrangement,r=rng(Math.floor(arr.sky.jd*1000));
   const MG=.78*(STYLE_LEVEL[arr.style]||1);bus.master.gain.cancelScheduledValues(0);bus.master.gain.setValueAtTime(MG,audioCtx.currentTime);
-  startAt=audioCtx.currentTime+.2;playedEvents=arr.style==='classic'?applyProfile(fitToEnsemble(arr.events,ens),'classic',ens,arr):arr.events;
+  startAt=audioCtx.currentTime+INTRO;playedEvents=arr.style==='classic'?applyProfile(fitToEnsemble(arr.events,ens),'classic',ens,arr):arr.events;
   // планировщик: ноты создаются за ~2.5 с до звучания; в режиме Loop очередь начинается заново ровно через 60 с
-  playing=true;PUMP={q:playedEvents.slice().sort((a,b)=>a.start-b.start),qi:0,base:startAt,r,ens,arr,MG};scheduleCycle(PUMP);pump();if(!LOOP)scheduleFade();cosmosInit(Math.floor(arr.sky.jd*31)%100000);
+  playing=true;PUMP={q:playedEvents.slice().sort((a,b)=>a.start-b.start),qi:0,base:startAt,r,ens,arr,MG};scheduleCycle(PUMP);pump();if(!LOOP)scheduleFade();cosmosInit(Math.floor(arr.sky.jd*31)%100000);COS.loop=false;
   document.body.classList.add('playing');gatherStars(1);playing=true;els.playBtn.textContent=t('stop');els.playBtn.classList.add('on');els.playhead.style.opacity=1;tick()}catch(e){console.error(e);setStatus(e.message||t('playFail'))}}
 
 /* ================= переключатель групп ================= */
-function renderEnsembles(){const box=document.getElementById('ensembles');if(!box)return;const cls=style==='classic',cur=cls?ensemble:curSE(style);
+function renderEnsembles(){const sel=document.getElementById('ensSel');if(!sel)return;const cls=style==='classic',cur=cls?ensemble:curSE(style);
   const items=cls?Object.entries(ENS_CFG).map(([k,c])=>[k,c.label]):STYLE_ENS[style].map(k=>[k,I18N[LANG].sens[style][k]]);
-  box.innerHTML=items.map(([k,l])=>`<button class="hud-btn ens${k===cur?' solid':''}" data-ens="${k}" aria-pressed="${k===cur}">${escapeHtml(l)}</button>`).join('');
-  box.querySelectorAll('button').forEach(b=>b.addEventListener('click',async()=>{const k=b.dataset.ens;if(k===cur)return;const was=playing;
-    if(cls){ensemble=k;try{localStorage.setItem('cm-ens',k)}catch(e){}renderEnsembles();if(currentArrangement){const dt=parseDatetimeLocal(els.dateInput.value);updateMidi(dt)}if(was)await play();return}
-    styleEns[style]=k;try{localStorage.setItem('cm-sens',JSON.stringify(styleEns))}catch(e){}renderEnsembles();generate();if(was)await play()}))}
+  sel.innerHTML=items.map(([k,l])=>`<option value="${k}"${k===cur?' selected':''}>${escapeHtml(l)}</option>`).join('');
+  sel.onchange=async()=>{const k=sel.value,was=playing;
+    if(cls){ensemble=k;try{localStorage.setItem('cm-ens',k)}catch(e){}if(currentArrangement){const dt=parseDatetimeLocal(els.dateInput.value);updateMidi(dt)}if(was)await play();return}
+    styleEns[style]=k;try{localStorage.setItem('cm-sens',JSON.stringify(styleEns))}catch(e){}generate();if(was)await play()}}
 function updateMidi(dt){const mb=generateMidiBlob(currentArrangement);if(midiUrl)URL.revokeObjectURL(midiUrl);midiUrl=URL.createObjectURL(mb);els.downloadMidi.href=midiUrl;els.downloadMidi.download=fileBase(dt)+'-'+(style==='classic'?ensemble:style+'-'+curSE(style))+'.mid';els.downloadMidi.setAttribute('aria-disabled','false')}
 
 function generate(){try{if(playing)stop();gatherStars(0);lastT=-1;const dt=parseDatetimeLocal(els.dateInput.value);currentArrangement=buildPiece(dt);render(currentArrangement);updateMidi(dt);setStatus('')}catch(e){console.error(e);setStatus(e.message||t('dateFail'))}}
@@ -402,8 +407,8 @@ function makeBus(){const ctx=audioCtx,master=ctx.createGain(),comp=ctx.createDyn
   const voices={};for(const[name,v]of Object.entries(VOICES)){const pan=ctx.createStereoPanner?ctx.createStereoPanner():null,dry=ctx.createGain(),send=ctx.createGain();send.gain.value=v.send;
     if(pan){pan.pan.value=v.pan;dry.connect(pan).connect(master)}else dry.connect(master);dry.connect(send).connect(verbIn);voices[name]=dry}
   const analyser=ctx.createAnalyser();analyser.fftSize=1024;comp.connect(analyser);return{master,voices,analyser,lofi,noise:noiseBuf(ctx)}}
-function stop(){clearTimeout(schedTimer);PUMP=null;document.body.classList.remove('playing');COS.ps=null;active.forEach(n=>{try{n.stop()}catch(e){}});active=[];resetBus();playing=false;cancelAnimationFrame(raf);els.playBtn.textContent=t('listen');els.playBtn.classList.remove('on');els.playhead.style.opacity=0;els.track.querySelectorAll('.seg').forEach(n=>n.classList.remove('now'))}
-function tick(){if(LOOP&&PUMP&&PUMP.base>startAt&&audioCtx.currentTime>=PUMP.base){startAt=PUMP.base;COS.hud=-1}const t=audioCtx.currentTime-startAt;if(t>TRACK_SECONDS+4.6){stop();drawChart(currentArrangement,TRACK_SECONDS);return}
+function stop(){clearTimeout(schedTimer);PUMP=null;document.body.classList.remove('playing','void');const hr=document.querySelector('.hero');if(hr)hr.style.transform='';COS.ps=null;active.forEach(n=>{try{n.stop()}catch(e){}});active=[];resetBus();playing=false;cancelAnimationFrame(raf);els.playBtn.textContent=t('listen');els.playBtn.classList.remove('on');els.playhead.style.opacity=0;els.track.querySelectorAll('.seg').forEach(n=>n.classList.remove('now'))}
+function tick(){if(LOOP&&PUMP&&PUMP.base>startAt&&audioCtx.currentTime>=PUMP.base){startAt=PUMP.base;COS.hud=-1;COS.loop=true}const t=audioCtx.currentTime-startAt;if(t>TRACK_SECONDS+4.6){stop();drawChart(currentArrangement,TRACK_SECONDS);return}
   const tt=clamp(t,0,TRACK_SECONDS);drawChart(currentArrangement,tt);cosmosHud(t);
   const segs=els.track.querySelectorAll('.seg');currentArrangement.scenes.forEach((sc,i)=>segs[i]&&(segs[i].classList.toggle('now',tt>=sc.start&&tt<sc.end),segs[i].querySelector('.bar2 i').style.width=(clamp((tt-sc.start)/(sc.end-sc.start),0,1)*100)+'%'));
   lastT=tt;els.playhead.style.left=(tt/TRACK_SECONDS*100)+'%';raf=requestAnimationFrame(tick)}
@@ -522,11 +527,13 @@ function skyFrame(now){const c=SKY.c,dpr=Math.min(2,window.devicePixelRatio||1),
   const rc=els.chart.getBoundingClientRect(),cx=rc.left+rc.width/2,cy=rc.top+rc.height/2,R=rc.width*.4,t=reduceMotion?0:now/1000,amb=ambientLevel();
   depthBack(g,W,H,t,cx,cy,R,amb);ambientUI(amb);if(COS.ps&&audioCtx)cosmosFrame(g,W,H,cx,cy,R,audioCtx.currentTime-startAt);
   g.globalCompositeOperation='lighter';if(!reduceMotion)flyFrame(g,W,H,dt);
+  const CT=COS.ps&&audioCtx?audioCtx.currentTime-startAt:99,col=CT<0?ease(clamp((CT+INTRO)/1.5,0,1)):CT<1.4?1-ease(clamp(CT/1.4,0,1)):0,starA=CT>=0&&CT<99&&!COS.loop?.15+.85*clamp((CT/TRACK_SECONDS-.2)/.14,0,1)+(CT<1.4?.85*(1-CT/1.4):0):1;
+  {const sh=shakeAmt(CT),hero=document.querySelector('.hero');if(sh>0){const dx=(Math.random()-.5)*2*sh,dy=(Math.random()-.5)*2*sh;g.translate(dx,dy);hero.style.transform=`translate(${dx}px,${dy}px)`}else if(hero.style.transform)hero.style.transform=''}
   for(const s of SKY.ps){const q=ease(clamp(SKY.G*1.6-s.delay,0,1)),x0=s.sx*W-SKY.mx*40*s.depth,y0=s.sy*H-SKY.my*40*s.depth,x1=cx+Math.cos(s.wa)*s.wd*R,y1=cy+Math.sin(s.wa)*s.wd*R;
-    const x=x0+(x1-x0)*q,y=y0+(y1-y0)*q,tw=reduceMotion?1:.65+.35*Math.sin(t*s.ts+s.tw),z=s.size*(s.big?10:6)*(1-.25*q);
-    g.globalAlpha=s.a*tw;g.drawImage(s.big?SPR.bright:SPR.star,x-z/2,y-z/2,z,z);
+    const xa=x0+(x1-x0)*q,ya=y0+(y1-y0)*q,cc=col*(1-s.delay*.15),x=xa+(cx-xa)*cc,y=ya+(cy-ya)*cc,tw=reduceMotion?1:.65+.35*Math.sin(t*s.ts+s.tw),z=s.size*(s.big?10:6)*(1-.25*q);
+    g.globalAlpha=clamp(s.a*tw*starA,0,1);g.drawImage(s.big?SPR.bright:SPR.star,x-z/2,y-z/2,z,z);
     if(q>0&&q<1&&!reduceMotion){g.globalAlpha=.3*s.a;g.strokeStyle=s.col;g.lineWidth=.6;g.beginPath();g.moveTo(x,y);g.lineTo(x-(x1-x0)*.06,y-(y1-y0)*.06);g.stroke()}}
-  g.globalAlpha=1;g.globalCompositeOperation='source-over';depthFront(g,W,H,t,dt,amb);
+  g.globalAlpha=1;g.globalCompositeOperation='source-over';if(!(COS.ps&&audioCtx&&voidLevel(audioCtx.currentTime-startAt)>.5&&!COS.loop))depthFront(g,W,H,t,dt,amb);g.setTransform(1,0,0,1,0,0);
   if(currentArrangement&&!playing&&!reduceMotion)drawChart(currentArrangement,lastT);
   requestAnimationFrame(skyFrame)}
 /* ---------- глубина и свет ----------
@@ -895,22 +902,40 @@ function makeCMB(){const N=256,c=document.createElement('canvas');c.width=c.heig
   for(let y=0;y<N;y++)for(let x=0;x<N;x++){const u=x/N,v=y/N,dx=u-.5,dy=v-.5,fall=Math.max(0,1-Math.sqrt(dx*dx+dy*dy)*1.9),s=n(u*3,v*3)*.6+n2(u*8,v*8)*.4,i=(y*N+x)*4;
     img.data[i]=255;img.data[i+1]=Math.round(90+120*s);img.data[i+2]=Math.round(40+60*s*s);img.data[i+3]=Math.round(clamp(fall*(.25+s*s)*255,0,255))}
   g.putImageData(img,0,0);return c}
-function makeGalaxy(seed,hue){const N=160,c=document.createElement('canvas');c.width=c.height=N;const g=c.getContext('2d'),r=rng(seed);g.globalCompositeOperation='lighter';
-  const core=g.createRadialGradient(N/2,N/2,0,N/2,N/2,N*.2);core.addColorStop(0,'rgba(255,240,215,.95)');core.addColorStop(1,'rgba(255,200,150,0)');g.fillStyle=core;g.fillRect(0,0,N,N);
-  for(let i=0;i<1100;i++){const arm=i%2,t=Math.pow(r(),.7)*3.2,a=t*1.7+arm*Math.PI+(r()-.5)*.6,rad=N*.05+t*N*.125;
-    g.fillStyle=`hsla(${hue+r()*40},85%,${68+r()*25}%,${.08+.3*r()})`;g.beginPath();g.arc(N/2+Math.cos(a)*rad,N/2+Math.sin(a)*rad,.5+r()*1.7,0,7);g.fill()}return c}
+function makeGalaxy(seed,kind){const N=320,c=document.createElement('canvas');c.width=c.height=N;const g=c.getContext('2d'),r=rng(seed),C=N/2,gauss=()=>(r()+r()+r()-1.5)/1.5;
+  if(kind==='ell'){const gr=g.createRadialGradient(C,C,0,C,C,C*.8);gr.addColorStop(0,'rgba(255,236,205,.85)');gr.addColorStop(.18,'rgba(255,214,170,.35)');gr.addColorStop(.5,'rgba(230,180,140,.08)');gr.addColorStop(1,'rgba(200,150,120,0)');g.fillStyle=gr;g.fillRect(0,0,N,N);return c}
+  const arms=r()<.6?2:3,wind=1.3+r()*.8,arm=(t,k)=>t*wind*Math.PI+k*2*Math.PI/arms;
+  // 1) рассеянный свет рукавов, размыт
+  const L=document.createElement('canvas');L.width=L.height=N;const l=L.getContext('2d');l.globalCompositeOperation='lighter';
+  for(let i=0;i<2600;i++){const k=i%arms,t=Math.pow(r(),.8),a=arm(t,k)+gauss()*.35,rad=N*(.04+t*.42)*(1+gauss()*.06);l.fillStyle=`rgba(${150+r()*60},${180+r()*50},255,.05)`;l.beginPath();l.arc(C+Math.cos(a)*rad,C+Math.sin(a)*rad,3+r()*6,0,7);l.fill()}
+  g.filter='blur(5px)';g.globalCompositeOperation='lighter';g.drawImage(L,0,0);g.filter='none';
+  // 2) пылевые прожилки по внутренней кромке рукавов
+  g.globalCompositeOperation='destination-out';for(let i=0;i<900;i++){const k=i%arms,t=.12+Math.pow(r(),.9)*.8,a=arm(t,k)-.18+gauss()*.08,rad=N*(.04+t*.42);g.fillStyle='rgba(0,0,0,.18)';g.beginPath();g.arc(C+Math.cos(a)*rad,C+Math.sin(a)*rad,1.5+r()*3,0,7);g.fill()}
+  // 3) отдельные звёзды и розовые узлы звездообразования
+  g.globalCompositeOperation='lighter';for(let i=0;i<1800;i++){const k=i%arms,t=Math.pow(r(),.75),a=arm(t,k)+gauss()*.28,rad=N*(.04+t*.43);g.fillStyle=`rgba(225,235,255,${.15+.5*r()})`;g.fillRect(C+Math.cos(a)*rad,C+Math.sin(a)*rad,.8,.8)}
+  for(let i=0;i<40;i++){const k=i%arms,t=.25+r()*.6,a=arm(t,k)+gauss()*.12,rad=N*(.04+t*.42),x=C+Math.cos(a)*rad,y=C+Math.sin(a)*rad,gr=g.createRadialGradient(x,y,0,x,y,3+r()*3);gr.addColorStop(0,'rgba(255,140,190,.55)');gr.addColorStop(1,'rgba(255,100,160,0)');g.fillStyle=gr;g.fillRect(x-7,y-7,14,14)}
+  // 4) тёплое ядро-балдж
+  const b=g.createRadialGradient(C,C,0,C,C,N*.16);b.addColorStop(0,'rgba(255,246,225,.95)');b.addColorStop(.3,'rgba(255,215,160,.45)');b.addColorStop(1,'rgba(255,190,130,0)');g.fillStyle=b;g.fillRect(0,0,N,N);
+  return c}
 let CMB=null;
 function cosmosInit(seed){CMB=CMB||makeCMB();const r=rng(seed),W=window.innerWidth,H=window.innerHeight,rc=els.chart.getBoundingClientRect(),cx=rc.left+rc.width/2,cy=rc.top+rc.height/2,R=rc.width*.4;
   const spot=minD=>{for(let k=0;k<40;k++){const x=r(),y=r();if(Math.hypot(x*W-cx,y*H-cy)>minD*R)return{x,y}}return{x:r(),y:r()}};
   const stars=[];for(let i=0;i<110;i++){const p=spot(1.05);stars.push({...p,b:i<60?.24+r()*.12:.5+r()*.11,s:.5+r()*1.2,c:r()<.7?'#bfe8ff':'#fff2d0'})}
-  const gals=[];for(let i=0;i<8;i++){const p=spot(1.6);gals.push({...p,b:.36+r()*.1,sz:.25+r()*.35,rot:r()*6,spd:(r()<.5?-1:1)*(.05+r()*.08),tilt:.35+r()*.5,spr:makeGalaxy(seed+i,r()<.5?200:30+r()*20)})}
+  const gals=[];for(let i=0;i<9;i++){const p=spot(1.7),near=i<2;gals.push({...p,b:.36+r()*.12,sz:near?.32+r()*.12:.08+r()*.12,rot:r()*6,spd:(r()<.5?-1:1)*(.006+r()*.01),tilt:.25+r()*.55,a:near?.85:.45+r()*.3,spr:makeGalaxy(seed+i,i%4===3?'ell':'spiral')})}
   const neb=[0,1,2].map(i=>({...gals[i],c:makeVolume(seed+50+i,[235,70,150])}));
   const cities=[];for(let i=0;i<14;i++)cities.push({a:r()*Math.PI*2,y:(r()-.5)*1.4});
   COS.ps={stars,gals,neb,cities};COS.hud=-1}
-function cosmosFrame(g,W,H,cx,cy,R,T){if(!COS.ps)return;const x=T/TRACK_SECONDS,fade=x>1?clamp(1-(T-TRACK_SECONDS)/4,0,1):1;if(fade<=0||x<0)return;
+const INTRO=3;// 1.5 с звёзды стягиваются в точку + 1.5 с тишины и дрожи, затем взрыв
+function voidLevel(T){const x=T/TRACK_SECONDS;if(T<0)return clamp((T+INTRO)/1.2,0,1);if(x>1)return 0;const k=clamp((x-.2)/(.42-.2),0,1);return 1-k*k*(3-2*k)}
+function shakeAmt(T){if(T<-1.5||T>1.2)return 0;return T<0?(T+1.5)/1.5*5:9*Math.exp(-T*4)}
+function cosmosFrame(g,W,H,cx,cy,R,T){if(!COS.ps)return;const x=T/TRACK_SECONDS,fade=x>1?clamp(1-(T-TRACK_SECONDS)/4,0,1):1;
+  const vd=COS.loop?0:voidLevel(T);if(vd>0){g.globalCompositeOperation='source-over';g.globalAlpha=vd*(T<0?1:.96);g.fillStyle='#000';g.fillRect(0,0,W,H);g.globalAlpha=1}
+  if(T<0){// сингулярность: крошечная точка, разгорается перед взрывом
+    const k=clamp((T+1.6)/1.6,0,1),z=4+k*k*30;g.globalCompositeOperation='lighter';g.globalAlpha=.5+.5*k;g.drawImage(SPR.bright,cx-z/2,cy-z/2,z,z);g.globalAlpha=1;g.globalCompositeOperation='source-over';return}
+  if(fade<=0)return;
   const sm=(a,b,v=x)=>{const k=clamp((v-a)/(b-a),0,1);return k*k*(3-2*k)},win=(a,b,c,d)=>sm(a,b)*(1-sm(c,d)),tm=reduceMotion?0:performance.now()/1000,P=COS.ps,M=Math.max(W,H);
   // тёмные века: небо гаснет
-  const dk=win(.08,.12,.22,.28)*.72;if(dk>0){g.globalCompositeOperation='source-over';g.globalAlpha=dk*fade;g.fillStyle='#000';g.fillRect(0,0,W,H)}
+  
   g.globalCompositeOperation='lighter';
   // Большой взрыв: вспышка и ударная волна
   if(x<.1){const p=x/.1,rad=R*.2+p*M*1.1,gr=g.createRadialGradient(cx,cy,0,cx,cy,rad);gr.addColorStop(0,`rgba(255,255,255,${(1-p)*.95})`);gr.addColorStop(.3,`rgba(255,230,190,${(1-p)*.6})`);gr.addColorStop(1,'rgba(255,160,90,0)');
@@ -923,9 +948,9 @@ function cosmosFrame(g,W,H,cx,cy,R,T){if(!COS.ps)return;const x=T/TRACK_SECONDS,
     g.globalAlpha=clamp((.35+.65*fl)*later*fade,0,1);g.drawImage(SPR.bright,s.x*W-z/2,s.y*H-z/2,z,z)});
   // галактики: проявляются и медленно вращаются
   P.gals.forEach(q=>{const a=sm(q.b,q.b+.07);if(a<=0)return;const z=q.sz*R*(.6+.4*sm(q.b,q.b+.12))*(1+.25*win(.48,.52,.6,.66));
-    g.save();g.translate(q.x*W,q.y*H);g.scale(1,q.tilt);g.rotate(q.rot+tm*q.spd);g.globalAlpha=a*.8*(1-.4*sm(.62,.72))*fade;g.drawImage(q.spr,-z,-z,2*z,2*z);g.restore()});
+    g.save();g.translate(q.x*W,q.y*H);g.rotate(q.rot*.3);g.scale(1,q.tilt);g.rotate(q.rot+tm*q.spd);g.globalAlpha=a*q.a*(1-.35*sm(.62,.72))*fade;g.drawImage(q.spr,-z,-z,2*z,2*z);g.restore()});
   // пик звездообразования: розовые облака водорода вокруг галактик
-  const pk=win(.47,.53,.61,.68);if(pk>0)P.neb.forEach(q=>{const D=R*1.6;g.globalAlpha=pk*.7*fade;g.drawImage(q.c,q.x*W-D/2,q.y*H-D/2,D,D)});
+  const pk=win(.47,.53,.61,.68);if(pk>0)P.neb.forEach(q=>{const D=R*1.6;g.globalAlpha=pk*.45*fade;g.drawImage(q.c,q.x*W-D/2,q.y*H-D/2,D,D)});
   // рождение Солнца: протопланетный диск и жёлтое свечение
   const sn=sm(.6,.66),disk=win(.6,.64,.7,.77);
   if(sn>0){const rad=R*(1.1+1.1*sn)*(1-.25*sm(.75,.85)),gr=g.createRadialGradient(cx,cy,R*.2,cx,cy,rad);gr.addColorStop(0,`rgba(255,210,110,${.55*sn})`);gr.addColorStop(1,'rgba(255,150,40,0)');g.globalAlpha=fade;g.fillStyle=gr;g.fillRect(0,0,W,H)}
@@ -943,17 +968,16 @@ function cosmosFrame(g,W,H,cx,cy,R,T){if(!COS.ps)return;const x=T/TRACK_SECONDS,
   // ваша дата: золотая волна вокруг круга
   const dd=sm(.97,1);if(dd>0){const pu=(tm*.6)%1;g.globalAlpha=dd*fade*(1-pu);g.strokeStyle='rgba(255,210,120,.9)';g.lineWidth=2;g.shadowColor='rgba(255,200,100,.9)';g.shadowBlur=12;g.beginPath();g.arc(cx,cy,R*(1.05+pu*.9),0,7);g.stroke();g.shadowBlur=0}
   g.globalAlpha=1;g.globalCompositeOperation='source-over'}
-function cosmosHud(T){const hud=document.getElementById('epochHud');if(!hud)return;const L=COS_I18N[LANG],x=clamp(T/TRACK_SECONDS,0,1),c=cosAt(x);
+function cosmosHud(T){const hud=document.getElementById('epochHud');if(!hud)return;hud.style.visibility=T<0?'hidden':'';document.body.classList.toggle('void',T<.6&&!COS.loop);const L=COS_I18N[LANG],x=clamp(T/TRACK_SECONDS,0,1),c=cosAt(x);
   if(c.i!==COS.hud){COS.hud=c.i;const k=COSMOS[c.i].k;hud.querySelector('small').textContent=String(c.i+1).padStart(2,'0')+' / '+COSMOS.length;hud.querySelector('b').textContent=L.n[k];hud.classList.remove('swap');void hud.offsetWidth;hud.classList.add('swap')}
   let txt;if(COSMOS[c.i].k==='date'){const q=parseDatetimeLocal(els.dateInput.value);txt=new Date(Date.UTC(q.year,q.month-1,q.day,12)).toLocaleDateString(LANG==='en'?'en-GB':LANG,{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'})}
   else if(x<.004)txt=L.zero;else txt=c.age!==undefined?L.after(cosFmt(c.age)):L.ago(cosFmt(c.ago));
   if(txt!==COS.txt){COS.txt=txt;hud.querySelector('span').textContent=txt}}
 
 function buildPiece(dt){const a=style==='hiphop'?buildHipHop(dt):style==='edm'?buildEdm(dt):style==='jazz'?buildJazz(dt):buildArrangement(dt);a.style=a.style||'classic';if(a.style==='classic')return a;revoice(a,a.style,curSE(a.style));a.events=applyProfile(a.events,a.style,a.ensKey,a);return a}
-function renderStyles(){const box=document.getElementById('styles');if(!box)return;const L=I18N[LANG].styles;
-  box.innerHTML=['classic','hiphop','edm','jazz'].map(k=>`<button class="hud-btn${k===style?' solid':''}" data-style="${k}" aria-pressed="${k===style}">${escapeHtml(L[k])}</button>`).join('');
-  box.querySelectorAll('button').forEach(b=>b.addEventListener('click',async()=>{const k=b.dataset.style;if(k===style)return;const was=playing;style=k;try{localStorage.setItem('cm-style',k)}catch(e){}
-    renderStyles();renderEnsembles();generate();if(was)await play()}))}
+function renderStyles(){const sel=document.getElementById('styleSel');if(!sel)return;const L=I18N[LANG].styles;
+  sel.innerHTML=['classic','hiphop','edm','jazz'].map(k=>`<option value="${k}"${k===style?' selected':''}>${escapeHtml(L[k])}</option>`).join('');
+  sel.onchange=async()=>{const k=sel.value,was=playing;style=k;try{localStorage.setItem('cm-style',k)}catch(e){}renderEnsembles();generate();if(was)await play()}}
 
 /* ================= постер: звёздная карта мелодии =================
    В центре — созвездие знака, в котором стояло Солнце (оно дало тонику), путь Солнца,
