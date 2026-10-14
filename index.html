@@ -525,9 +525,9 @@ function skyFrame(now){const c=SKY.c,dpr=Math.min(2,window.devicePixelRatio||1),
   g.setTransform(dpr,0,0,dpr,0,0);
   const dt=Math.min(.05,(now-(SKY.last||now))/1000);SKY.last=now;
   const rc=els.chart.getBoundingClientRect(),cx=rc.left+rc.width/2,cy=rc.top+rc.height/2,R=rc.width*.4,t=reduceMotion?0:now/1000,amb=ambientLevel();
-  depthBack(g,W,H,t,cx,cy,R,amb);ambientUI(amb);if(COS.ps&&audioCtx)cosmosFrame(g,W,H,cx,cy,R,audioCtx.currentTime-startAt);
-  g.globalCompositeOperation='lighter';if(!reduceMotion)flyFrame(g,W,H,dt);
-  const CT=COS.ps&&audioCtx?audioCtx.currentTime-startAt:99,col=CT<0?ease(clamp((CT+INTRO)/1.5,0,1)):CT<1.4?1-ease(clamp(CT/1.4,0,1)):0,starA=CT>=0&&CT<99&&!COS.loop?.15+.85*clamp((CT/TRACK_SECONDS-.2)/.14,0,1)+(CT<1.4?.85*(1-CT/1.4):0):1;
+  depthBack(g,W,H,t,cx,cy,R,amb);ambientUI(amb);g.globalCompositeOperation='lighter';if(!reduceMotion)flyFrame(g,W,H,dt);g.globalCompositeOperation='source-over';if(COS.ps&&audioCtx)cosmosFrame(g,W,H,cx,cy,R,audioCtx.currentTime-startAt);
+  g.globalCompositeOperation='lighter';
+  const CT=COS.ps&&audioCtx?audioCtx.currentTime-startAt:99,col=CT<0?ease(clamp((CT+INTRO)/1.5,0,1)):CT<1.4?1-ease(clamp(CT/1.4,0,1)):0,starA=CT<0?1-ease(clamp((CT+INTRO)/1.4,0,1)):CT>=0&&CT<99&&!COS.loop?.15+.85*clamp((CT/TRACK_SECONDS-.2)/.14,0,1)+(CT<1.4?.85*(1-CT/1.4):0):1;
   {const sh=shakeAmt(CT),hero=document.querySelector('.hero');if(sh>0){const dx=(Math.random()-.5)*2*sh,dy=(Math.random()-.5)*2*sh;g.translate(dx,dy);hero.style.transform=`translate(${dx}px,${dy}px)`}else if(hero.style.transform)hero.style.transform=''}
   for(const s of SKY.ps){const q=ease(clamp(SKY.G*1.6-s.delay,0,1)),x0=s.sx*W-SKY.mx*40*s.depth,y0=s.sy*H-SKY.my*40*s.depth,x1=cx+Math.cos(s.wa)*s.wd*R,y1=cy+Math.sin(s.wa)*s.wd*R;
     const xa=x0+(x1-x0)*q,ya=y0+(y1-y0)*q,cc=col*(1-s.delay*.15),x=xa+(cx-xa)*cc,y=ya+(cy-ya)*cc,tw=reduceMotion?1:.65+.35*Math.sin(t*s.ts+s.tw),z=s.size*(s.big?10:6)*(1-.25*q);
