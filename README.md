@@ -58,6 +58,12 @@ Each style has its own four ensembles; the rhythm section stays in the genre, th
 
 Each phrase is fitted into the instrument's range as a whole, so melodies keep their shape. Only the selected ensemble is downloaded.
 
+## Loop and epochs
+
+The **↻ Loop** button repeats the minute seamlessly. While the melody plays, the screen travels through cosmic history — Big Bang, recombination, dark ages, first stars, galaxies, the peak of star formation, the birth of the Sun, Earth, life, humans — and ends on the chosen date, with a live counter of cosmic time.
+
+Ensembles differ in manner as well as timbre: articulation, register, density, echoes and doublings change with each one.
+
 ## Poster
 
 The **Poster** button draws a print-ready A4 poster (2480×3508 px, 300 dpi) of the sky behind the melody: the constellation of the Sun's sign highlighted in gold, the ecliptic, the Sun at its true position and the Moon in its real phase, the date, a line on how the sky set the music, and a QR code that opens the same date, style and ensemble. Links like `?d=1987-03-21T07:15&s=jazz&e=organ` open a specific melody.
