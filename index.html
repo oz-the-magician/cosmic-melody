@@ -954,8 +954,15 @@ function cosmosFrame(g,W,H,cx,cy,R,T){if(!COS.ps)return;const x=T/TRACK_SECONDS,
   // рождение Солнца: протопланетный диск и жёлтое свечение
   const sn=sm(.6,.66),disk=win(.6,.64,.7,.77);
   if(sn>0){const rad=R*(1.1+1.1*sn)*(1-.25*sm(.75,.85)),gr=g.createRadialGradient(cx,cy,R*.2,cx,cy,rad);gr.addColorStop(0,`rgba(255,210,110,${.55*sn})`);gr.addColorStop(1,'rgba(255,150,40,0)');g.globalAlpha=fade;g.fillStyle=gr;g.fillRect(0,0,W,H)}
-  if(disk>0){g.save();g.translate(cx,cy);g.rotate(-.22);for(let i=0;i<12;i++){const k=i/11;g.strokeStyle=`rgba(255,${150+80*(1-k)},${70+60*(1-k)},${(.32-.18*k)*disk*fade})`;g.lineWidth=1+3*(1-k);g.setLineDash([3+i*2,6+i*3]);g.lineDashOffset=-tm*(30-i*1.6);
-    g.beginPath();g.ellipse(0,0,R*(1.08+1.5*k),R*(1.08+1.5*k)*.2,0,0,7);g.stroke()}g.setLineDash([]);g.restore()}
+  if(disk>0){const A=disk*fade,ca=Math.cos(-.22),sa=Math.sin(-.22);
+    // светящийся протопланетный диск: мягкое тёплое кольцо, а не пунктир
+    g.save();g.translate(cx,cy);g.rotate(-.22);g.scale(1,.2);g.globalCompositeOperation='lighter';
+    const dg=g.createRadialGradient(0,0,R*.95,0,0,R*2.8);dg.addColorStop(0,'rgba(255,235,170,0)');dg.addColorStop(.08,`rgba(255,235,170,${.55*A})`);dg.addColorStop(.25,`rgba(255,190,90,${.38*A})`);dg.addColorStop(.6,`rgba(240,120,50,${.16*A})`);dg.addColorStop(1,'rgba(200,80,30,0)');
+    g.fillStyle=dg;g.fillRect(-R*2.8,-R*2.8,R*5.6,R*5.6);
+    [[1.25,.5],[1.6,.35],[2.05,.25]].forEach(([k,a],n)=>{g.strokeStyle=`rgba(255,${215-n*25},${140-n*30},${a*A})`;g.lineWidth=R*.03*(1+n*.4);g.shadowColor='rgba(255,180,80,1)';g.shadowBlur=18;g.beginPath();g.arc(0,0,R*k,0,7);g.stroke()});g.restore();
+    // пылинки и планетезимали на орбитах, ближние ярче
+    g.globalCompositeOperation='lighter';for(let i=0;i<140;i++){const rr=R*(1.05+((i*37)%100)/100*1.7),an=i*2.399+tm*(.5/Math.sqrt(rr/R)),ox=Math.cos(an)*rr,oy=Math.sin(an)*rr*.2,px=cx+ox*ca-oy*sa,py=cy+ox*sa+oy*ca,near=(Math.sin(an)+1)/2,z=(3+5*near)*(i%9===0?2.2:1);
+      g.globalAlpha=A*(.25+.6*near);g.drawImage(SPR.gold,px-z/2,py-z/2,z,z)}g.globalAlpha=1}
   // Земля на орбите: раскалённая → голубая → живая → огни городов
   const e=sm(.69,.74);if(e>0){const a=tm*.25+1.2,ex=Math.cos(a)*R*1.75,ey=Math.sin(a)*R*.32,px=cx+ex*Math.cos(-.22)-ey*Math.sin(-.22),py=cy+ex*Math.sin(-.22)+ey*Math.cos(-.22),pr=R*.018*(.6+.4*e);
     const cool=sm(.72,.8),life=sm(.81,.87),hum=sm(.91,.95),mix=(c1,c2,k)=>c1.map((v,i)=>Math.round(v+(c2[i]-v)*k)),col=mix(mix([255,100,50],[50,130,255],cool),[60,170,120],life*.45);
