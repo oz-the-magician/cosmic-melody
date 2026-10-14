@@ -50,6 +50,13 @@ h1.glitch span{animation:glitchSpan .38s steps(1) both}
 h1{position:absolute;left:0;right:0;top:calc(64px + 5svh);margin:0;text-align:center;text-transform:uppercase;
   font:800 clamp(38px,6.6vw,108px)/.95 'Exo 2',sans-serif;letter-spacing:.04em;color:#f2fdff;text-shadow:0 0 18px rgba(0,229,255,.35)}
 h1 span{display:block;color:var(--cyan);filter:brightness(calc(1 + .5*var(--amb,0)));text-shadow:0 0 12px rgba(0,229,255,.8),0 0 40px rgba(0,229,255,.45)}
+.epoch{position:absolute;left:0;right:0;top:calc(64px + 7svh);text-align:center;opacity:0;pointer-events:none;transition:opacity .8s;z-index:4}
+.epoch small{display:block;font-size:10px;letter-spacing:.3em;color:var(--dim)}
+.epoch b{display:block;margin:.25em 0 .2em;font:700 clamp(26px,4.4vw,68px)/1 'Exo 2',sans-serif;text-transform:uppercase;letter-spacing:.05em;color:#f2fdff;text-shadow:0 0 18px rgba(0,229,255,.55)}
+.epoch span{display:block;font-size:clamp(11px,1.1vw,15px);letter-spacing:.18em;text-transform:uppercase;color:var(--cyan)}
+.epoch.swap b{animation:epIn .9s cubic-bezier(.2,.7,.2,1) both}
+@keyframes epIn{0%{opacity:0;transform:translateY(10px);filter:blur(8px)}100%{opacity:1;transform:none;filter:none}}
+body.playing .epoch{opacity:1}body.playing h1,body.playing .chip{opacity:0}h1,.chip{transition:opacity .8s}
 .chip{position:absolute;left:50%;top:calc(64px + 1.4svh);transform:translateX(-50%);font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--dim);padding:5px 14px;border:1px solid var(--line);white-space:nowrap}
 .chip i{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);margin-right:8px;vertical-align:1px}
 .stage{position:absolute;left:50%;top:55%;width:min(46svh,90vw);aspect-ratio:1;transform:translate(-50%,-50%);z-index:3}
@@ -140,6 +147,7 @@ footer a{color:var(--cyan)}
 <section class="hero">
   <div class="chip"><i></i><span data-i18n="chip">Дата → небо → музыка · 60 секунд</span></div>
   <h1>Космическая<span>мелодия</span></h1>
+  <div class="epoch" id="epochHud" aria-live="polite"><small></small><b></b><span></span></div>
   <div class="stage">
     <canvas id="chart" data-i18n-aria="chartAria" aria-label="Орбита: положение Солнца в зодиаке и созвездие мелодии" role="img"></canvas>
     <button id="playBtn" class="orb">Слушать</button>
@@ -150,6 +158,7 @@ footer a{color:var(--cyan)}
   <div class="ens-row" role="group" data-i18n-aria="ensAria" aria-label="Группа инструментов"><span class="ens-label" data-i18n="ens">// Состав</span><div id="ensembles"></div></div>
   <div class="controls">
     <label class="field" for="dateInput"><span data-i18n="date">// Дата</span><input id="dateInput" data-i18n-aria="dateAria" type="datetime-local" step="60"></label>
+    <button id="loopBtn" class="hud-btn" data-i18n="loop" aria-pressed="false">↻ Loop</button>
     <button id="randomBtn" class="hud-btn" data-i18n="random">Случайная дата</button>
     <a id="downloadMidi" class="hud-btn" aria-disabled="true" href="#" download>MIDI</a>
     <button id="posterBtn" class="hud-btn" data-i18n="posterBtn">Постер</button>
@@ -356,18 +365,21 @@ function playSample(e,when,r,ens){ens=e.ens||ens;const v=voiceCfg(ens,e.voice),s
   let out=g;if(v.wide&&!e.mono&&ctx.createStereoPanner){const p=ctx.createStereoPanner();p.pan.value=((e.midi%5)-2)*.22;g.connect(p);out=p}
   src.connect(g);out.connect(bus.voices[e.voice]);src.start(Math.max(ctx.currentTime,start));src.stop(end+.05);active.push(src)}
 let playedEvents=[],schedTimer=0;const STYLE_LEVEL={classic:1,hiphop:.62,edm:.58,jazz:.85};
+let LOOP=(()=>{try{return localStorage.getItem('cm-loop')==='1'}catch(e){return false}})(),PUMP=null;
+function scheduleCycle(P){if(P.arr.style==='edm')scheduleDuck(playedEvents,P.base);(P.arr.auto||[]).forEach(a=>{bus.lofi.frequency.setValueAtTime(a.v0,P.base+a.t0);bus.lofi.frequency.exponentialRampToValueAtTime(a.v1,P.base+a.t1)})}
+function pump(){const P=PUMP;if(!playing||!P)return;clearTimeout(schedTimer);const now=audioCtx.currentTime;
+  if(P.qi>=P.q.length&&LOOP&&now>P.base+TRACK_SECONDS-2.5){P.base=Math.max(P.base+TRACK_SECONDS,now+.05);P.qi=0;scheduleCycle(P)}
+  const horizon=now-P.base+2.5;while(P.qi<P.q.length&&P.q[P.qi].start<horizon){const e=P.q[P.qi++];e.syn?synthPlay(e,P.base):playSample(e.voice==='pad'&&!e.tight?{...e,dur:e.dur+.6}:e,P.base,P.r,P.ens)}
+  if(active.length>600)active=active.slice(-300);if(P.qi<P.q.length||LOOP)schedTimer=setTimeout(pump,250)}
+function scheduleFade(){const P=PUMP;if(!P)return;const g=bus.master.gain,now=audioCtx.currentTime,endT=P.base+TRACK_SECONDS;g.cancelScheduledValues(now);g.setValueAtTime(P.MG,Math.max(now,endT+1));g.linearRampToValueAtTime(0,Math.max(now+.1,endT+4.5))}
+function setLoop(on){LOOP=on;try{localStorage.setItem('cm-loop',on?'1':'0')}catch(e){}const b=document.getElementById('loopBtn');if(b){b.classList.toggle('solid',on);b.setAttribute('aria-pressed',on)}
+  if(!playing||!PUMP)return;if(on){const g=bus.master.gain,now=audioCtx.currentTime;g.cancelScheduledValues(now);g.setValueAtTime(PUMP.MG,now);pump()}else scheduleFade()}
 async function play(){try{if(!currentArrangement)generate();const ens=currentArrangement.style==='classic'?ensemble:'orchestra';for(const x of new Set([ens,...currentArrangement.events.filter(e=>!e.syn&&e.ens).map(e=>e.ens)]))await loadSamples(x);stop();const arr=currentArrangement,r=rng(Math.floor(arr.sky.jd*1000));
   const MG=.78*(STYLE_LEVEL[arr.style]||1);bus.master.gain.cancelScheduledValues(0);bus.master.gain.setValueAtTime(MG,audioCtx.currentTime);
-  startAt=audioCtx.currentTime+.2;playedEvents=arr.style==='classic'?fitToEnsemble(arr.events,ens):arr.events;
-  // планировщик: ноты создаются за ~2.5 с до звучания, а не все сразу
-  playing=true;const q=playedEvents.slice().sort((a,b)=>a.start-b.start);let qi=0;
-  const pump=()=>{if(!playing)return;const horizon=audioCtx.currentTime-startAt+2.5;
-    while(qi<q.length&&q[qi].start<horizon){const e=q[qi++];e.syn?synthPlay(e,startAt):playSample(e.voice==='pad'&&!e.tight?{...e,dur:e.dur+.6}:e,startAt,r,ens)}
-    if(active.length>600)active=active.slice(-300);if(qi<q.length)schedTimer=setTimeout(pump,250)};pump();
-  if(arr.style==='edm')scheduleDuck(playedEvents,startAt);
-  (arr.auto||[]).forEach(a=>{bus.lofi.frequency.setValueAtTime(a.v0,startAt+a.t0);bus.lofi.frequency.exponentialRampToValueAtTime(a.v1,startAt+a.t1)});
-  const endT=startAt+TRACK_SECONDS;bus.master.gain.setValueAtTime(MG,endT+1);bus.master.gain.linearRampToValueAtTime(0,endT+4.5);
-  gatherStars(1);playing=true;els.playBtn.textContent=t('stop');els.playBtn.classList.add('on');els.playhead.style.opacity=1;tick()}catch(e){console.error(e);setStatus(e.message||t('playFail'))}}
+  startAt=audioCtx.currentTime+.2;playedEvents=arr.style==='classic'?applyProfile(fitToEnsemble(arr.events,ens),'classic',ens,arr):arr.events;
+  // планировщик: ноты создаются за ~2.5 с до звучания; в режиме Loop очередь начинается заново ровно через 60 с
+  playing=true;PUMP={q:playedEvents.slice().sort((a,b)=>a.start-b.start),qi:0,base:startAt,r,ens,arr,MG};scheduleCycle(PUMP);pump();if(!LOOP)scheduleFade();cosmosInit(Math.floor(arr.sky.jd*31)%100000);
+  document.body.classList.add('playing');gatherStars(1);playing=true;els.playBtn.textContent=t('stop');els.playBtn.classList.add('on');els.playhead.style.opacity=1;tick()}catch(e){console.error(e);setStatus(e.message||t('playFail'))}}
 
 /* ================= переключатель групп ================= */
 function renderEnsembles(){const box=document.getElementById('ensembles');if(!box)return;const cls=style==='classic',cur=cls?ensemble:curSE(style);
@@ -390,9 +402,9 @@ function makeBus(){const ctx=audioCtx,master=ctx.createGain(),comp=ctx.createDyn
   const voices={};for(const[name,v]of Object.entries(VOICES)){const pan=ctx.createStereoPanner?ctx.createStereoPanner():null,dry=ctx.createGain(),send=ctx.createGain();send.gain.value=v.send;
     if(pan){pan.pan.value=v.pan;dry.connect(pan).connect(master)}else dry.connect(master);dry.connect(send).connect(verbIn);voices[name]=dry}
   const analyser=ctx.createAnalyser();analyser.fftSize=1024;comp.connect(analyser);return{master,voices,analyser,lofi,noise:noiseBuf(ctx)}}
-function stop(){clearTimeout(schedTimer);active.forEach(n=>{try{n.stop()}catch(e){}});active=[];resetBus();playing=false;cancelAnimationFrame(raf);els.playBtn.textContent=t('listen');els.playBtn.classList.remove('on');els.playhead.style.opacity=0;els.track.querySelectorAll('.seg').forEach(n=>n.classList.remove('now'))}
-function tick(){const t=audioCtx.currentTime-startAt;if(t>TRACK_SECONDS+4.6){stop();drawChart(currentArrangement,TRACK_SECONDS);return}
-  const tt=clamp(t,0,TRACK_SECONDS);drawChart(currentArrangement,tt);
+function stop(){clearTimeout(schedTimer);PUMP=null;document.body.classList.remove('playing');COS.ps=null;active.forEach(n=>{try{n.stop()}catch(e){}});active=[];resetBus();playing=false;cancelAnimationFrame(raf);els.playBtn.textContent=t('listen');els.playBtn.classList.remove('on');els.playhead.style.opacity=0;els.track.querySelectorAll('.seg').forEach(n=>n.classList.remove('now'))}
+function tick(){if(LOOP&&PUMP&&PUMP.base>startAt&&audioCtx.currentTime>=PUMP.base){startAt=PUMP.base;COS.hud=-1}const t=audioCtx.currentTime-startAt;if(t>TRACK_SECONDS+4.6){stop();drawChart(currentArrangement,TRACK_SECONDS);return}
+  const tt=clamp(t,0,TRACK_SECONDS);drawChart(currentArrangement,tt);cosmosHud(t);
   const segs=els.track.querySelectorAll('.seg');currentArrangement.scenes.forEach((sc,i)=>segs[i]&&(segs[i].classList.toggle('now',tt>=sc.start&&tt<sc.end),segs[i].querySelector('.bar2 i').style.width=(clamp((tt-sc.start)/(sc.end-sc.start),0,1)*100)+'%'));
   lastT=tt;els.playhead.style.left=(tt/TRACK_SECONDS*100)+'%';raf=requestAnimationFrame(tick)}
 
@@ -508,7 +520,7 @@ function skyFrame(now){const c=SKY.c,dpr=Math.min(2,window.devicePixelRatio||1),
   g.setTransform(dpr,0,0,dpr,0,0);
   const dt=Math.min(.05,(now-(SKY.last||now))/1000);SKY.last=now;
   const rc=els.chart.getBoundingClientRect(),cx=rc.left+rc.width/2,cy=rc.top+rc.height/2,R=rc.width*.4,t=reduceMotion?0:now/1000,amb=ambientLevel();
-  depthBack(g,W,H,t,cx,cy,R,amb);ambientUI(amb);
+  depthBack(g,W,H,t,cx,cy,R,amb);ambientUI(amb);if(COS.ps&&audioCtx)cosmosFrame(g,W,H,cx,cy,R,audioCtx.currentTime-startAt);
   g.globalCompositeOperation='lighter';if(!reduceMotion)flyFrame(g,W,H,dt);
   for(const s of SKY.ps){const q=ease(clamp(SKY.G*1.6-s.delay,0,1)),x0=s.sx*W-SKY.mx*40*s.depth,y0=s.sy*H-SKY.my*40*s.depth,x1=cx+Math.cos(s.wa)*s.wd*R,y1=cy+Math.sin(s.wa)*s.wd*R;
     const x=x0+(x1-x0)*q,y=y0+(y1-y0)*q,tw=reduceMotion?1:.65+.35*Math.sin(t*s.ts+s.tw),z=s.size*(s.big?10:6)*(1-.25*q);
@@ -832,7 +844,112 @@ function revoice(a,st,se){const D=e=>e.voice==='drums';a.events=a.events.flatMap
     if(se==='bigband'){if(e.voice==='pad'&&e.src==='lead')return[toSample(e,'brass','pad',{atk:.04,tight:true,rel:.25,vel:e.vel+6})];if(e.voice==='lead')return[toSample(e,'brass','lead',{tight:true,rel:.25})]}}
   return[e]});a.ensKey=se;return a}
 
-function buildPiece(dt){const a=style==='hiphop'?buildHipHop(dt):style==='edm'?buildEdm(dt):style==='jazz'?buildJazz(dt):buildArrangement(dt);a.style=a.style||'classic';return a.style==='classic'?a:revoice(a,a.style,curSE(a.style))}
+/* ================= контраст ансамблей =================
+   Ансамбль меняет не только тембр, но и манеру: артикуляцию, регистр, плотность, эхо, удвоения. */
+const PROFILES={
+ classic:{orchestra:{},
+  stardust:{art:{lead:1.7,pad:1.4,arp:1.5},echo:{lead:[.75,3,.5],arp:[1.5,2,.45]},thin:{bass:2},vel:{impact:.45,pulse:0,bass:.8}},
+  brass:{dbl:{lead:-12},art:{lead:.7,pad:.55,arp:.45},thin:{arp:2},vel:{impact:1.4,bass:1.25,pulse:1.3,pad:1.1}},
+  chamber:{art:{lead:.45,bass:.4,arp:.55},roll:{arp:[2,.25]},vel:{pad:.65,impact:0,pulse:.8}}},
+ hiphop:{rhodes:{},
+  strings:{art:{pad:1.6,bass:1.4},echo:{lead:[.75,2,.45]},thin:{'drums:hat':2},vel:{'drums:snare':1.15,'drums:snareLofi':1.15}},
+  organ:{art:{pad:.4},roll:{'drums:hat':[2,.25]},dbl:{lead:12},vel:{bass:1.15,'drums:clap':1.2}},
+  vibes:{roll:{'drums:hat':[3,1/6]},art:{bass:1.7},oct:{arp:12},vel:{pad:.7}}},
+ edm:{synth:{},
+  synthwave:{echo:{lead:[.75,3,.5]},oct:{arp:-12},thin:{'drums:hat':2},art:{bass:.6}},
+  ambient:{echo:{lead:[1.5,4,.6],arp:[1,2,.5]},art:{lead:2,pad:1.5},thin:{arp:2}},
+  orchestral:{dbl:{lead:-12},roll:{arp:[2,.25]},vel:{'drums:crash':1.35,'drums:kick':1.1}}},
+ jazz:{trio:{},
+  vibes:{oct:{arp:12},echo:{arp:[.5,1,.35]},art:{lead:.7},vel:{'drums:ride':.8}},
+  organ:{art:{bass:1.5,pad:1.5},roll:{'drums:ride':[2,1/3]},vel:{bass:1.1}},
+  bigband:{dbl:{lead:-12},art:{pad:.5},vel:{'drums:crash':1.5,'drums:snare':1.25,pad:1.2}}}};
+function applyProfile(evs,st,key,arr){const P=(PROFILES[st]||{})[key];if(!P||!Object.keys(P).length)return evs;
+  const base=60/(arr.sky.tempo||100),out=[],cnt={},put=n=>{if(n.start>=TRACK_SECONDS-.02||n.start<0)return;n.dur=Math.max(.04,Math.min(n.dur,TRACK_SECONDS-n.start));n.vel=clamp(Math.round(n.vel),1,127);out.push(n)};
+  evs.slice().sort((a,b)=>a.start-b.start).forEach(e=>{const ks=[e.voice+':'+e.syn,e.voice],get=m=>{if(m)for(const k of ks)if(m[k]!==undefined)return m[k]};
+    const spb=e.durBeat?e.dur/e.durBeat:base,v=get(P.vel);if(v===0)return;
+    const th=get(P.thin);if(th){const k=ks[0];cnt[k]=(cnt[k]||0)+1;if(cnt[k]%th===0)return}
+    const n={...e};if(v)n.vel*=v;const o=get(P.oct);if(o)n.midi=clamp(n.midi+o,0,127);const a=get(P.art);if(a)n.dur*=a;put(n);
+    const d=get(P.dbl);if(d)put({...n,midi:clamp(n.midi+d,0,127),vel:n.vel*.7});
+    const rl=get(P.roll);if(rl)for(let i=1;i<rl[0];i++)put({...n,start:n.start+i*rl[1]*spb,dur:Math.min(n.dur,rl[1]*spb),vel:n.vel*(1-.22*i)});
+    const ec=get(P.echo);if(ec)for(let i=1;i<=ec[1];i++)put({...n,start:n.start+i*ec[0]*spb,vel:n.vel*Math.pow(ec[2],i),duck:false,echo:true})});
+  return out.sort((a,b)=>a.start-b.start||a.midi-b.midi)}
+
+/* ================= эпохи: от Большого взрыва до выбранной даты ================= */
+const COSMOS=[{k:'bang',f:0,age:1},{k:'recomb',f:.07,age:3.8e5},{k:'dark',f:.15,age:5e7},{k:'stars',f:.24,age:1.8e8},{k:'gal',f:.36,age:5e8},{k:'peak',f:.5,age:3.5e9},
+  {k:'sun',f:.62,age:9.2e9},{k:'earth',f:.71,age:9.25e9},{k:'life',f:.81,age:13.26e9},{k:'human',f:.91,age:13.8e9-3e5},{k:'date',f:.975,age:13.8e9}];
+const COS_I18N={
+ ru:{n:{bang:'Большой взрыв',recomb:'Рекомбинация · первый свет',dark:'Тёмные века',stars:'Первые звёзды',gal:'Первые галактики',peak:'Пик звездообразования',sun:'Рождение Солнца',earth:'Земля',life:'Взрыв жизни',human:'Человек',date:'Ваша дата'},
+   u:['тыс.','млн','млрд'],after:n=>`${n} лет после Большого взрыва`,ago:n=>`${n} лет назад`,zero:'t = 0'},
+ en:{n:{bang:'Big Bang',recomb:'Recombination · first light',dark:'Dark Ages',stars:'First stars',gal:'First galaxies',peak:'Peak of star formation',sun:'Birth of the Sun',earth:'Earth',life:'Explosion of life',human:'Humans',date:'Your date'},
+   u:['thousand','million','billion'],after:n=>`${n} years after the Big Bang`,ago:n=>`${n} years ago`,zero:'t = 0'},
+ cs:{n:{bang:'Velký třesk',recomb:'Rekombinace · první světlo',dark:'Temný věk',stars:'První hvězdy',gal:'První galaxie',peak:'Vrchol tvorby hvězd',sun:'Zrod Slunce',earth:'Země',life:'Exploze života',human:'Člověk',date:'Vaše datum'},
+   u:['tis.','mil.','mld.'],after:n=>`${n} let po Velkém třesku`,ago:n=>`před ${n} let`,zero:'t = 0'}};
+function cosFmt(y){const U=COS_I18N[LANG].u,loc=LANG==='en'?'en-US':LANG,f=(v,d)=>v.toLocaleString(loc,{maximumFractionDigits:d});
+  return y>=1e9?f(y/1e9,1)+' '+U[2]:y>=1e6?f(Math.round(y/1e6),0)+' '+U[1]:y>=1e4?f(Math.round(y/1e3),0)+' '+U[0]:f(Math.round(y),0)}
+// возраст Вселенной в момент x∈[0,1]: ранние эпохи — по логарифму возраста, поздние — по логарифму «сколько лет назад»
+function cosAt(x){let i=0;while(i<COSMOS.length-1&&x>=COSMOS[i+1].f)i++;if(i===COSMOS.length-1)return{i,ago:0};const A=COSMOS[i],B=COSMOS[i+1],p=clamp((x-A.f)/(B.f-A.f),0,1),T=13.8e9;
+  if(B.age<6.9e9)return{i,age:Math.pow(10,Math.log10(A.age)+(Math.log10(B.age)-Math.log10(A.age))*p)};
+  const a0=Math.max(1,T-A.age),a1=Math.max(1,T-B.age);return{i,ago:Math.pow(10,Math.log10(a0)+(Math.log10(a1)-Math.log10(a0))*p)}}
+const COS={ps:null,hud:-1,txt:''};
+function makeCMB(){const N=256,c=document.createElement('canvas');c.width=c.height=N;const g=c.getContext('2d'),img=g.createImageData(N,N),n=noiseField(5,N),n2=noiseField(17,N);
+  for(let y=0;y<N;y++)for(let x=0;x<N;x++){const u=x/N,v=y/N,dx=u-.5,dy=v-.5,fall=Math.max(0,1-Math.sqrt(dx*dx+dy*dy)*1.9),s=n(u*3,v*3)*.6+n2(u*8,v*8)*.4,i=(y*N+x)*4;
+    img.data[i]=255;img.data[i+1]=Math.round(90+120*s);img.data[i+2]=Math.round(40+60*s*s);img.data[i+3]=Math.round(clamp(fall*(.25+s*s)*255,0,255))}
+  g.putImageData(img,0,0);return c}
+function makeGalaxy(seed,hue){const N=160,c=document.createElement('canvas');c.width=c.height=N;const g=c.getContext('2d'),r=rng(seed);g.globalCompositeOperation='lighter';
+  const core=g.createRadialGradient(N/2,N/2,0,N/2,N/2,N*.2);core.addColorStop(0,'rgba(255,240,215,.95)');core.addColorStop(1,'rgba(255,200,150,0)');g.fillStyle=core;g.fillRect(0,0,N,N);
+  for(let i=0;i<1100;i++){const arm=i%2,t=Math.pow(r(),.7)*3.2,a=t*1.7+arm*Math.PI+(r()-.5)*.6,rad=N*.05+t*N*.125;
+    g.fillStyle=`hsla(${hue+r()*40},85%,${68+r()*25}%,${.08+.3*r()})`;g.beginPath();g.arc(N/2+Math.cos(a)*rad,N/2+Math.sin(a)*rad,.5+r()*1.7,0,7);g.fill()}return c}
+let CMB=null;
+function cosmosInit(seed){CMB=CMB||makeCMB();const r=rng(seed),W=window.innerWidth,H=window.innerHeight,rc=els.chart.getBoundingClientRect(),cx=rc.left+rc.width/2,cy=rc.top+rc.height/2,R=rc.width*.4;
+  const spot=minD=>{for(let k=0;k<40;k++){const x=r(),y=r();if(Math.hypot(x*W-cx,y*H-cy)>minD*R)return{x,y}}return{x:r(),y:r()}};
+  const stars=[];for(let i=0;i<110;i++){const p=spot(1.05);stars.push({...p,b:i<60?.24+r()*.12:.5+r()*.11,s:.5+r()*1.2,c:r()<.7?'#bfe8ff':'#fff2d0'})}
+  const gals=[];for(let i=0;i<8;i++){const p=spot(1.6);gals.push({...p,b:.36+r()*.1,sz:.25+r()*.35,rot:r()*6,spd:(r()<.5?-1:1)*(.05+r()*.08),tilt:.35+r()*.5,spr:makeGalaxy(seed+i,r()<.5?200:30+r()*20)})}
+  const neb=[0,1,2].map(i=>({...gals[i],c:makeVolume(seed+50+i,[235,70,150])}));
+  const cities=[];for(let i=0;i<14;i++)cities.push({a:r()*Math.PI*2,y:(r()-.5)*1.4});
+  COS.ps={stars,gals,neb,cities};COS.hud=-1}
+function cosmosFrame(g,W,H,cx,cy,R,T){if(!COS.ps)return;const x=T/TRACK_SECONDS,fade=x>1?clamp(1-(T-TRACK_SECONDS)/4,0,1):1;if(fade<=0||x<0)return;
+  const sm=(a,b,v=x)=>{const k=clamp((v-a)/(b-a),0,1);return k*k*(3-2*k)},win=(a,b,c,d)=>sm(a,b)*(1-sm(c,d)),tm=reduceMotion?0:performance.now()/1000,P=COS.ps,M=Math.max(W,H);
+  // тёмные века: небо гаснет
+  const dk=win(.08,.12,.22,.28)*.72;if(dk>0){g.globalCompositeOperation='source-over';g.globalAlpha=dk*fade;g.fillStyle='#000';g.fillRect(0,0,W,H)}
+  g.globalCompositeOperation='lighter';
+  // Большой взрыв: вспышка и ударная волна
+  if(x<.1){const p=x/.1,rad=R*.2+p*M*1.1,gr=g.createRadialGradient(cx,cy,0,cx,cy,rad);gr.addColorStop(0,`rgba(255,255,255,${(1-p)*.95})`);gr.addColorStop(.3,`rgba(255,230,190,${(1-p)*.6})`);gr.addColorStop(1,'rgba(255,160,90,0)');
+    g.globalAlpha=fade;g.fillStyle=gr;g.fillRect(0,0,W,H);g.strokeStyle=`rgba(255,240,220,${(1-p)*.7})`;g.lineWidth=2+24*(1-p);g.beginPath();g.arc(cx,cy,rad*.85,0,7);g.stroke()}
+  // горячая плазма → реликтовое излучение
+  const fog=win(.01,.04,.06,.09);if(fog>0){g.globalAlpha=fog*.32*fade;g.fillStyle='rgb(255,130,60)';g.fillRect(0,0,W,H)}
+  const cmb=win(.03,.07,.1,.17);if(cmb>0){const D=M*1.5*(1+.15*x);g.globalAlpha=cmb*.85*fade;g.drawImage(CMB,cx-D/2,cy-D/2,D,D)}
+  // первые звёзды: вспыхивают по одной, потом остаются
+  const later=1-.45*sm(.62,.72);P.stars.forEach(s=>{if(x<s.b)return;const age=(x-s.b)*TRACK_SECONDS,fl=Math.exp(-age*1.6),z=s.s*(6+34*fl);
+    g.globalAlpha=clamp((.35+.65*fl)*later*fade,0,1);g.drawImage(SPR.bright,s.x*W-z/2,s.y*H-z/2,z,z)});
+  // галактики: проявляются и медленно вращаются
+  P.gals.forEach(q=>{const a=sm(q.b,q.b+.07);if(a<=0)return;const z=q.sz*R*(.6+.4*sm(q.b,q.b+.12))*(1+.25*win(.48,.52,.6,.66));
+    g.save();g.translate(q.x*W,q.y*H);g.scale(1,q.tilt);g.rotate(q.rot+tm*q.spd);g.globalAlpha=a*.8*(1-.4*sm(.62,.72))*fade;g.drawImage(q.spr,-z,-z,2*z,2*z);g.restore()});
+  // пик звездообразования: розовые облака водорода вокруг галактик
+  const pk=win(.47,.53,.61,.68);if(pk>0)P.neb.forEach(q=>{const D=R*1.6;g.globalAlpha=pk*.7*fade;g.drawImage(q.c,q.x*W-D/2,q.y*H-D/2,D,D)});
+  // рождение Солнца: протопланетный диск и жёлтое свечение
+  const sn=sm(.6,.66),disk=win(.6,.64,.7,.77);
+  if(sn>0){const rad=R*(1.1+1.1*sn)*(1-.25*sm(.75,.85)),gr=g.createRadialGradient(cx,cy,R*.2,cx,cy,rad);gr.addColorStop(0,`rgba(255,210,110,${.55*sn})`);gr.addColorStop(1,'rgba(255,150,40,0)');g.globalAlpha=fade;g.fillStyle=gr;g.fillRect(0,0,W,H)}
+  if(disk>0){g.save();g.translate(cx,cy);g.rotate(-.22);for(let i=0;i<12;i++){const k=i/11;g.strokeStyle=`rgba(255,${150+80*(1-k)},${70+60*(1-k)},${(.32-.18*k)*disk*fade})`;g.lineWidth=1+3*(1-k);g.setLineDash([3+i*2,6+i*3]);g.lineDashOffset=-tm*(30-i*1.6);
+    g.beginPath();g.ellipse(0,0,R*(1.08+1.5*k),R*(1.08+1.5*k)*.2,0,0,7);g.stroke()}g.setLineDash([]);g.restore()}
+  // Земля на орбите: раскалённая → голубая → живая → огни городов
+  const e=sm(.69,.74);if(e>0){const a=tm*.25+1.2,ex=Math.cos(a)*R*1.75,ey=Math.sin(a)*R*.32,px=cx+ex*Math.cos(-.22)-ey*Math.sin(-.22),py=cy+ex*Math.sin(-.22)+ey*Math.cos(-.22),pr=R*.085*(.5+.5*e);
+    const cool=sm(.72,.8),life=sm(.81,.87),hum=sm(.91,.95),mix=(c1,c2,k)=>c1.map((v,i)=>Math.round(v+(c2[i]-v)*k)),col=mix(mix([255,100,50],[50,130,255],cool),[60,170,120],life*.45);
+    const lx=(cx-px)/Math.hypot(cx-px,cy-py),ly=(cy-py)/Math.hypot(cx-px,cy-py),bg=g.createRadialGradient(px+lx*pr*.45,py+ly*pr*.45,pr*.1,px,py,pr);
+    bg.addColorStop(0,`rgb(${mix(col,[255,255,255],.35)})`);bg.addColorStop(.7,`rgb(${col})`);bg.addColorStop(1,'rgb(4,10,20)');
+    g.globalCompositeOperation='source-over';g.globalAlpha=e*fade;g.fillStyle=bg;g.beginPath();g.arc(px,py,pr,0,7);g.fill();
+    g.globalCompositeOperation='lighter';const at=g.createRadialGradient(px,py,pr*.9,px,py,pr*1.9);at.addColorStop(0,`rgba(${col},.5)`);at.addColorStop(1,`rgba(${col},0)`);g.fillStyle=at;g.fillRect(px-pr*2,py-pr*2,pr*4,pr*4);
+    if(hum>0)P.cities.forEach(c=>{const ca=c.a+tm*.6,cxp=Math.cos(ca);if(cxp*lx+Math.sin(ca)*ly>-.1)return;const z=pr*.5;g.globalAlpha=hum*fade*(.5+.5*Math.sin(tm*3+c.a*9));
+      g.drawImage(SPR.star,px+cxp*pr*.7-z/2,py+c.y*pr*.6-z/2,z,z)})}
+  // ваша дата: золотая волна вокруг круга
+  const dd=sm(.97,1);if(dd>0){const pu=(tm*.6)%1;g.globalAlpha=dd*fade*(1-pu);g.strokeStyle='rgba(255,210,120,.9)';g.lineWidth=2;g.shadowColor='rgba(255,200,100,.9)';g.shadowBlur=12;g.beginPath();g.arc(cx,cy,R*(1.05+pu*.9),0,7);g.stroke();g.shadowBlur=0}
+  g.globalAlpha=1;g.globalCompositeOperation='source-over'}
+function cosmosHud(T){const hud=document.getElementById('epochHud');if(!hud)return;const L=COS_I18N[LANG],x=clamp(T/TRACK_SECONDS,0,1),c=cosAt(x);
+  if(c.i!==COS.hud){COS.hud=c.i;const k=COSMOS[c.i].k;hud.querySelector('small').textContent=String(c.i+1).padStart(2,'0')+' / '+COSMOS.length;hud.querySelector('b').textContent=L.n[k];hud.classList.remove('swap');void hud.offsetWidth;hud.classList.add('swap')}
+  let txt;if(COSMOS[c.i].k==='date'){const q=parseDatetimeLocal(els.dateInput.value);txt=new Date(Date.UTC(q.year,q.month-1,q.day,12)).toLocaleDateString(LANG==='en'?'en-GB':LANG,{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'})}
+  else if(x<.004)txt=L.zero;else txt=c.age!==undefined?L.after(cosFmt(c.age)):L.ago(cosFmt(c.ago));
+  if(txt!==COS.txt){COS.txt=txt;hud.querySelector('span').textContent=txt}}
+
+function buildPiece(dt){const a=style==='hiphop'?buildHipHop(dt):style==='edm'?buildEdm(dt):style==='jazz'?buildJazz(dt):buildArrangement(dt);a.style=a.style||'classic';if(a.style==='classic')return a;revoice(a,a.style,curSE(a.style));a.events=applyProfile(a.events,a.style,a.ensKey,a);return a}
 function renderStyles(){const box=document.getElementById('styles');if(!box)return;const L=I18N[LANG].styles;
   box.innerHTML=['classic','hiphop','edm','jazz'].map(k=>`<button class="hud-btn${k===style?' solid':''}" data-style="${k}" aria-pressed="${k===style}">${escapeHtml(L[k])}</button>`).join('');
   box.querySelectorAll('button').forEach(b=>b.addEventListener('click',async()=>{const k=b.dataset.style;if(k===style)return;const was=playing;style=k;try{localStorage.setItem('cm-style',k)}catch(e){}
@@ -922,7 +1039,7 @@ const I18N={
   subs:{hiphop:{lofi:'Lo-fi',soul:'Соул',jazzhop:'Джаз-хоп',boombap:'Бум-бэп'},edm:{deep:'Дип-хаус',trance:'Транс',techno:'Техно',melodic:'Мелодик-хаус'},jazz:{ballad:'Баллада',waltz:'Джаз-вальс',swing:'Свинг',modal:'Модальный джаз'}},
   secHip:['Вступление','Куплет','Брейк','Второй куплет','Аутро'],secEdm:['Вступление','Нарастание','Дроп','Брейк','Финальный дроп'],secJazz:['Вступление','Тема','Импровизация','Тема','Кода'],
   title:'Космическая мелодия',desc:'Любая дата превращается в минуту оркестровой музыки по положению Солнца и фазе Луны.',
-  h1a:'Космическая',h1b:'мелодия',sys:'Звёзды на связи',chip:'Дата → небо → музыка · 60 секунд',listen:'Слушать',stop:'Остановить',random:'Случайная дата',date:'// Дата',ens:'// Состав',
+  h1a:'Космическая',h1b:'мелодия',sys:'Звёзды на связи',chip:'Дата → небо → музыка · 60 секунд',listen:'Слушать',stop:'Остановить',loop:'↻ Повтор',random:'Случайная дата',date:'// Дата',ens:'// Состав',
   h2:'Пять эпох за минуту',about:'Солнце задаёт тонику, Луна — лад, стихия знака — фактуру. Мелодия проходит путь от Большого взрыва до сегодняшнего дня.',
   instruments:'Инструменты:',codeOn:'Код на',chartAria:'Орбита: положение Солнца в зодиаке и созвездие мелодии',ensAria:'Группа инструментов',dateAria:'Дата и время',
   sunTonic:'// Солнце::тоника',moon:m=>`// Луна ${m}%::лад`,bpm:'уд/мин',sec:'сек',s:'с',fromSilence:'из тишины',unison:'унисон',pause:'пауза',major:'мажор',
@@ -936,7 +1053,7 @@ const I18N={
   subs:{hiphop:{lofi:'Lo-fi',soul:'Soul',jazzhop:'Jazz-hop',boombap:'Boom bap'},edm:{deep:'Deep house',trance:'Trance',techno:'Techno',melodic:'Melodic house'},jazz:{ballad:'Ballad',waltz:'Jazz waltz',swing:'Swing',modal:'Modal jazz'}},
   secHip:['Intro','Verse','Break','Second verse','Outro'],secEdm:['Intro','Build-up','Drop','Break','Final drop'],secJazz:['Intro','Head','Solo','Head out','Coda'],
   title:'Cosmic Melody',desc:'Any date becomes a minute of orchestral music, shaped by the position of the Sun and the phase of the Moon.',
-  h1a:'Cosmic',h1b:'Melody',sys:'Stars online',chip:'Date → sky → music · 60 seconds',listen:'Listen',stop:'Stop',random:'Random date',date:'// Date',ens:'// Ensemble',
+  h1a:'Cosmic',h1b:'Melody',sys:'Stars online',chip:'Date → sky → music · 60 seconds',listen:'Listen',stop:'Stop',loop:'↻ Loop',random:'Random date',date:'// Date',ens:'// Ensemble',
   h2:'Five epochs in a minute',about:'The Sun sets the tonic, the Moon the mode, the element of the sign the texture. The melody travels from the Big Bang to the present day.',
   instruments:'Instruments:',codeOn:'Code on',chartAria:'Orbit: the Sun in the zodiac and the melody as a constellation',ensAria:'Instrument ensemble',dateAria:'Date and time',
   sunTonic:'// Sun::tonic',moon:m=>`// Moon ${m}%::mode`,bpm:'BPM',sec:'s',s:'s',fromSilence:'from silence',unison:'unison',pause:'pause',major:'major',
@@ -950,7 +1067,7 @@ const I18N={
   subs:{hiphop:{lofi:'Lo-fi',soul:'Soul',jazzhop:'Jazz-hop',boombap:'Boom bap'},edm:{deep:'Deep house',trance:'Trance',techno:'Techno',melodic:'Melodic house'},jazz:{ballad:'Balada',waltz:'Jazzový valčík',swing:'Swing',modal:'Modální jazz'}},
   secHip:['Intro','Sloka','Break','Druhá sloka','Outro'],secEdm:['Intro','Gradace','Drop','Break','Finální drop'],secJazz:['Intro','Téma','Improvizace','Téma','Coda'],
   title:'Kosmická melodie',desc:'Každé datum se promění v minutu orchestrální hudby podle polohy Slunce a fáze Měsíce.',
-  h1a:'Kosmická',h1b:'melodie',sys:'Hvězdy online',chip:'Datum → nebe → hudba · 60 sekund',listen:'Poslech',stop:'Zastavit',random:'Náhodné datum',date:'// Datum',ens:'// Obsazení',
+  h1a:'Kosmická',h1b:'melodie',sys:'Hvězdy online',chip:'Datum → nebe → hudba · 60 sekund',listen:'Poslech',stop:'Zastavit',loop:'↻ Smyčka',random:'Náhodné datum',date:'// Datum',ens:'// Obsazení',
   h2:'Pět epoch za minutu',about:'Slunce určuje tóniku, Měsíc modus, živel znamení fakturu. Melodie putuje od Velkého třesku až do dneška.',
   instruments:'Nástroje:',codeOn:'Kód na',chartAria:'Orbita: Slunce ve zvěrokruhu a melodie jako souhvězdí',ensAria:'Obsazení nástrojů',dateAria:'Datum a čas',
   sunTonic:'// Slunce::tónika',moon:m=>`// Měsíc ${m}%::modus`,bpm:'BPM',sec:'s',s:'s',fromSilence:'z ticha',unison:'unisono',pause:'pauza',major:'dur',
@@ -976,7 +1093,7 @@ function applyLang(lang,{save=false}={}){LANG=lang;if(save){try{localStorage.set
   document.querySelectorAll('.lang button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.lang===lang));
   renderEnsembles();renderStyles();if(currentArrangement){if(playing){render(currentArrangement)}else generate()}}
 
-els.randomBtn.addEventListener('click',randomDate);els.playBtn.addEventListener('click',()=>playing?stop():play());els.dateInput.addEventListener('change',generate);
+els.randomBtn.addEventListener('click',randomDate);document.getElementById('loopBtn').addEventListener('click',()=>setLoop(!LOOP));setLoop(LOOP);els.playBtn.addEventListener('click',()=>playing?stop():play());els.dateInput.addEventListener('change',generate);
 window.addEventListener('resize',()=>currentArrangement&&drawChart(currentArrangement,playing?clamp(audioCtx.currentTime-startAt,0,TRACK_SECONDS):-1));
 document.querySelectorAll('.lang button').forEach(b=>b.addEventListener('click',()=>applyLang(b.dataset.lang,{save:true})));const __d=applyUrlParams();applyLang(LANG);setDefaultDate();if(__d)els.dateInput.value=__d;
 document.getElementById('posterBtn').addEventListener('click',openPoster);document.getElementById('posterDl').addEventListener('click',downloadPoster);
