@@ -959,7 +959,10 @@ function cosmosFrame(g,W,H,cx,cy,R,T){if(!COS.ps)return;const x=T/TRACK_SECONDS,
     g.save();g.translate(cx,cy);g.rotate(-.22);g.scale(1,.2);g.globalCompositeOperation='lighter';
     const dg=g.createRadialGradient(0,0,R*.95,0,0,R*2.8);dg.addColorStop(0,'rgba(255,235,170,0)');dg.addColorStop(.08,`rgba(255,235,170,${.55*A})`);dg.addColorStop(.25,`rgba(255,190,90,${.38*A})`);dg.addColorStop(.6,`rgba(240,120,50,${.16*A})`);dg.addColorStop(1,'rgba(200,80,30,0)');
     g.fillStyle=dg;g.fillRect(-R*2.8,-R*2.8,R*5.6,R*5.6);
-    [[1.25,.5],[1.6,.35],[2.05,.25]].forEach(([k,a],n)=>{g.strokeStyle=`rgba(255,${215-n*25},${140-n*30},${a*A})`;g.lineWidth=R*.03*(1+n*.4);g.shadowColor='rgba(255,180,80,1)';g.shadowBlur=18;g.beginPath();g.arc(0,0,R*k,0,7);g.stroke()});g.restore();
+    // кольца как мягкие размытые полосы: яркие у Солнца, к краю почти прозрачные
+    const RG=g.createRadialGradient(0,0,0,0,0,R*2.8),band=(k,w,a)=>{const c=`255,${Math.round(225-60*(k-1))},${Math.round(150-60*(k-1))}`;RG.addColorStop(clamp((k-w)/2.8,0,1),`rgba(${c},0)`);RG.addColorStop(k/2.8,`rgba(${c},${a*A})`);RG.addColorStop(clamp((k+w)/2.8,0,1),`rgba(${c},0)`)};
+    RG.addColorStop(0,'rgba(0,0,0,0)');[[1.18,.1,.75],[1.45,.13,.5],[1.78,.17,.3],[2.15,.22,.15],[2.5,.25,.06]].forEach(b=>band(...b));
+    g.fillStyle=RG;g.fillRect(-R*2.8,-R*2.8,R*5.6,R*5.6);g.restore();
     // пылинки и планетезимали на орбитах, ближние ярче
     g.globalCompositeOperation='lighter';for(let i=0;i<140;i++){const rr=R*(1.05+((i*37)%100)/100*1.7),an=i*2.399+tm*(.5/Math.sqrt(rr/R)),ox=Math.cos(an)*rr,oy=Math.sin(an)*rr*.2,px=cx+ox*ca-oy*sa,py=cy+ox*sa+oy*ca,near=(Math.sin(an)+1)/2,z=(3+5*near)*(i%9===0?2.2:1);
       g.globalAlpha=A*(.25+.6*near);g.drawImage(SPR.gold,px-z/2,py-z/2,z,z)}g.globalAlpha=1}
